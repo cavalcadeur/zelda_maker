@@ -3,15 +3,16 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","mastersword","boomerang"]};
+var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","mastersword","boomerang"],"aura":""};
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,-1,-1,0,1],[1,0,0,0,0,0,0,0,-1,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,3,0,0,0,1],[1,0,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,1,2,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]];
-var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],["coffre0"],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],["herbe0","rubisBleu"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""],[""],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],[""],[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
+var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],[["coffre0","arbre0"],[""],[""],[""],[""],[""],["coffre0","coffre0"],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],["herbe0","rubisBleu"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""],[""],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],[""],[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],[[""],[""],[""],[""],[""],[""],["coffre0","herbe0"],[""],[""],[""],[""]],[[""],[""],[""],["coffre1"],[""],[""],[""],["coffre0"],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
 var imgMenu = {};
 var imgArme = {};
 var tElement = {"rubisBleu":[50,70],"rubisVert":[50,70],"rubisRouge":[50,70],"arbre0":[50,95],"herbe0":[50,50],"herbe1":[50,50],"coffre0":[50,50],"coffre1":[50,50]};
+var figer = 0;
 
 // programme
 
@@ -106,7 +107,7 @@ function start(){
             event.preventDefault();
             event.stopPropagation();
             keys[event.keyCode] = 1;
-            if (event.keyCode == 16) attack();
+            if (event.keyCode == 16) {disalert(); figer = 0;attack();}
         }
     );
     document.addEventListener(
@@ -116,7 +117,6 @@ function start(){
             event.stopPropagation();
             keys[event.keyCode] = 0;
             if (event.keyCode == 17) changeArme();
-            if (event.keyCode == 16) disalert();
         }
     );
 //    alert("Salut les amis c'est moi Mikey !");
@@ -132,7 +132,7 @@ function animation(){
 }
 
 function action(t){
-    if (heros.vx == 0 && heros.vy == 0){
+    if (heros.vx == 0 && heros.vy == 0 && figer == 0){
         if (objNiveau[heros.y][heros.x][0] != "" && objNiveau[heros.y][heros.x][0] != "herbe0"){
             if (objNiveau[heros.y][heros.x][0] == "rubisVert"){
                 objNiveau[heros.y][heros.x][0] = "";
@@ -260,6 +260,10 @@ function drawHeros(){
     if (heros.invent[heros.objet] != "blank") {
         ctx.drawImage(imgArme[heros.invent[heros.objet] + heros.sens],heros.x * 50 - (heros.tx - 50)/2 + heros.vx,heros.y * 50 - (heros.ty - 40) - 20*niveau[heros.y][heros.x] + heros.vy);
     }
+    if (heros.aura != ""){
+        ctx.drawImage(imgElement[heros.aura],heros.x * 50 - (heros.tx - 50)/2 + heros.vx,heros.y * 50 - (heros.ty - 40) - 20*niveau[heros.y][heros.x] + heros.vy);
+
+    }
 }
 
 function testTerrain(x,y,f){
@@ -295,9 +299,18 @@ function attack(){
     }
     if (heros.sens == 0 && objNiveau[heros.y - 1][heros.x][0] == "coffre0"){
         objNiveau[heros.y - 1][heros.x][0] = "coffre1";
-
-
+        if (objNiveau[heros.y - 1][heros.x].length > 1)donnerHeros(objNiveau[heros.y - 1][heros.x][1]);
+        else donnerHeros("");
     }
+}
 
-
+function donnerHeros(obj){
+    heros.sens = 2;
+    heros.aura = obj;
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tous votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ..."};
+    alert(description[obj]);
+    figer = 1;
+    if (obj == "rubisVert") heros.rubis += 1;
+    else if (obj == "rubisBleu") heros.rubis += 5;
+    else if (obj == "rubisRouge") heros.rubis += 20;
 }
