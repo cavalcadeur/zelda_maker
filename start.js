@@ -3,15 +3,15 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","mastersword","boomerang"],"aura":"","tAura":0,"vAura":1};
+var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1};
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,-1,-1,0,1],[1,0,0,0,0,0,0,0,-1,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,3,0,0,0,1],[1,0,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,1,2,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]];
-var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],[["coffre0","arbre0"],[""],[""],[""],[""],[""],["coffre0","coffre0"],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],["herbe0","rubisBleu"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""],[""],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],[""],[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],[[""],[""],[""],[""],[""],[""],["coffre0","herbe0"],[""],[""],[""],[""]],[[""],[""],[""],["coffre0","rubisRouge"],[""],[""],[""],["coffre0"],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
+var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],[["coffre0","arbre0"],[""],[""],[""],[""],[""],["coffre0","coffre0"],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],["herbe0","rubisBleu"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""],[""],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],[""],[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],[[""],[""],[""],[""],[""],[""],["coffre0","mastersword"],[""],[""],[""],[""]],[[""],[""],[""],["coffre0","rubisRouge"],[""],[""],[""],["coffre0"],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
 var imgMenu = {};
 var imgArme = {};
-var tElement = {"rubisBleu":[50,70],"rubisVert":[50,70],"rubisRouge":[50,70],"arbre0":[50,95],"herbe0":[50,50],"herbe1":[50,50],"coffre0":[50,50],"coffre1":[50,50]};
+var tElement = {"rubisBleu":[50,70],"rubisVert":[50,70],"rubisRouge":[50,70],"arbre0":[50,95],"herbe0":[50,50],"herbe1":[50,50],"coffre0":[50,50],"coffre1":[50,50],"boomerang":[25,26],"mastersword":[50,70],"blank":[50,50]};
 var figer = 0;
 
 // programme
@@ -31,8 +31,8 @@ function charge(){
     var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1"];
     var imgInterface = ["blank","mastersword","boomerang"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge"];
-    var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang","boomerang0","boomerang1","boomerang2","boomerang3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length;
+    var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3"];
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -58,6 +58,16 @@ function charge(){
             imgMenu[e] = new Image();
             imgMenu[e].src = "images/interface/" + e + ".png";
             imgMenu[e].onload = function(){
+                chargement -= 1;
+                if (chargement == 0) animation();
+            };
+        }
+    );
+    imgInterface.forEach(
+        function(e,i){
+            imgElement[e] = new Image();
+            imgElement[e].src = "images/elements/armes/" + e + ".png";
+            imgElement[e].onload = function(){
                 chargement -= 1;
                 if (chargement == 0) animation();
             };
@@ -314,10 +324,11 @@ function attack(){
 function donnerHeros(obj){
     heros.sens = 2;
     heros.aura = obj;
-    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le."};
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et utilisez avec la touche maj."};
     alert(description[obj]);
     figer = 1;
     if (obj == "rubisVert") heros.rubis += 1;
     else if (obj == "rubisBleu") heros.rubis += 5;
     else if (obj == "rubisRouge") heros.rubis += 20;
+    else if (obj == "mastersword") heros.invent.push("mastersword");
 }
