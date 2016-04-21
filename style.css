@@ -27,7 +27,7 @@ body {
 
 #alert.show {
     transform: translateY(0);
-    transition: 2s transform;
+    transition: 0.5s transform;
 }
 
 canvas {

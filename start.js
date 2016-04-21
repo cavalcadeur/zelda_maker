@@ -3,10 +3,10 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1};
+var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","boomerang","boomerang"],"aura":"","tAura":0,"vAura":1};
 var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
-var niveau = [[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,-1,-1,0,1],[1,0,0,0,0,0,0,0,-1,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,3,0,0,0,1],[1,0,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,1,2,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]];
+var niveau = [[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,1,0,1],[1,0,0,0,0,0,0,-1,-1,0,1],[1,0,0,0,0,0,0,0,-1,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,3,0,0,0,1],[1,0,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,1,2,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]];
 var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],[["coffre0","arbre0"],[""],[""],[""],[""],[""],["coffre0","coffre0"],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],["herbe0","rubisBleu"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0","coffre0","rubisVert"],[""],[""],[""],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],[""],[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],[[""],[""],[""],[""],[""],[""],["coffre0","mastersword"],[""],[""],[""],[""]],[[""],[""],[""],["coffre0","rubisRouge"],[""],[""],[""],["coffre0"],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boomerang"]],[[""],[""],["boomerang"],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
@@ -160,6 +160,7 @@ function action(t){
             if (objNiveau[heros.y][heros.x][0] == "boomerang"){
                 objNiveau[heros.y][heros.x][0] = "";
                 heros.invent.push("boomerang");
+                heros.objet = heros.invent.length - 1;
             }
             if (objNiveau[heros.y][heros.x].length > 1) objNiveau[heros.y][heros.x].splice(0,1);
 
@@ -276,12 +277,18 @@ function draw() {
                                 f.r += 0.5;
                                 if (f.vx == 0 && f.vy == 0){
                                     if (f.endu == 0){
-                                        objNiveau[f.y][f.x].splice(0,0,"boomerang",f.content);
+                                        objNiveau[f.y][f.x].splice(0,0,"boomerang");
+                                        f.content.forEach(function(g){objNiveau[f.y][f.x].push(g);});
                                         boomerang.splice(i,1);return;
                                     }
                                     else if (f.endu == 5) f.sens = (f.sens+2)%4;
-                                    if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0"){
-                                        f.endu = 1;
+                                    if ((f.y + vecteurs[f.sens][0]) <= -1 | (f.x + vecteurs[f.sens][1]) <= -1 | (f.y + vecteurs[f.sens][0]) >= niveau.length | (f.x + vecteurs[f.sens][1]) >= niveau[f.y].length){
+                                        if (f.endu <= 5) f.endu = 1;
+                                        else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
+                                    }
+                                    else if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0"){
+                                        if (f.endu <= 5) f.endu = 1;
+                                        else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
                                     else {
                                         f.y += vecteurs[f.sens][0];
@@ -346,7 +353,12 @@ function drawInterface(){
 
 function attack(){
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
-    if (heros.invent[heros.objet] == "mastersword"){
+    if (heros.sens == 0 && objNiveau[heros.y - 1][heros.x][0] == "coffre0"){
+        objNiveau[heros.y - 1][heros.x][0] = "coffre1";
+        if (objNiveau[heros.y - 1][heros.x].length > 1)donnerHeros(objNiveau[heros.y - 1][heros.x][1]);
+        else donnerHeros("");
+    }
+    else if (heros.invent[heros.objet] == "mastersword"){
         if (niveau[heros.y + vecteurs[heros.sens][0]][heros.x + vecteurs[heros.sens][1]] != niveau[heros.y][heros.x]) return;
         if (objNiveau[heros.y + vecteurs[heros.sens][0]][heros.x + vecteurs[heros.sens][1]][0] == "herbe0" | objNiveau[heros.y + vecteurs[heros.sens][0]][heros.x + vecteurs[heros.sens][1]][0] == "herbe1"){
             if (objNiveau[heros.y + vecteurs[heros.sens][0]][heros.x + vecteurs[heros.sens][1]].length > 1){
@@ -364,11 +376,6 @@ function attack(){
         heros.invent.splice(heros.objet,1);
         if (heros.objet == heros.invent.length) heros.objet -= 1;
     }
-    if (heros.sens == 0 && objNiveau[heros.y - 1][heros.x][0] == "coffre0"){
-        objNiveau[heros.y - 1][heros.x][0] = "coffre1";
-        if (objNiveau[heros.y - 1][heros.x].length > 1)donnerHeros(objNiveau[heros.y - 1][heros.x][1]);
-        else donnerHeros("");
-    }
 }
 
 function donnerHeros(obj){
@@ -380,6 +387,6 @@ function donnerHeros(obj){
     if (obj == "rubisVert") heros.rubis += 1;
     else if (obj == "rubisBleu") heros.rubis += 5;
     else if (obj == "rubisRouge") heros.rubis += 20;
-    else if (obj == "mastersword") heros.invent.push("mastersword");
-    else if (obj == "boomerang") heros.invent.push("boomerang");
+    else if (obj == "mastersword") {heros.invent.push("mastersword");heros.objet = heros.invent.length - 1;}
+    else if (obj == "boomerang") {heros.invent.push("boomerang");heros.objet = heros.invent.length - 1;}
 }
