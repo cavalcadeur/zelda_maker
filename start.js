@@ -286,7 +286,7 @@ function draw() {
                                         if (f.endu <= 5) f.endu = 1;
                                         else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
-                                    else if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0"){
+                                    else if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | ((objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0"| objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre1") && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
                                         if (f.endu <= 5) f.endu = 1;
                                         else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
