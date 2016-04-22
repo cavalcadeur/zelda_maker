@@ -3,16 +3,38 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","boomerang","boomerang"],"aura":"","tAura":0,"vAura":1};
+var heros = {"x":2,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0};
 var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
-var niveau = [[1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,1,0,1],[1,0,0,0,0,0,0,-1,-1,0,1],[1,0,0,0,0,0,0,0,-1,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,3,0,0,0,1],[1,0,0,0,0,0,2,0,0,0,1],[1,0,0,0,0,1,2,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]];
-var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],[["coffre0","arbre0"],[""],[""],[""],[""],[""],["coffre0","coffre0"],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],["herbe0","rubisBleu"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0","coffre0","rubisVert"],[""],[""],[""],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],[""],[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],[[""],[""],[""],[""],[""],[""],["coffre0","mastersword"],[""],[""],[""],[""]],[[""],[""],[""],["coffre0","rubisRouge"],[""],[""],[""],["coffre0"],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boomerang"]],[[""],[""],["boomerang"],[""],[""],[""],[""],[""],[""],[""],[""]]];
+var niveau = [[1,1,1,1,1,1,1,1,-1,-1,-1],
+              [1,1,1,1,1,1,1,1,-1,-1,-1],
+              [1,0,0,0,0,0,0,0,-1,0,-1],
+              [1,0,0,0,0,0,0,0,-1,0,-1],
+              [1,0,2,2,2,0,0,0,-1,0,-1],
+              [1,0,2,0,2,0,0,0,-1,0,-1],
+              [1,0,2,0,2,0,0,0,-1,0,-1],
+              [1,0,0,0,0,0,3,0,0,0,0],
+              [1,0,0,0,0,0,2,0,0,0,1],
+              [1,0,0,0,0,1,2,0,0,0,1],
+              [1,0,0,0,0,0,0,0,0,0,1],
+              [1,1,1,1,1,1,1,1,1,1,1]];
+var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],
+                 [["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],
+                 [["coffre0","arbre0"],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","cle0"],[""]],
+                 [[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],[""]],
+                 [[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],["cle0"],[""]],
+                 [["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0"],["herbe0","coffre0","rubisVert"],[""],[""],[""],[""],[""]],
+                 [["rubisVert","rubisBleu"],["rubisBleu"],[""],["porte0"],[""],["herbe0"],["herbe0"],["herbe0"],[""],["porte0"],[""]],
+                 [[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"]],
+                 [[""],[""],[""],[""],[""],[""],["coffre0","mastersword"],[""],[""],[""],[""]],
+                 [[""],[""],["herbe0","rubisBleu"],["herbe0"],[""],[""],[""],["coffre0"],[""],[""],[""]],
+                 [[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boomerang"]],
+                 [[""],[""],["boomerang"],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
 var imgMenu = {};
 var imgArme = {};
-var tElement = {"rubisBleu":[50,70],"rubisVert":[50,70],"rubisRouge":[50,70],"arbre0":[50,95],"herbe0":[50,50],"herbe1":[50,50],"coffre0":[50,50],"coffre1":[50,50],"boomerang":[25,26],"mastersword":[50,70],"blank":[50,50]};
+var tElement = {"rubisBleu":[50,70],"rubisVert":[50,70],"rubisRouge":[50,70],"arbre0":[50,95],"herbe0":[50,50],"herbe1":[50,50],"coffre0":[50,50],"coffre1":[50,50],"boomerang":[25,26],"mastersword":[50,70],"blank":[50,50],"porte0":[50,50],"cle0":[23,23]};
 var figer = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 
@@ -30,7 +52,7 @@ function resize(){
 }
 
 function charge(){
-    var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1"];
+    var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0"];
     var imgInterface = ["blank","mastersword","boomerang"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3"];
@@ -149,15 +171,19 @@ function action(t){
                 objNiveau[heros.y][heros.x][0] = "";
                 heros.rubis += 1;
             }
-            if (objNiveau[heros.y][heros.x][0] == "rubisBleu"){
+            else if (objNiveau[heros.y][heros.x][0] == "rubisBleu"){
                 objNiveau[heros.y][heros.x][0] = "";
                 heros.rubis += 5;
             }
-            if (objNiveau[heros.y][heros.x][0] == "rubisRouge"){
+            else if (objNiveau[heros.y][heros.x][0] == "rubisRouge"){
                 objNiveau[heros.y][heros.x][0] = "";
                 heros.rubis += 20;
             }
-            if (objNiveau[heros.y][heros.x][0] == "boomerang"){
+            else if (objNiveau[heros.y][heros.x][0] == "cle0"){
+                objNiveau[heros.y][heros.x][0] = "";
+                heros.cles += 1;
+            }
+            else if (objNiveau[heros.y][heros.x][0] == "boomerang"){
                 objNiveau[heros.y][heros.x][0] = "";
                 heros.invent.push("boomerang");
                 heros.objet = heros.invent.length - 1;
@@ -165,10 +191,10 @@ function action(t){
             if (objNiveau[heros.y][heros.x].length > 1) objNiveau[heros.y][heros.x].splice(0,1);
 
         }
-        if (1 == keys[39]) moveRight();
-        else if (1 == keys[37]) moveLeft();
-        else if (1 == keys[38]) moveUp();
-        else if (1 == keys[40]) moveDown();
+        if (1 == keys[39]) move(1);
+        else if (1 == keys[37]) move(3);
+        else if (1 == keys[38]) move(0);
+        else if (1 == keys[40]) move(2);
     }
     if (figer == 1) {heros.tAura += heros.vAura; if (heros.tAura == 40 | heros.tAura == -40) heros.vAura = heros.vAura * -1;}
     else if (heros.vx > 0) heros.vx -= 5;
@@ -178,9 +204,9 @@ function action(t){
     draw();
 }
 
-function moveRight(){
-    if (heros.sens != 1){
-        heros.sens = 1;
+function move(d){
+    if (heros.sens != d){
+        heros.sens = d;
         heros.delay = 2;
         return;
     }
@@ -188,61 +214,16 @@ function moveRight(){
         heros.delay -= 1;
         return;
     }
-    if (heros.x == niveau[heros.y].length - 1) return;
-    if (niveau[heros.y][heros.x] + 1 < niveau[heros.y][heros.x+1]) return;
-    if (objNiveau[heros.y][heros.x+1][0] == "arbre0" | objNiveau[heros.y][heros.x+1][0] == "coffre0" | objNiveau[heros.y][heros.x+1][0] == "coffre1" | niveau[heros.y][heros.x+1] == -1) return;
-    if (niveau[heros.y][heros.x] > niveau[heros.y][heros.x+1]) heros.vy = -20*(niveau[heros.y][heros.x] - niveau[heros.y][heros.x+1]);
-    heros.x += 1;
-    heros.vx = -50;
-}
-function moveLeft(){
-    if (heros.sens != 3){
-        heros.sens = 3;
-        heros.delay = 2;
-        return;
-    }
-    if (heros.delay != 0){
-        heros.delay -= 1;
-        return;
-    }
-    if (heros.x == 0) return;
-    if (niveau[heros.y][heros.x] + 1 < niveau[heros.y][heros.x-1]) return;
-    if (objNiveau[heros.y][heros.x-1][0] == "arbre0" | objNiveau[heros.y][heros.x-1][0] == "coffre0" | objNiveau[heros.y][heros.x-1][0] == "coffre1" | niveau[heros.y][heros.x-1] == -1) return;
-    if (niveau[heros.y][heros.x] > niveau[heros.y][heros.x-1]) heros.vy = -20*(niveau[heros.y][heros.x] - niveau[heros.y][heros.x-1]);
-    heros.x -= 1;
-    heros.vx = 50;
-}
-function moveUp(){
-    if (heros.sens != 0){
-        heros.sens = 0;
-        heros.delay = 2;
-        return;
-    }
-    if (heros.delay != 0){
-        heros.delay -= 1;
-        return;
-    }
-    if (heros.y == 0) return;
-    if (niveau[heros.y][heros.x] + 1 < niveau[heros.y-1][heros.x]) return;
-    if (objNiveau[heros.y-1][heros.x][0] == "arbre0" | objNiveau[heros.y-1][heros.x][0] == "coffre0"  | objNiveau[heros.y-1][heros.x][0] == "coffre1" | niveau[heros.y-1][heros.x] == -1) return;
-    heros.y -= 1;
-    heros.vy = 50 - 20*(niveau[heros.y+1][heros.x] - niveau[heros.y][heros.x]);
-}
-function moveDown(){
-    if (heros.sens != 2){
-        heros.sens = 2;
-        heros.delay = 2;
-        return;
-    }
-    if (heros.delay != 0){
-        heros.delay -= 1;
-        return;
-    }
-    if (heros.y == niveau.length - 1) return;
-    if (objNiveau[heros.y+1][heros.x][0] == "arbre0" | objNiveau[heros.y+1][heros.x][0] == "coffre0" | objNiveau[heros.y+1][heros.x][0] == "coffre1" | niveau[heros.y+1][heros.x] == -1) return;
-    if (niveau[heros.y][heros.x] + 1 < niveau[heros.y+1][heros.x]) return;
-    heros.y += 1;
-    heros.vy = -50;
+    if (heros.x + vecteurs[d][1] == niveau[heros.y].length | heros.x + vecteurs[d][1] == -1 | heros.y + vecteurs[d][0] == niveau.length | heros.y + vecteurs[d][0] == -1) return;
+    if (niveau[heros.y][heros.x] + 1 < niveau[heros.y+vecteurs[d][0]][heros.x+vecteurs[d][1]]) return;
+    var truc = objNiveau[heros.y+vecteurs[d][0]][heros.x+vecteurs[d][1]][0];
+    if (niveau[heros.y+vecteurs[d][0]][heros.x+vecteurs[d][1]] == -1 | truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0") return;
+    if (niveau[heros.y][heros.x] > niveau[heros.y][heros.x+vecteurs[d][1]]) heros.vy = -20*(niveau[heros.y][heros.x] - niveau[heros.y+vecteurs[d][0]][heros.x+vecteurs[d][1]]);
+    heros.x +=  vecteurs[d][1];
+    heros.y +=  vecteurs[d][0];
+    heros.vx += -50 * vecteurs[d][1];
+    heros.vy += -50 * vecteurs[d][0];
+    if (d == 0) heros.vy += -20*(niveau[heros.y+1][heros.x] - niveau[heros.y][heros.x]);
 }
 
 function changeArme(){
@@ -278,7 +259,7 @@ function draw() {
                                 if (f.vx == 0 && f.vy == 0){
                                     if (f.endu == 0){
                                         objNiveau[f.y][f.x].splice(0,0,"boomerang");
-                                        f.content.forEach(function(g){objNiveau[f.y][f.x].push(g);});
+                                        f.content.forEach(function(g){objNiveau[f.y][f.x].splice(1,0,g);});
                                         boomerang.splice(i,1);return;
                                     }
                                     else if (f.endu == 5) f.sens = (f.sens+2)%4;
@@ -286,7 +267,7 @@ function draw() {
                                         if (f.endu <= 5) f.endu = 1;
                                         else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
-                                    else if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | ((objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0"| objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre1") && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
+                                    else if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | ((objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0" | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre1" | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "arbre0" | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "porte0") && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
                                         if (f.endu <= 5) f.endu = 1;
                                         else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
@@ -300,7 +281,7 @@ function draw() {
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
                                         else objNiveau[f.y][f.x].splice(0,1);
                                     }
-                                    else if ((objNiveau[f.y][f.x][0] == "rubisVert" | objNiveau[f.y][f.x][0] == "rubisBleu" | objNiveau[f.y][f.x][0] == "rubisRouge")&&f.alti == niveau[f.y][f.x]) {
+                                    else if ((objNiveau[f.y][f.x][0] == "rubisVert" | objNiveau[f.y][f.x][0] == "rubisBleu" | objNiveau[f.y][f.x][0] == "rubisRouge" | objNiveau[f.y][f.x][0] == "cle0")&&f.alti == niveau[f.y][f.x]) {
                                         f.content.push(objNiveau[f.y][f.x][0]);
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
                                         else objNiveau[f.y][f.x].splice(0,1);
@@ -337,13 +318,13 @@ function drawHeros(){
 }
 
 function testTerrain(x,y,f){
-    if (x == niveau[y].length - 1) ctx.fillRect(x*50 + 48,y*50-f*20,2,70 + niveau[y][x]*20);
+    if (x == niveau[y].length - 1){if(niveau[y][x] != -1) ctx.fillRect(x*50 + 48,y*50-f*20,2,70 + niveau[y][x]*20);}
     else if (niveau[y][x+1] < f) ctx.fillRect(x*50 + 48,y*50-f*20,2,50 + 20*(f-niveau[y][x+1]));
-    if (x == 0) ctx.fillRect(x*50,y*50-f*20,2,70  + niveau[y][x]*20);
+    if (x == 0){if(niveau[y][x] != -1) ctx.fillRect(x*50,y*50-f*20,2,70  + niveau[y][x]*20);}
     else if (niveau[y][x-1] < f) ctx.fillRect(x*50,y*50-f*20,2,50 + 20*(f-niveau[y][x-1]));
-    if (y == niveau.length - 1) ctx.fillRect(x*50,y*50-f*20+48,50,2);
+    if (y == niveau.length - 1) {if(niveau[y][x] != -1)ctx.fillRect(x*50,y*50-f*20+48,50,2);}
     else if (niveau[y+1][x] < f) ctx.fillRect(x*50,y*50-f*20+48,50,2);
-    if (y == 0) ctx.fillRect(x*50,y*50-f*20,50,2);
+    if (y == 0) {if(niveau[y][x] != -1)ctx.fillRect(x*50,y*50-f*20,50,2);}
     else if (niveau[y-1][x] < f) ctx.fillRect(x*50,y*50-f*20,50,2);
 }
 
@@ -353,10 +334,16 @@ function drawInterface(){
 
 function attack(){
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
-    if (heros.sens == 0 && objNiveau[heros.y - 1][heros.x][0] == "coffre0"){
-        objNiveau[heros.y - 1][heros.x][0] = "coffre1";
-        if (objNiveau[heros.y - 1][heros.x].length > 1)donnerHeros(objNiveau[heros.y - 1][heros.x][1]);
-        else donnerHeros("");
+    if (heros.sens == 0 && (objNiveau[heros.y - 1][heros.x][0] == "coffre0" | objNiveau[heros.y - 1][heros.x][0] == "porte0")){
+        if (objNiveau[heros.y - 1][heros.x][0] == "coffre0"){
+            objNiveau[heros.y - 1][heros.x][0] = "coffre1";
+            if (objNiveau[heros.y - 1][heros.x].length > 1)donnerHeros(objNiveau[heros.y - 1][heros.x][1]);
+            else donnerHeros("");
+        }
+        else if (objNiveau[heros.y - 1][heros.x][0] == "porte0"){
+            if (heros.cles > 0) {objNiveau[heros.y - 1][heros.x][0] = ""; heros.cles -= 1;}
+            else alert("Cette porte est verouillée.");
+        }
     }
     else if (heros.invent[heros.objet] == "mastersword"){
         if (niveau[heros.y + vecteurs[heros.sens][0]][heros.x + vecteurs[heros.sens][1]] != niveau[heros.y][heros.x]) return;
@@ -381,7 +368,7 @@ function attack(){
 function donnerHeros(obj){
     heros.sens = 2;
     heros.aura = obj;
-    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et utilisez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle."};
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et utilisez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !"};
     alert(description[obj]);
     figer = 1;
     if (obj == "rubisVert") heros.rubis += 1;
@@ -389,4 +376,5 @@ function donnerHeros(obj){
     else if (obj == "rubisRouge") heros.rubis += 20;
     else if (obj == "mastersword") {heros.invent.push("mastersword");heros.objet = heros.invent.length - 1;}
     else if (obj == "boomerang") {heros.invent.push("boomerang");heros.objet = heros.invent.length - 1;}
+    else if (obj == "cle0") {heros.cles += 1;}
 }
