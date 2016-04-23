@@ -40,6 +40,7 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
+var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1"];
 
 // programme
 
@@ -55,7 +56,6 @@ function resize(){
 }
 
 function charge(){
-    var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1"];
     var imgInterface = ["blank","mastersword","boomerang","pencil"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3"];
@@ -263,7 +263,7 @@ function draw() {
         function(e,y){
             e.forEach(
                 function(f,x){
-                    ctx.fillStyle = "rgb(120,154,61)";
+                    ctx.fillStyle = "rgb("+(105+f*5)+","+(139+f*15)+","+(46+f*3)+")";
                     if (f == -1) ctx.fillStyle = "rgb(72,98,178)";
                     ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,50,50);
                     ctx.fillStyle = "rgb(107,93,66)";
