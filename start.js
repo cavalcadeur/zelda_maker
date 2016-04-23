@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = {"x":0,"y":4,"tx":50,"ty":70,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0};
+var heros = {"x":0,"y":4,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1};
 var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -18,6 +18,7 @@ var niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
               [1,0,2,2,2,0,2,0,0,0,1],
               [1,0,0,0,0,0,1,0,0,0,1],
               [1,1,1,1,1,1,1,1,1,1,1]];
+Painter.niveau( niveau );
 var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],
                  [["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""]],
                  [["coffre0","pencil"],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","cle1"],[""]],
@@ -34,7 +35,6 @@ var imgHeros = [new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
 var imgMenu = {};
 var imgArme = {};
-var tElement = {"rubisBleu":[50,70],"rubisVert":[50,70],"rubisRouge":[50,70],"arbre0":[50,95],"herbe0":[50,50],"herbe1":[50,50],"coffre0":[50,50],"coffre1":[50,50],"boomerang":[25,26],"mastersword":[50,70],"pencil":[50,67],"blank":[50,50],"porte0":[50,50],"cle0":[23,23],"cle1":[51,46]};
 var figer = 0;
 var edition = 0;
 var scrollX = 0;
@@ -168,7 +168,7 @@ function start(){
             if (event.keyCode == 17) changeArme();
         }
     );
-//    alert("Salut les amis c'est moi Mikey !");
+    //    alert("Salut les amis c'est moi Mikey !");
     charge();
 }
 
@@ -263,24 +263,16 @@ function draw() {
         function(e,y){
             e.forEach(
                 function(f,x){
-                    ctx.fillStyle = "rgb("+(105+f*5)+","+(139+f*15)+","+(46+f*3)+")";
-                    if (f == -1) ctx.fillStyle = "rgb(72,98,178)";
-                    ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,50,50);
-                    ctx.fillStyle = "rgb(107,93,66)";
-                    ctx.fillRect(x*50 + scrollX,y*50-f*20+50 + scrollY,50,20+20*f);
-                    ctx.fillStyle = "rgb(0,0,0)";
-                    testTerrain(x,y,f);
-                    if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
+                    Painter.cell( ctx, x, y, f );
+                    Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                    //testTerrain(x,y,f);
+                    //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
                     if (y == heros.y && x == e.length - 1) drawHeros();
                     if (heros.vy > 0 && y == heros.y + 1 && x == e.length - 1) drawHeros();
                     boomerang.forEach(
                         function(f,i){
                             if ((y == f.y && x == e.length - 1) | (f.vy > 0 && y == f.y + 1 && x == e.length - 1)){
-                                ctx.save();
-                                ctx.translate(f.x * 50 + 25 + f.vx + scrollX,f.y * 50 + 25 + f.vy - f.alti*20 + scrollY);
-                                ctx.rotate(f.r);
-                                ctx.drawImage(imgElement["boomerang"],-13,-13);
-                                ctx.restore();
+                                Painter.imgBoomerang( ctx, f.x + f.vx/50, f.y + f.vy/50, f.alti, f.r, imgElement["boomerang"] );
                                 f.r += 0.5;
                                 if (f.vx == 0 && f.vy == 0){
                                     if (f.endu == 0){
@@ -330,31 +322,14 @@ function draw() {
 
 function drawHeros(){
     if (edition == 1) return;
-    ctx.drawImage(imgHeros[heros.sens],heros.x * 50 - (heros.tx - 50)/2 + heros.vx + scrollX,heros.y * 50 - (heros.ty - 40) - 20*niveau[heros.y][heros.x] + heros.vy + scrollY);
+    Painter.img( ctx, heros.x + heros.vx/50, heros.y + heros.vy/50, niveau[heros.y][heros.x], imgHeros[heros.sens] );
     if (heros.invent[heros.objet] != "blank") {
-        ctx.drawImage(imgArme[heros.invent[heros.objet] + heros.sens],heros.x * 50 - (heros.tx - 50)/2 + heros.vx + scrollX,heros.y * 50 - (heros.ty - 40) - 20*niveau[heros.y][heros.x] + heros.vy  + scrollY);
+        Painter.img(ctx,heros.x + heros.vx/50,heros.y + heros.vy/50,niveau[heros.y][heros.x],imgArme[heros.invent[heros.objet] + heros.sens]);
     }
     if (heros.aura != ""){
-        ctx.save();
-        ctx.translate(heros.x * 50 - (heros.tx - 50)/2 + heros.vx+25 + scrollX,0);
-        ctx.scale(heros.tAura/40,1);
-        ctx.drawImage(imgElement[heros.aura],-25,heros.y * 50 - (heros.ty - 40) - 20*niveau[heros.y][heros.x] + heros.vy + 20 - tElement[heros.aura][1] + scrollY);
-        ctx.restore();
-
+        Painter.imgScale(ctx,heros.x + heros.vx/50,heros.y - 1 + heros.vy/50,niveau[heros.y][heros.x],heros.tAura/40,imgElement[heros.aura]);
     }
 }
-
-function testTerrain(x,y,f){
-    if (x == niveau[y].length - 1){if(niveau[y][x] != -1) ctx.fillRect(x*50 + 48 + scrollX,y*50-f*20 + scrollY,2,70 + niveau[y][x]*20);}
-    else if (niveau[y][x+1] < f) ctx.fillRect(x*50 + 48 + scrollX,y*50-f*20 + scrollY,2,50 + 20*(f-niveau[y][x+1]));
-    if (x == 0){if(niveau[y][x] != -1) ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,2,70  + niveau[y][x]*20);}
-    else if (niveau[y][x-1] < f) ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,2,50 + 20*(f-niveau[y][x-1]));
-    if (y == niveau.length - 1) {if(niveau[y][x] != -1)ctx.fillRect(x*50 + scrollX,y*50-f*20+48 + scrollY,50,2);}
-    else if (niveau[y+1][x] < f) ctx.fillRect(x*50 + scrollX,y*50-f*20+48 + scrollY,50,2);
-    if (y == 0) {if(niveau[y][x] != -1)ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,50,2);}
-    else if (niveau[y-1][x] < f) ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,50,2);
-}
-
 
 function drawInterface(){
     ctx.drawImage(imgMenu[heros.invent[heros.objet]],W-50,0);

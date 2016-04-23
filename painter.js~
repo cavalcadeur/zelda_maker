@@ -1,0 +1,184 @@
+var Painter = function() {
+    var scrollX = 0;
+    var scrollY = 0;
+    var cellX = 50;  // Largeur d'une cellule.
+    var cellY = 35;  // Profondeur.
+    var cellZ = 30;
+    var cellS = 10;  // Décalage.
+    var walls;
+    var wallsVert;
+
+    function toX( x, y, z ) {
+        return Math.floor( scrollX + x * cellX - y * cellS + 700 ) + 0;
+    }
+
+    function toY( x, y, z ) {
+        return Math.floor( scrollY + y * cellY - z * cellZ + 150 ) + 0;
+    }
+
+    return {
+        niveau: function( level ) {
+            var rows = level.length;
+            var cols = level[0].length;
+            walls = [];
+            wallsVert = [];
+            level.forEach(function( row, y ) {
+                var line = [];
+                walls.push( line );
+                var lineVert = [];
+                wallsVert.push( lineVert );
+                row.forEach(function ( z, x ) {
+                    var v = 0;
+                    if( y == 0 || level[y - 1][x] < z ) {
+                        v += 1;
+                    }
+                    if( x == cols - 1 || level[y][x + 1] < z ) {
+                        v += 2;
+                    }
+                    if( y == rows - 1 || level[y + 1][x] < z ) {
+                        v += 4;
+                    }
+                    if( x == 0 || level[y][x - 1] < z ) {
+                        v += 8;
+                    }
+                    line.push( v );
+
+                    if( z < 0 ) {
+                        // C'est la mer.
+                        lineVert.push( [0,0,0] );
+                        return;
+                    }
+                    var lineA = 0;
+                    var lineB = 0;
+                    var lineC = 0;
+
+                    if( x == 0 ) lineA = z + 1;
+                    else if( level[y][x - 1] < z ) {
+                        lineA = z - level[y][x - 1];
+                    }
+                    lineC = y == 0 ? z + 1 : 0;
+                    if( y > 0 && level[y - 1][x] < z ) {
+                        lineC = z - level[y - 1][x];
+                    }
+                    if( x < cols - 1 ) {
+                        lineC = Math.min( lineC, Math.max( 0, z - level[y][x + 1] ) );
+                    }
+                    lineB = z + 1;
+                    if( x < cols - 1 && level[y][x + 1] <= z ) {
+                        lineB = z - level[y][x + 1];
+                    }
+                    if( y < rows - 1 ) {
+                        lineB = Math.min( lineB, z - level[y + 1][x] );
+                    }
+
+                    lineVert.push( [lineA, lineB, lineC] );
+                });
+            });
+
+            console.info("[painter] wallsVert=...", wallsVert);
+        },
+
+        scroll: function( x, y ) {
+            scrollX = x;
+            scrollY = y;
+        },
+
+        img: function( ctx, x, y, z, img ) {
+            if( !img ) return;
+
+            var X = toX( x, y, z ) + cellS / 2 + (cellX - img.width) / 2;
+            var Y = toY( x, y, z ) - img.height - cellY / 2;
+
+            ctx.drawImage( img, X, Y );
+        },
+
+        cell: function( ctx, x, y, z ) {
+            ctx.fillStyle = "rgb("+(105+z*5)+","+(139+z*15)+","+(46+z*3)+")";
+            if (z == -1) ctx.fillStyle = "rgb(72,98,178)";
+            ctx.fillRect(x*50 + scrollX,y*50-z*20 + scrollY,50,50);
+            ctx.fillStyle = "rgb(107,93,66)";
+            ctx.fillRect(x*50 + scrollX,y*50-z*20+50 + scrollY,50,20+20*z);
+            //-----------------------------------------------------------------
+
+            var X = toX( x, y, z );
+            var Y = toY( x, y, z );
+
+            if( z > -1 ) {
+                // Partie frontale (verticale)
+                ctx.fillStyle = "rgb(107,93,66)";
+                ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
+
+                // Partie latérale (verticale)
+                ctx.fillStyle = "rgb(90,70,50)";
+                ctx.beginPath();
+                ctx.moveTo( X + cellX, Y );
+                ctx.lineTo( X + cellX + cellS, Y - cellY );
+                ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
+                ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Partie horizontale.
+            ctx.fillStyle = "rgb("+(10+z*10)+","+(60+z*40)+","+(5+z*5)+")";
+            if( z < 0 ) ctx.fillStyle = "rgb(72,98,178)";
+            ctx.beginPath();
+            ctx.moveTo( X, Y );
+            ctx.lineTo( X + cellX + 1, Y );
+            ctx.lineTo( X + cellX + 1 + cellS, Y - cellY );
+            ctx.lineTo( X + cellS, Y - cellY );
+            ctx.closePath();
+            ctx.fill();
+            if( z >= 0 ) {
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 2;
+                // Tracer les lignes des plateaux.
+                var wall = walls[y][x];
+                if( wall & 1 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X + cellS, Y - cellY );
+                    ctx.lineTo( X + cellS + cellX, Y - cellY );
+                    ctx.stroke();
+                }
+                if( wall & 2 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X + cellX, Y );
+                    ctx.lineTo( X + cellX + cellS, Y - cellY );
+                    ctx.stroke();
+                }
+                if( wall & 4 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X, Y );
+                    ctx.lineTo( X + cellX, Y );
+                    ctx.stroke();
+                }
+                if( wall & 8 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X, Y );
+                    ctx.lineTo( X + cellS, Y - cellY );
+                    ctx.stroke();
+                }
+                // Tracer les lignes verticales.
+                wall = wallsVert[y][x];
+                if( wall[0] > 0 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X, Y );
+                    ctx.lineTo( X, Y + cellZ * wall[0] );
+                    ctx.stroke();
+                }
+                if( wall[1] > 0 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X + cellX, Y );
+                    ctx.lineTo( X + cellX, Y + cellZ * wall[1] );
+                    ctx.stroke();
+                }
+                if( wall[2] > 0 ) {
+                    ctx.beginPath();
+                    ctx.moveTo( X + cellX + cellS, Y - cellY);
+                    ctx.lineTo( X + cellX + cellS, Y + cellZ * wall[2] - cellY);
+                    ctx.stroke();
+                }
+            }
+        }
+    };
+}();
