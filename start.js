@@ -3,10 +3,10 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = {"x":0,"y":1,"tx":50,"ty":70,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0};
+var heros = {"x":0,"y":4,"tx":50,"ty":70,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0};
 var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
-var niveau = [[1,1,1,1,1,1,1,1,-1,-1,-1],
+var niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
               [1,1,1,1,1,1,1,1,-1,-1,-1],
               [1,0,0,0,0,0,0,0,-1,0,-1],
               [1,0,0,0,0,0,0,0,-1,0,-1],
@@ -137,6 +137,19 @@ function start(){
     //                       var y = evt.pageY - rect.top;
     //                       click(x, y);
     //                  });
+    document.addEventListener(
+        "mouseup",
+        function (event){
+            event.preventDefault();
+            event.stopPropagation();
+            if (edition == 0) return;
+            var rect = canvas.getBoundingClientRect();
+            var x = event.clientX;
+            var y = event.clientY;
+            if (event.button == 0) pencil(x,y,1);
+            else pencil(x,y,-1);
+        }
+    );
     document.addEventListener(
         "keydown",
         function (event){
@@ -342,6 +355,7 @@ function testTerrain(x,y,f){
     else if (niveau[y-1][x] < f) ctx.fillRect(x*50 + scrollX,y*50-f*20 + scrollY,50,2);
 }
 
+
 function drawInterface(){
     ctx.drawImage(imgMenu[heros.invent[heros.objet]],W-50,0);
 }
@@ -397,4 +411,22 @@ function donnerHeros(obj){
     else if (obj == "pencil") {heros.invent.push("pencil");heros.objet = heros.invent.length - 1;}
     else if (obj == "cle0") {heros.cles += 1;}
     else if (obj == "cle1") {heros.cles += 5;}
+}
+
+function pencil(x,y,action){
+    var coor = [0,0];
+    x = Math.floor(x-scrollX);
+    y = Math.floor(y-scrollY);
+    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
+    while (x % 50 != 0){
+        x -= 1;
+    }
+    x = x/50;
+    coor[1] = x;
+    niveau.forEach(
+        function(e,i){
+            if (y > i*50-e[x]*20 && y < (i+1)*50-e[x]*20) coor[0] = i;
+        }
+    );
+    if (niveau[coor[0]][coor[1]] + action > -2)niveau[coor[0]][coor[1]] += action;
 }
