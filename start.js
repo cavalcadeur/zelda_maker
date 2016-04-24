@@ -263,8 +263,8 @@ function draw() {
         function(e,y){
             e.forEach(
                 function(f,x){
-                    Painter.cell( ctx, x, y, f );
-                    Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                    Painter.cell( ctx, x, y, f );                     
+                    Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );                     
                     //testTerrain(x,y,f);
                     //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
                     if (y == heros.y && x == e.length - 1) drawHeros();

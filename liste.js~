@@ -1,4 +1,4 @@
-var Painter = function() {
+var Liste = function(content) {
     var scrollX = 130;
     var scrollY = 0;
     var cellX = 50;  // Largeur d'une cellule.
@@ -9,11 +9,11 @@ var Painter = function() {
     var wallsVert;
 
     function toX( x, y, z ) {
-        return Math.floor( scrollX + x * cellX - y * cellS );
+        return Math.floor( scrollX + x * cellX - y * cellS ) + 0;
     }
 
     function toY( x, y, z ) {
-        return Math.floor( scrollY + y * cellY - z * cellZ + 150 );
+        return Math.floor( scrollY + y * cellY - z * cellZ + 150 ) + 0;
     }
 
     return {
@@ -120,37 +120,37 @@ var Painter = function() {
         cell: function( ctx, x, y, z ) {
      
             //-----------------------------------------------------------------
-            
-            if( z > -1 ) {
-                var X = toX( x, y, z );
-                var Y = toY( x, y, z );
-                // Partie frontale (verticale)
-                if  (y == niveau.length - 1 || z > niveau[y+1][x]){
-                    ctx.fillStyle = "rgb(107,93,66)";
-                    ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
-                }
-                // Partie latérale (verticale)
-                if  (x == niveau[y].length - 1 || z > niveau[y][x+1]){
-                    ctx.fillStyle = "rgb(90,70,50)";
-                    ctx.beginPath();
-                    ctx.moveTo( X + cellX, Y );
-                    ctx.lineTo( X + cellX + cellS, Y - cellY );
-                    ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
-                    ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
-                    ctx.closePath();
-                    ctx.fill();
-                }
 
-                // Partie horizontale.
-                ctx.fillStyle = "rgb("+(20+z*10)+","+(80+z*40)+","+(10+z*5)+")";
+            var X = toX( x, y, z );
+            var Y = toY( x, y, z );
+
+            if( z > -1 ) {
+                // Partie frontale (verticale)
+                ctx.fillStyle = "rgb(107,93,66)";
+                ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
+
+                // Partie latérale (verticale)
+                ctx.fillStyle = "rgb(90,70,50)";
                 ctx.beginPath();
-                ctx.moveTo( X, Y );
-                ctx.lineTo( X + cellX + 1, Y );
-                ctx.lineTo( X + cellX + 1 + cellS, Y - cellY );
-                ctx.lineTo( X + cellS, Y - cellY );
+                ctx.moveTo( X + cellX, Y );
+                ctx.lineTo( X + cellX + cellS, Y - cellY );
+                ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
+                ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
                 ctx.closePath();
                 ctx.fill();
+            }
 
+            // Partie horizontale.
+            ctx.fillStyle = "rgb("+(20+z*10)+","+(80+z*40)+","+(10+z*5)+")";
+            if( z < 0 ) ctx.fillStyle = "rgb(72,98,178)";
+            ctx.beginPath();
+            ctx.moveTo( X, Y );
+            ctx.lineTo( X + cellX + 1, Y );
+            ctx.lineTo( X + cellX + 1 + cellS, Y - cellY );
+            ctx.lineTo( X + cellS, Y - cellY );
+            ctx.closePath();
+            ctx.fill();
+            if( z >= 0 ) {
                 ctx.strokeStyle = "#000";
                 ctx.lineWidth = 2;
                 // Tracer les lignes des plateaux.
