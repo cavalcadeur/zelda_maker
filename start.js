@@ -41,6 +41,9 @@ var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1"];
+var mouse = [0,0];
+var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang"];
+var editnumber = 1;
 
 // programme
 
@@ -146,8 +149,28 @@ function start(){
             var rect = canvas.getBoundingClientRect();
             var x = event.clientX;
             var y = event.clientY;
-            if (event.button == 0) pencil(x,y,1);
-            else pencil(x,y,-1);
+            if (editnumber == 0){
+                if (event.button == 0) pencil(x,y,1);
+                else pencil(x,y,-1);
+            }
+            else pencil(x,y,editObject[editnumber]);
+        }
+    );
+    document.addEventListener(
+        "wheel",
+        function(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            if (edition == 0) return;
+            if (evt.deltaY > 0 && editnumber > 0) editnumber = (editnumber - 1) % editObject.length;
+            else if (evt.deltaY > 0 && editnumber == 0) editnumber = editObject.length - 1;
+            else editnumber = (editnumber + 1) % editObject.length;
+        });
+    document.addEventListener(
+        "mousemove",
+        function (event){
+            mouse[1] = event.clientX;
+            mouse[0] = event.clientY;
         }
     );
     document.addEventListener(
@@ -319,6 +342,10 @@ function drawHeros(){
 
 function drawInterface(){
     ctx.drawImage(imgMenu[heros.invent[heros.objet]],W-50,0);
+    if (edition == 1 && editObject[editnumber] != "rien"){
+        ctx.drawImage(imgElement[editObject[editnumber]],mouse[1],mouse[0]- imgElement[editObject[editnumber]].height / 2);
+
+    }
 }
 
 function attack(){
@@ -380,6 +407,12 @@ function pencil(x,y,action){
 //    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
     var coor = Painter.case(niveau,x,y);
     if (coor[0] == "ah") return;
-    if (niveau[coor[0]][coor[1]] + action > -2)niveau[coor[0]][coor[1]] += action;
-    Painter.niveau(niveau);
+    if (action == 1 || action == -1){
+        if (niveau[coor[0]][coor[1]] + action > -2)niveau[coor[0]][coor[1]] += action;
+        Painter.niveau(niveau);
+    }
+    else{
+        if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].push(action);
+        else objNiveau[coor[0]][coor[1]][0] = action;
+    }
 }
