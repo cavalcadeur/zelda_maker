@@ -1,6 +1,6 @@
 var Painter = function() {
     var scrollX = 130;
-    var scrollY = 0;
+    var scrollY = 130;
     var cellX = 50;  // Largeur d'une cellule.
     var cellY = 35;  // Profondeur.
     var cellZ = 30;
@@ -13,7 +13,7 @@ var Painter = function() {
     }
 
     function toY( x, y, z ) {
-        return Math.floor( scrollY + y * cellY - z * cellZ + 150 );
+        return Math.floor( scrollY + y * cellY - z * cellZ);
     }
 
     return {
@@ -75,7 +75,7 @@ var Painter = function() {
                 });
             });
 
-            console.info("[painter] wallsVert=...", wallsVert);
+            //console.info("[painter] wallsVert=...", wallsVert);
         },
 
         scroll: function( x, y ) {
@@ -200,6 +200,21 @@ var Painter = function() {
                     ctx.stroke();
                 }
             }
+        },
+        case: function(level,x,y){
+            var result = ["ah","ah"];
+            level.forEach(
+                function(e,Y){
+                    e.forEach(
+                        function(f,X){
+                            if (toY(X,Y,f) > y && toY(X,Y,f) - cellY < y){
+                                if (toX(X,Y,f) < x && toX(X,Y,f) + cellX + cellS > x) result = [Y,X];
+                            }
+                        }
+                    );
+                }
+            );
+            return result;
         }
     };
 }();

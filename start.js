@@ -184,37 +184,23 @@ function action(t){
     if (heros.vx == 0 && heros.vy == 0 && figer == 0){
         if (objNiveau[heros.y][heros.x][0] != "" && objNiveau[heros.y][heros.x][0] != "herbe0"){
             if (objNiveau[heros.y][heros.x][0] == "rubisVert"){
-                objNiveau[heros.y][heros.x][0] = "";
                 heros.rubis += 1;
             }
             else if (objNiveau[heros.y][heros.x][0] == "rubisBleu"){
-                objNiveau[heros.y][heros.x][0] = "";
                 heros.rubis += 5;
             }
             else if (objNiveau[heros.y][heros.x][0] == "rubisRouge"){
-                objNiveau[heros.y][heros.x][0] = "";
                 heros.rubis += 20;
             }
             else if (objNiveau[heros.y][heros.x][0] == "cle0"){
-                objNiveau[heros.y][heros.x][0] = "";
                 heros.cles += 1;
             }
-            else if (objNiveau[heros.y][heros.x][0] == "boomerang"){
-                objNiveau[heros.y][heros.x][0] = "";
-                heros.invent.push("boomerang");
-                heros.objet = heros.invent.length - 1;
-            }
-            else if (objNiveau[heros.y][heros.x][0] == "mastersword"){
-                objNiveau[heros.y][heros.x][0] = "";
-                heros.invent.push("mastersword");
-                heros.objet = heros.invent.length - 1;
-            }
-            else if (objNiveau[heros.y][heros.x][0] == "pencil"){
-                objNiveau[heros.y][heros.x][0] = "";
-                heros.invent.push("pencil");
+            else if (objNiveau[heros.y][heros.x][0] == "boomerang" || objNiveau[heros.y][heros.x][0] == "mastersword" || objNiveau[heros.y][heros.x][0] == "pencil"){
+                heros.invent.push(objNiveau[heros.y][heros.x][0]);
                 heros.objet = heros.invent.length - 1;
             }
             if (objNiveau[heros.y][heros.x].length > 1) objNiveau[heros.y][heros.x].splice(0,1);
+            else objNiveau[heros.y][heros.x][0] = "";
 
         }
         if (1 == keys[39]) move(1);
@@ -389,19 +375,11 @@ function donnerHeros(obj){
 }
 
 function pencil(x,y,action){
-    var coor = [0,0];
     x = Math.floor(x-scrollX);
     y = Math.floor(y-scrollY);
-    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
-    while (x % 50 != 0){
-        x -= 1;
-    }
-    x = x/50;
-    coor[1] = x;
-    niveau.forEach(
-        function(e,i){
-            if (y > i*50-e[x]*20 && y < (i+1)*50-e[x]*20) coor[0] = i;
-        }
-    );
+//    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
+    var coor = Painter.case(niveau,x,y);
+    if (coor[0] == "ah") return;
     if (niveau[coor[0]][coor[1]] + action > -2)niveau[coor[0]][coor[1]] += action;
+    Painter.niveau(niveau);
 }
