@@ -1,5 +1,5 @@
 var Painter = function() {
-    var scrollX = 130;
+    var scrollX = 200;
     var scrollY = 130;
     var cellX = 50;  // Largeur d'une cellule.
     var cellY = 35;  // Profondeur.
