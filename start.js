@@ -6,22 +6,9 @@ var keys = [];
 var heros = [{"x":0,"y":4,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1},{"x":1,"y":4,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1}];
 var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
-var niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,0,-1],[1,0,0,0,0,0,0,0,-1,0,-1,-1,-1,0,0],[1,0,0,0,0,0,0,0,-1,0,-1,1,-1,1,1],[1,0,2,2,2,0,0,0,-1,0,-1,0,-1,-1,-1],[1,0,2,0,2,0,0,0,-1,0,-1,0,0,-1,-1],[1,0,2,0,2,0,0,0,-1,0,-1,0,0,0,0],[1,0,2,0,3,3,3,0,0,0,0,0,0,0,0],[1,0,2,0,0,0,2,0,0,0,1,0,0,0,1],[1,0,2,2,2,0,2,0,0,0,1,0,0,0,1],[1,0,0,0,0,0,1,0,0,0,1,0,0,0,0],[1,0,1,1,-1,-1,-1,-1,-1,1,1,0,0,0,1],[1,0,2,0,0,0,0,0,-1,3,1,0,0,0,1],[1,0,0,0,-1,-1,-1,0,-1,2,1,0,0,0,1],[1,0,0,0,-1,-1,0,0,-1,2,1,1,1,1,1]];
+var niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,0,-1],[1,0,0,0,0,0,0,0,-1,0,-1,-1,-1,0,0],[1,0,0,0,0,0,0,0,-1,0,-1,1,-1,1,1],[1,0,2,2,2,0,0,0,-1,0,-1,0,-1,-1,-1],[1,0,2,0,2,0,0,0,-1,0,-1,0,0,-1,-1],[1,0,2,0,2,0,0,0,-1,0,-1,0,0,0,0],[1,0,2,0,3,3,3,0,0,0,0,0,0,0,0],[1,0,2,0,0,0,2,0,0,0,1,0,0,0,1],[1,0,2,2,2,0,2,0,0,0,1,0,0,0,1],[1,0,0,0,0,0,1,0,0,0,1,0,0,0,0],[1,0,1,1,-1,-1,-1,-1,-1,1,1,0,0,0,1],[1,0,2,0,0,0,0,0,-1,3,1,0,0,0,1],[1,0,0,0,-1,-1,-1,0,-1,2,1,0,1,0,1],[1,0,0,0,-1,0,-1,0,-1,2,1,0,0,0,1],[1,0,0,0,-1,0,-1,0,-1,2,1,0,0,0,1],[1,0,0,0,-1,0,0,0,-1,2,1,1,1,1,1]];
 Painter.niveau( niveau );
-var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],
-                 [["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","rubisRouge"],[""]],
-                 [["coffre0","pencil"],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","cle1"],[""],[""],[""],[""],[""]],
-                 [[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],[""],[""],[""],[""],["arbre0"]],
-                 [[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],["cle0"],[""],[""],[""],[""],[""]],
-                 [["herbe0"],["herbe0"],["herbe0"],["coffre0","arbre0"],["herbe0"],["herbe0","coffre0","rubisVert"],[""],[""],[""],[""],[""],["herbe0","herbe0"],["herbe0"],[""],[""]],
-                 [["rubisVert","rubisBleu"],["rubisBleu"],[""],["porte0"],[""],["herbe0"],["herbe0"],["herbe0"],[""],["porte0"],[""],["herbe0"],["herbe0"],[""],[""]],
-                 [[""],[""],[""],[""],[""],[""],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"],[""],[""],[""],[""]],
-                 [[""],[""],[""],[""],[""],[""],["coffre0","mastersword"],[""],[""],[""],[""],[""],[""],[""],["arbre0"]],
-                 [[""],[""],["herbe0","rubisBleu"],["herbe0"],[""],["porte0"],[""],[""],[""],[""],[""],[""],[""],[""],[""]],
-                 [[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boomerang"],["herbe0","herbe0"],["herbe0"],[""],["herbe0"]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["herbe0"],["herbe0"],[""],[""]],
-                 [[""],["boomerang"],[""],["porte0"],[""],[""],[""],[""],[""],["herbe1"],[""],[""],[""],[""],[""]],
-                 [[""],[""],["herbe0"],[""],[""],[""],[""],[""],[""],["herbe0"],[""],[""],[""],[""],["coffre0","herbe0"]],
-                 [[""],[""],["herbe0"],["herbe1"],[""],[""],["rubisRouge"],[""],[""],["herbe0"],[""],[""],[""],[""],[""]]];
+var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[["herbe0","rubisVert"],["herbe0","rubisBleu"],["herbe0","rubisBleu"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","rubisRouge"],[""]],[["coffre0","pencil"],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","cle1"],[""],[""],[""],[""],[""]],[[""],["arbre0","rubisRouge"],[""],[""],[""],[""],[""],[""],[""],["herbe0","rubisBleu"],[""],[""],[""],[""],["arbre0"]],[[""],[""],[""],["herbe1"],["herbe0","rubisRouge"],["herbe0"],["herbe0"],[""],[""],["cle0"],[""],[""],[""],[""],[""]],[["herbe0"],["herbe0"],["herbe0"],["coffre0","arbre0"],["herbe0"],["herbe0","coffre0","rubisVert"],[""],[""],[""],[""],[""],["herbe0"],["herbe0"],[""],[""]],[["rubisVert","rubisBleu"],["rubisBleu"],[""],["porte0"],[""],["herbe0"],["herbe0"],["herbe0"],[""],["porte0"],[""],["herbe0"],["herbe0"],[""],[""]],[[""],[""],[""],[""],["herbe0"],["herbe0"],["arbre0"],[""],[""],[""],["rubisRouge","herbe0","rubisVert","herbe1"],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],["coffre0","mastersword"],[""],[""],[""],[""],[""],[""],[""],["arbre0"]],[[""],[""],["herbe0","rubisBleu"],["herbe0"],[""],["porte0"],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boomerang"],["herbe0"],["herbe0"],[""],["herbe0"]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["herbe0"],["herbe0"],[""],[""]],[[""],["boomerang"],["herbe0"],["porte0"],[""],[""],["bleu0"],[""],[""],["herbe1"],[""],[""],[""],[""],[""]],[[""],[""],["herbe0"],[""],[""],[""],[""],[""],[""],["herbe0"],[""],[""],["arbre0"],[""],["coffre0","herbe0"]],[[""],["herbe0"],["herbe0"],[""],[""],["switch0"],[""],[""],[""],["herbe0"],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],["herbe0"],[""],["coffre0","coffre0"],[""],[""],[""],["arbre0"],[""],[""],[""],[""],["herbe0"]],[[""],["herbe0"],["herbe1"],["herbe0"],[""],[""],["rouge0"],[""],[""],["herbe0"],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
 var imgMenu = {};
@@ -31,9 +18,9 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1"];
+var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1"];
 var mouse = [0,0];
-var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang"];
+var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang"];
 var editnumber = 1;
 
 // programme
@@ -204,7 +191,7 @@ function action(t){
     heros.forEach(
         function(h,n){
         if (h.vx == 0 && h.vy == 0 && figer == 0){
-            if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1"){
+            if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1"){
                 if (objNiveau[h.y][h.x][0] == "rubisVert"){
                     h.rubis += 1;
                 }
@@ -252,7 +239,7 @@ function move(d,n){
     if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
     if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
     var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0];
-    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 | truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0") return;
+    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 | truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1") return;
     if (niveau[heros[n].y][heros[n].x] > niveau[heros[n].y][heros[n].x+vecteurs[d][1]]) heros[n].vy = -20*(niveau[heros[n].y][heros[n].x] - niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]);
     heros[n].x +=  vecteurs[d][1];
     heros[n].y +=  vecteurs[d][0];
@@ -272,8 +259,9 @@ function draw() {
         function(e,y){
             e.forEach(
                 function(f,x){
-                    Painter.cell( ctx, x, y, f );                     
-                    Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );                     
+                    Painter.cell( ctx, x, y, f );    
+                    if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
+                    else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
                     //testTerrain(x,y,f);
                     //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
                     heros.forEach(
@@ -298,15 +286,19 @@ function draw() {
                                         if (f.endu <= 5) f.endu = 1;
                                         else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
-                                    else if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | ((objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre0" | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "coffre1" | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "arbre0" | objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0] == "porte0") && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
-                                        if (f.endu <= 5) f.endu = 1;
-                                        else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
-                                    }
                                     else {
-                                        f.y += vecteurs[f.sens][0];
-                                        f.x += vecteurs[f.sens][1];
-                                        f.vy += vecteurs[f.sens][0] * -50;
-                                        f.vx += vecteurs[f.sens][1] * -50;
+                                        var truc = objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0];
+                                        if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | ((truc == "coffre0" | truc == "coffre1" | truc == "arbre0" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1") && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
+                                            if (f.endu <= 5) f.endu = 1;
+                                            else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
+                                            if (truc == "switch0" | truc == "switch1") changeColor();
+                                        }
+                                        else {
+                                            f.y += vecteurs[f.sens][0];
+                                            f.x += vecteurs[f.sens][1];
+                                            f.vy += vecteurs[f.sens][0] * -50;
+                                            f.vx += vecteurs[f.sens][1] * -50;
+                                        }
                                     }
                                     if ((objNiveau[f.y][f.x][0] == "herbe0" | objNiveau[f.y][f.x][0] == "herbe1")&&f.alti == niveau[f.y][f.x]) {
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
@@ -346,6 +338,7 @@ function drawHeros(n){
 
 function drawInterface(){
     ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],W-50,0);
+    ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-50,55);
     if (edition == 1 && editObject[editnumber] != "rien"){
         ctx.drawImage(imgElement[editObject[editnumber]],mouse[1],mouse[0]- imgElement[editObject[editnumber]].height / 2);
     }
@@ -365,17 +358,17 @@ function attack(n){
         }
     }
     else if (heros[n].invent[heros[n].objet] == "mastersword"){
+        var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
         if (niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] != niveau[heros[n].y][heros[n].x]) return;
-        if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] == "herbe0" | objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] == "herbe1"){
+        if (truc == "herbe0" | truc == "herbe1"){
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1){
                 objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
             }
             else {
                 objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = grassContent[rnd(grassContent.length - 1)];
             }
-
         }
-
+        else if (truc == "switch0" || truc == "switch1") changeColor();
     }
     else if (heros[n].invent[heros[n].objet] == "boomerang"){
         boomerang.push({"x":heros[n].x,"y":heros[n].y,"vx":0,"vy":0,"sx":heros[n].x,"sy":heros[n].y,"r":0,"alti":niveau[heros[n].y][heros[n].x],"sens":heros[n].sens,"endu":10,"content":[]});
@@ -406,6 +399,24 @@ function donnerHeros(obj,n){
     else if (obj == "pencil") {heros[n].invent.push("pencil");heros[n].objet = heros[n].invent.length - 1;}
     else if (obj == "cle0") {heros[n].cles += 1;}
     else if (obj == "cle1") {heros[n].cles += 5;}
+}
+
+function changeColor(){
+    objNiveau.forEach(
+        function(e){
+            e.forEach(
+                function(f){
+                    if (f[0] == "switch0") f[0] = "switch1";
+                    else if (f[0] == "switch1") f[0] = "switch0";
+                    else if (f[0] == "bleu1") f[0] = "bleu0";
+                    else if (f[0] == "bleu0") f[0] = "bleu1";
+                    else if (f[0] == "rouge1") f[0] = "rouge0";
+                    else if (f[0] == "rouge0") f[0] = "rouge1";
+                }
+            );
+        }
+    );
+
 }
 
 function pencil(x,y,action){
