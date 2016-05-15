@@ -67,6 +67,7 @@ var Painter = function() {
                     if( x < cols - 1 && level[y][x + 1] <= z ) {
                         lineB = z - level[y][x + 1];
                     }
+                    else if(x < cols - 1 && level[y][x + 1] >= z) lineB = 0;
                     if( y < rows - 1 ) {
                         lineB = Math.min( lineB, z - level[y + 1][x] );
                     }

@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":0,"y":4,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1},{"x":1,"y":4,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1}];
+var heros = [{"x":100,"y":40,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1},{"x":1,"y":4,"vx":0,"vy":0,"sens":0,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1}];
 var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],[1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,0,-1],[1,0,0,0,0,0,0,0,-1,0,-1,-1,-1,0,0],[1,0,0,0,0,0,0,0,-1,0,-1,1,-1,1,1],[1,0,2,2,2,0,0,0,-1,0,-1,0,-1,-1,-1],[1,0,2,0,2,0,0,0,-1,0,-1,0,0,-1,-1],[1,0,2,0,2,0,0,0,-1,0,-1,0,0,0,0],[1,0,2,0,3,3,3,0,0,0,0,0,0,0,0],[1,0,2,0,0,0,2,0,0,0,1,0,0,0,1],[1,0,2,2,2,0,2,0,0,0,1,0,0,0,1],[1,0,0,0,0,0,1,0,0,0,1,0,0,0,0],[1,0,1,1,-1,-1,-1,-1,-1,1,1,0,0,0,1],[1,0,2,0,0,0,0,0,-1,3,1,0,0,0,1],[1,0,0,0,-1,-1,-1,0,-1,2,1,0,1,0,1],[1,0,0,0,-1,0,-1,0,-1,2,1,0,0,0,1],[1,0,0,0,-1,0,-1,0,-1,2,1,0,0,0,1],[1,0,0,0,-1,0,0,0,-1,2,1,1,1,1,1]];
@@ -13,6 +13,8 @@ var imgHeros = [new Image(),new Image(),new Image(),new Image(),new Image(),new 
 var imgElement = {};
 var imgMenu = {};
 var imgArme = {};
+var imgBoat = new Image();
+imgBoat.src = "images/heros/boat.png";
 var figer = 0;
 var edition = 0;
 var scrollX = 0;
@@ -22,6 +24,9 @@ var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","
 var mouse = [0,0];
 var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang"];
 var editnumber = 1;
+var onSea = 1;
+var waves = [];
+var goto = "";
 
 // programme
 
@@ -175,12 +180,16 @@ function start(){
             else if (event.keyCode == 96) changeArme(1);
         }
     );
+    for(var i = 0;i < 17;i ++){
+        waves.push([rnd(W),rnd(H),-rnd(200)]);
+    }
     charge();
 }
 
 function animation(){
     var f = function(t) {
-        action(t);
+        if (onSea == 0) action(t);
+        else seaAction(t);
         window.requestAnimationFrame(f);
     };
     window.requestAnimationFrame(f);
@@ -346,14 +355,15 @@ function drawInterface(){
 
 function attack(n){
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
-    if (heros[n].sens == 0 && (objNiveau[heros[n].y - 1][heros[n].x][0] == "coffre0" | objNiveau[heros[n].y - 1][heros[n].x][0] == "porte0")){
-        if (objNiveau[heros[n].y - 1][heros[n].x][0] == "coffre0"){
-            objNiveau[heros[n].y - 1][heros[n].x][0] = "coffre1";
-            if (objNiveau[heros[n].y - 1][heros[n].x].length > 1)donnerHeros(objNiveau[heros[n].y - 1][heros[n].x][1],n);
+    var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
+    if ((truc == "coffre0" || truc == "porte0") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
+        if (truc == "coffre0"){
+            objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "coffre1";
+            if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1)donnerHeros(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][1],n);
             else donnerHeros("",n);
         }
-        else if (objNiveau[heros[n].y - 1][heros[n].x][0] == "porte0"){
-            if (heros[n].cles > 0) {objNiveau[heros[n].y - 1][heros[n].x][0] = ""; heros[n].cles -= 1;}
+        else if (truc == "porte0"){
+            if (heros[n].cles > 0) {objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = ""; heros[n].cles -= 1;}
             else alert("Cette porte est verouillée.");
         }
     }
