@@ -181,7 +181,7 @@ function start(){
         }
     );
     for(var i = 0;i < 17;i ++){
-        waves.push([rnd(W),rnd(H),-rnd(200)]);
+        waves.push([rnd(W),rnd(H),-rnd(200) + 100]);
     }
     charge();
 }
@@ -264,6 +264,11 @@ function changeArme(n){
 function draw() {
     ctx.fillStyle = "rgb(72,98,178)";
     ctx.fillRect(0,0,W,H);
+    waves.forEach(
+        function(e){
+            waveNiveau(e);
+        }
+    );
     niveau.forEach(
         function(e,y){
             e.forEach(

@@ -89,3 +89,31 @@ function moveBoat(d){
     heros[0].x += vecteurs[d][1] * 5;
     heros[0].y += vecteurs[d][0] * 5;
 }
+
+function waveNiveau(e){
+    ctx.fillStyle = "rgb(180,180,215)";
+    if (e[2] < 100 && e[2] > 0){
+        ctx.beginPath();
+        ctx.moveTo(e[0] - 50,e[1] - e[2] / 10);
+        ctx.lineTo(e[0],e[1] - 5 - e[2] / 5 - e[2] / 10);
+        ctx.lineTo(e[0] + 50,e[1] - e[2] / 10);
+        ctx.lineTo(e[0],e[1] - 5 - e[2] / 10 - e[2] / 10);
+        ctx.closePath();
+        ctx.fill();
+    }
+    else if (e[2] >= 100){
+        ctx.beginPath();
+        ctx.moveTo(e[0] - 50,e[1] - 10);
+        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 5 - 10);
+        ctx.lineTo(e[0] + 50,e[1] - 10);
+        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - 10);
+        ctx.closePath();
+        ctx.fill();
+    }
+    if (e[2] == 200) {
+        e[2] = -rnd(500)+100;
+        e[0] = rnd(W);
+        e[1] = rnd(H);
+    }
+    e[2] += 1;    
+}
