@@ -8,7 +8,7 @@ var boomerang = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [[-1,4,4,4,4,4,4,4,4,4,4,4,4,4,-1,-1,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2,2,2,2,-1,-1,-1,2],[-1,2,2,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,1],[-1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1],[-1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1,-1],[-1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,0],[-1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[-1,-1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,-1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,-1,-1,0,0,0,0,0,0,0,0,0,0,0,0,0,-1,-1],[-1,-1,-1,-1,0,0,0,0,0,0,-1,-1,0,0,0,0,-1,-1]];
 Painter.niveau( niveau );
-var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","rubisRouge"],[""],[""],[""],["herbe1"]],[[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],["herbe0"],["arbre0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],["arbre0"],[""],[""],[""],[""],[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boat"]],[[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
+var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","rubisRouge"],[""],[""],[""],["herbe1"]],[[""],["herbe0"],["herbe0"],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],["house0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],[""],[""],["house1"],["house2"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],["herbe0"],["arbre0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],["arbre0"],[""],[""],[""],[""],[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],["herbe0"],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],["coffre0","boat"]],[[""],["herbe0"],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image()];
 var imgElement = {};
 var imgMenu = {};
@@ -20,9 +20,9 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1"];
+var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2"];
 var mouse = [0,0];
-var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang"];
+var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house2"];
 var editnumber = 1;
 var onSea = 0;
 var waves = [];
@@ -201,7 +201,7 @@ function action(t){
     heros.forEach(
         function(h,n){
         if (h.vx == 0 && h.vy == 0 && figer == 0){
-            if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1"){
+            if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1" && objNiveau[h.y][h.x][0] != "house0"){
                 if (objNiveau[h.y][h.x][0] == "rubisVert"){
                     h.rubis += 1;
                 }
@@ -249,7 +249,7 @@ function move(d,n){
     if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
     if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
     var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0];
-    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 | truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1") return;
+    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 | truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1" | truc == "house0" | truc == "house1" | truc == "house2") return;
     if (niveau[heros[n].y][heros[n].x] > niveau[heros[n].y][heros[n].x+vecteurs[d][1]]) heros[n].vy = -20*(niveau[heros[n].y][heros[n].x] - niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]);
     heros[n].x +=  vecteurs[d][1];
     heros[n].y +=  vecteurs[d][0];
@@ -276,6 +276,7 @@ function draw() {
                 function(f,x){
                     Painter.cell( ctx, x, y, f );    
                     if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
+                    else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
                     else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
                     //testTerrain(x,y,f);
                     //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
