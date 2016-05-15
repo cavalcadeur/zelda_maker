@@ -15,6 +15,10 @@ function seaAction(t){
         objNiveau = iles[goto].obj;
         Painter.niveau(niveau);
     }
+    else {
+        boatPosition[0] = heros[0].y;
+        boatPosition[1] = heros[0].x;
+    }
 }
 
 function drawSea(){
@@ -25,11 +29,9 @@ function drawSea(){
             waveMove(f);
         }
     );
-    console.log(waves[0]);
     sea.forEach(
         function(e){
             drawIsland(e[0],e[1],e[2]);
-            testIsland(e);
         }
     );
     ctx.drawImage(imgBoat,heros[0].x - 35,heros[0].y - 35);
@@ -88,6 +90,12 @@ function waveMove(e){
 function moveBoat(d){
     heros[0].x += vecteurs[d][1] * 5;
     heros[0].y += vecteurs[d][0] * 5;
+    sea.forEach(
+        function(e){
+            testIsland(e);
+        }
+    );
+    if (goto == "") boatPosition = [heros[0].y,heros[0].x];
 }
 
 function waveNiveau(e){
