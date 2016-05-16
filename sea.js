@@ -2,9 +2,9 @@ function seaAction(t){
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     drawSea();
     if (1 == keys[controlKeys[0][1]]) moveBoat(1);
-    else if (1 == keys[controlKeys[0][3]]) moveBoat(3);
-    else if (1 == keys[controlKeys[0][0]]) moveBoat(0);
-    else if (1 == keys[controlKeys[0][2]]) moveBoat(2);
+    if (1 == keys[controlKeys[0][3]]) moveBoat(3);
+    if (1 == keys[controlKeys[0][0]]) moveBoat(0);
+    if (1 == keys[controlKeys[0][2]]) moveBoat(2);
     if (goto != ""){
         onSea = 0;
         heros[0].x = iles[goto].heros[0][1];
@@ -54,7 +54,7 @@ function drawIsland(ile,Y,X){
 }
 
 function testIsland(ile){
-    if (Math.hypot(heros[0].x+35 - ile[2] - 2.5*iles[ile[0]].alti[0].length,heros[0].y - ile[1] - 2.5*iles[ile[0]].alti.length) < 2.5*iles[ile[0]].alti.length + 30){
+    if (Math.hypot(heros[0].x - ile[2] - 2.5*iles[ile[0]].alti[0].length,heros[0].y+30 - ile[1] - 2.5*iles[ile[0]].alti.length) < 2.5*iles[ile[0]].alti.length){
         goto = ile[0];
     }
 }
