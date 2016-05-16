@@ -54,7 +54,7 @@ function drawIsland(ile,Y,X){
 }
 
 function testIsland(ile){
-    if (Math.hypot(heros[0].x - ile[2] - 2.5*iles[ile[0]].alti[0].length,heros[0].y - ile[1] - 2.5*iles[ile[0]].alti.length) < 2.5*iles[ile[0]].alti.length + 30){
+    if (Math.hypot(heros[0].x+35 - ile[2] - 2.5*iles[ile[0]].alti[0].length,heros[0].y - ile[1] - 2.5*iles[ile[0]].alti.length) < 2.5*iles[ile[0]].alti.length + 30){
         goto = ile[0];
     }
 }
@@ -111,10 +111,10 @@ function waveNiveau(e){
     }
     else if (e[2] >= 100){
         ctx.beginPath();
-        ctx.moveTo(e[0] - 50,e[1] - 10);
-        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 5 - 10);
-        ctx.lineTo(e[0] + 50,e[1] - 10);
-        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - 10);
+        ctx.moveTo(e[0] - 50,e[1] - e[2] / 10);
+        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 5 - e[2] / 10);
+        ctx.lineTo(e[0] + 50,e[1] - e[2] / 10);
+        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - e[2] / 10);
         ctx.closePath();
         ctx.fill();
     }
