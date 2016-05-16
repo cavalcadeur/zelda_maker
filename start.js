@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1},{"x":9,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1}];
+var heros = [{"x":8,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["pencil"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1},{"x":9,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1}];
 var boomerang = [];
 var pots = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
@@ -23,7 +23,7 @@ var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4"];
 var mouse = [0,0];
-var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house2","house3","house4"];
+var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3"];
 var editnumber = 1;
 var onSea = 0;
 var waves = [];
@@ -439,7 +439,6 @@ function attack(n){
         else{
             pots.push({"alti":niveau[heros[n].y][heros[n].x] + 0.9,"g":15,"x":heros[n].x + heros[n].vx / 50,"y":heros[n].y + heros[n].vy / 50,"ox":heros[n].x + vecteurs[heros[n].sens][1] * 3,"oy":heros[n].y + vecteurs[heros[n].sens][0] * 3,"n":0});
             var nPot = pots.length - 1;
-            controlKeys[n].forEach(function(gg){keys[gg] = 0;});
             while (pots[nPot].oy >= niveau.length){pots[nPot].oy -= 1;}
             while (pots[nPot].oy < 0){pots[nPot].oy += 1;}
             while (pots[nPot].ox >= niveau[0].length){pots[nPot].ox -= 1;}
@@ -513,5 +512,13 @@ function pencil(x,y,action){
     else{
         if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].splice(0,0,action);
         else objNiveau[coor[0]][coor[1]][0] = action;
+        if (action == "house3" && coor[1] + 1 != objNiveau[coor[0]].length){
+            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house4");
+            else objNiveau[coor[0]][coor[1]+1][0] = "house4";
+        }
+        if (action == "house1" && coor[1] + 1 != objNiveau[coor[0]].length){
+            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house2");
+            else objNiveau[coor[0]][coor[1]+1][0] = "house2";
+        }
     }
 }
