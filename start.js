@@ -308,7 +308,7 @@ function draw() {
                     );
                     pots.forEach(
                         function(g,i){
-                            if (y == Math.round(g.y) && x == e.length - 1) drawPot(g,i);
+                            if (y == Math.round(g.y + g.n*((g.oy - g.y)/32)) && x == e.length - 1) drawPot(g,i);
                         }
                     );
                     boomerang.forEach(
