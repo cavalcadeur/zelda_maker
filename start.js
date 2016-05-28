@@ -136,6 +136,7 @@ function start(){
     objNiveau = iles["depart"].obj;
     Painter.niveau( niveau );
     resize();
+    Crossed.init(W,H);
     //    canvas.addEventListener("click",function(evt) {
     //                           evt.stopPropagation();
     //                        evt.preventDefault();
@@ -187,6 +188,7 @@ function start(){
             event.preventDefault();
             event.stopPropagation();
             keys[event.keyCode] = 1;
+            Crossed.keysPress(event.keyCode);
             if (event.keyCode == 16) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = ""; heros[2].aura = "";} else{attack(0);}}
             else if (event.keyCode == 13) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = ""; heros[2].aura = "";} else{attack(1);}}
         }
@@ -209,9 +211,16 @@ function start(){
 
 function animation(){
     var f = function(t) {
-        if (onSea == 0) action(t);
-        else seaAction(t);
-        window.requestAnimationFrame(f);
+        if (Crossed.testCrossed() == 1){
+            if (onSea == 0) draw(t);
+            else drawSea(t);
+            Crossed.drawMenu(ctx,W,H);
+        }
+        else{
+            if (onSea == 0) action(t);
+            else seaAction(t);
+            window.requestAnimationFrame(f);
+        }
     };
     window.requestAnimationFrame(f);
 }
@@ -389,8 +398,9 @@ function attack(n){
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
     var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
-    if ((truc == "coffre0" || truc == "porte0") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
+    if ((truc == "coffre0" || truc == "porte0" || truc == "pot") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
         if (truc == "coffre0"){
+            Crossed.improve();
             objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "coffre1";
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1)donnerHeros(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][1],n);
             else donnerHeros("",n);
@@ -398,6 +408,12 @@ function attack(n){
         else if (truc == "porte0"){
             if (heros[n].cles > 0) {objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = ""; heros[n].cles -= 1;}
             else alert("Cette porte est verouillée.");
+        }
+        else if (truc == "pot"){
+            heros[n].invent.push("pot");
+            heros[n].objet = heros[n].invent.length - 1;
+            if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1) objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
+            else objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] = "";
         }
     }
     else if (heros[n].invent[heros[n].objet] == "mastersword"){
@@ -447,14 +463,6 @@ function attack(n){
         }
         heros[n].invent.splice(heros[n].objet,1);
         if (heros[n].objet == heros[n].invent.length) heros[n].objet = 0;
-    }
-    else if (heros[n].invent[heros[n].objet] == "blank"){
-        if (truc == "pot"){
-            heros[n].invent.push("pot");
-            heros[n].objet = heros[n].invent.length - 1;
-            if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1) objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
-            else objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] = "";
-        }
     }
 }
 
