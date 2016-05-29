@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1},{"x":9,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1}];
+var heros = [{"x":8,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3},{"x":9,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3}];
 var boomerang = [];
 var pots = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
@@ -23,7 +23,7 @@ var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4"];
 var mouse = [0,0];
-var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3"];
+var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3"];
 var editnumber = 1;
 var onSea = 0;
 var waves = [];
@@ -44,11 +44,12 @@ function resize(){
 }
 
 function charge(){
+    var coeur = ["coeurVide","coeur1","coeur05"];
     var debris = ["pot0","pot1","pot2","pot3","pot4"];
     var imgInterface = ["blank","mastersword","boomerang","pencil","boat","pot"];
-    var imgRubis = ["rubisVert","rubisBleu","rubisRouge"];
+    var imgRubis = ["rubisVert","rubisBleu","rubisRouge","fragment","coeur"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","boat0","boat1","boat2","boat3","pot0","pot1","pot2","pot3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length;
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -59,6 +60,15 @@ function charge(){
             };
         }
     );
+    coeur.forEach(
+        function(e,i){
+            imgMenu[e] = new Image();
+            imgMenu[e].src = "images/interface/" + e + ".png";
+            imgMenu[e].onload = function(){
+                chargement -= 1;
+                if (chargement == 0) animation();
+            };
+        });
     debris.forEach(
         function(e,i){
             imgDebris[e] = new Image();
@@ -240,6 +250,12 @@ function action(t){
                 else if (objNiveau[h.y][h.x][0] == "rubisRouge"){
                     h.rubis += 20;
                 }
+                else if (objNiveau[h.y][h.x][0] == "coeur"){
+                    if (h.vie + 1 <= h.vieTotale){
+                        h.vie += 1;
+                    }
+                    else if (h.vie + 0.5 <= h.vieTotale) h.vie += 0.5;
+                }
                 else if (objNiveau[h.y][h.x][0] == "cle0"){
                     h.cles += 1;
                 }
@@ -354,7 +370,7 @@ function draw() {
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
                                         else objNiveau[f.y][f.x].splice(0,1); 
                                     }
-                                    else if ((objNiveau[f.y][f.x][0] == "rubisVert" | objNiveau[f.y][f.x][0] == "rubisBleu" | objNiveau[f.y][f.x][0] == "rubisRouge" | objNiveau[f.y][f.x][0] == "cle0")&&f.alti == niveau[f.y][f.x]) {
+                                    else if ((objNiveau[f.y][f.x][0] == "rubisVert" | objNiveau[f.y][f.x][0] == "rubisBleu" | objNiveau[f.y][f.x][0] == "rubisRouge" | objNiveau[f.y][f.x][0] == "cle0" | objNiveau[f.y][f.x][0] == "coeur")&&f.alti == niveau[f.y][f.x]) {
                                         f.content.push(objNiveau[f.y][f.x][0]);
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
                                         else objNiveau[f.y][f.x].splice(0,1);
@@ -392,6 +408,24 @@ function drawInterface(){
     if (edition == 1 && editObject[editnumber] != "rien"){
         ctx.drawImage(imgElement[editObject[editnumber]],mouse[1],mouse[0]- imgElement[editObject[editnumber]].height / 2);
     }
+    heros.forEach(
+        function(h,index){
+            for (var i = 0;i < h.vieTotale;i++){
+                if (i < 10) ctx.drawImage(imgMenu.coeurVide,5 + i*15,5 + index*35);
+                else ctx.drawImage(imgMenu.coeurVide,5 + (i-10)*15,15 + index*35);
+                if (h.vie > i){
+                    if (h.vie - 0.5 > i){
+                        if (i < 10) ctx.drawImage(imgMenu.coeur1,5 + i*15,5 + index*35);
+                        else ctx.drawImage(imgMenu.coeur1,5 + (i-10)*15,15 + index*35);
+                    }
+                    else {
+                        if (i < 10) ctx.drawImage(imgMenu.coeur05,5 + i*15,5 + index*35);
+                        else ctx.drawImage(imgMenu.coeur05,5 + (i-10)*15,15 + index*35);
+                    }
+                } 
+            }
+        }
+    );
 }
 
 function attack(n){
@@ -449,18 +483,14 @@ function attack(n){
         onSea = 1;
     }
     else if (heros[n].invent[heros[n].objet] == "pot"){
-        if (heros[n].vx + heros[n].vy == 0 && keys[controlKeys[n][0]]+keys[controlKeys[n][1]]+keys[controlKeys[n][2]]+keys[controlKeys[n][3]] == 0 && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
-            objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,0,"pot");
-        }
-        else{
-            pots.push({"alti":niveau[heros[n].y][heros[n].x] + 0.9,"g":15,"x":heros[n].x + heros[n].vx / 50,"y":heros[n].y + heros[n].vy / 50,"ox":heros[n].x + vecteurs[heros[n].sens][1] * 3,"oy":heros[n].y + vecteurs[heros[n].sens][0] * 3,"n":0});
-            var nPot = pots.length - 1;
-            while (pots[nPot].oy >= niveau.length){pots[nPot].oy -= 1;}
-            while (pots[nPot].oy < 0){pots[nPot].oy += 1;}
-            while (pots[nPot].ox >= niveau[0].length){pots[nPot].ox -= 1;}
-            while (pots[nPot].ox < 0){pots[nPot].ox += 1;}
-            while (niveau[pots[nPot].oy][pots[nPot].ox] > pots[nPot].alti) {pots[nPot].ox -= vecteurs[heros[n].sens][1];pots[nPot].oy -= vecteurs[heros[n].sens][0];}
-        }
+        pots.push({"alti":niveau[heros[n].y][heros[n].x] + 0.9,"g":15,"x":heros[n].x + heros[n].vx / 50,"y":heros[n].y + heros[n].vy / 50,"ox":heros[n].x + vecteurs[heros[n].sens][1] * 3,"oy":heros[n].y + vecteurs[heros[n].sens][0] * 3,"n":0});
+        var nPot = pots.length - 1;
+        
+        while (pots[nPot].oy >= niveau.length){pots[nPot].oy -= 1;}
+        while (pots[nPot].oy < 0){pots[nPot].oy += 1;}
+        while (pots[nPot].ox >= niveau[0].length){pots[nPot].ox -= 1;}
+        while (pots[nPot].ox < 0){pots[nPot].ox += 1;}
+        while (niveau[pots[nPot].oy][pots[nPot].ox] > pots[nPot].alti) {pots[nPot].ox -= vecteurs[heros[n].sens][1];pots[nPot].oy -= vecteurs[heros[n].sens][0];}
         heros[n].invent.splice(heros[n].objet,1);
         if (heros[n].objet == heros[n].invent.length) heros[n].objet = 0;
     }
@@ -469,7 +499,7 @@ function attack(n){
 function donnerHeros(obj,n){
     heros[n].sens = 2;
     heros[n].aura = obj;
-    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl puis appuyez sur maj pour déchainer votre créativité.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures.","pot":"C'est un pot de fleur !!! Attention c'est fragile."};
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl puis appuyez sur maj pour déchainer votre créativité.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment."};
     alert(description[obj]);
     figer = 1;
     if (obj == "rubisVert") heros[n].rubis += 1;
@@ -482,6 +512,7 @@ function donnerHeros(obj,n){
     else if (obj == "pot") {heros[n].invent.push("pot");heros[n].objet = heros[n].invent.length - 1;}
     else if (obj == "cle0") {heros[n].cles += 1;}
     else if (obj == "cle1") {heros[n].cles += 5;}
+    else if (obj == "fragment") {if (heros[n].vieTotale<20){heros[n].vieTotale += 1;}heros[n].vie = heros[n].vieTotale;}
 }
 
 function changeColor(){
