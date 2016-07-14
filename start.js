@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3},{"x":9,"y":13,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3}];
 var boomerang = [];
 var pots = [];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
@@ -169,7 +169,7 @@ function start(){
                 if (event.button == 0) pencil(x,y,1);
                 else pencil(x,y,-1);
             }
-            else{ 
+            else{
                 if (event.button == 0) pencil(x,y,editObject[editnumber]);
                 else pencil(x,y,"delete");
             }
@@ -239,45 +239,48 @@ function action(t){
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     heros.forEach(
         function(h,n){
-        if (h.vx == 0 && h.vy == 0 && figer == 0){
-            if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1" && objNiveau[h.y][h.x][0] != "house0"){
-                if (objNiveau[h.y][h.x][0] == "rubisVert"){
-                    h.rubis += 1;
-                }
-                else if (objNiveau[h.y][h.x][0] == "rubisBleu"){
-                    h.rubis += 5;
-                }
-                else if (objNiveau[h.y][h.x][0] == "rubisRouge"){
-                    h.rubis += 20;
-                }
-                else if (objNiveau[h.y][h.x][0] == "coeur"){
-                    if (h.vie + 1 <= h.vieTotale){
-                        h.vie += 1;
+            if (h.vx == 0 && h.vy == 0 && figer == 0){
+                if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1" && objNiveau[h.y][h.x][0] != "house0"){
+                    if (objNiveau[h.y][h.x][0] == "rubisVert"){
+                        h.rubis += 1;
                     }
-                    else if (h.vie + 0.5 <= h.vieTotale) h.vie += 0.5;
+                    else if (objNiveau[h.y][h.x][0] == "rubisBleu"){
+                        h.rubis += 5;
+                    }
+                    else if (objNiveau[h.y][h.x][0] == "rubisRouge"){
+                        h.rubis += 20;
+                    }
+                    else if (objNiveau[h.y][h.x][0] == "coeur"){
+                        if (h.vie + 1 <= h.vieTotale){
+                            h.vie += 1;
+                        }
+                        else if (h.vie + 0.5 <= h.vieTotale) h.vie += 0.5;
+                    }
+                    else if (objNiveau[h.y][h.x][0] == "cle0"){
+                        h.cles += 1;
+                    }
+                    else if (objNiveau[h.y][h.x][0] == "boomerang" || objNiveau[h.y][h.x][0] == "mastersword" || objNiveau[h.y][h.x][0] == "pencil"){
+                        h.invent.push(objNiveau[h.y][h.x][0]);
+                        h.objet = h.invent.length - 1;
+                    }
+                    if (objNiveau[h.y][h.x].length > 1) objNiveau[h.y][h.x].splice(0,1);
+                    else objNiveau[h.y][h.x][0] = "";
+
                 }
-                else if (objNiveau[h.y][h.x][0] == "cle0"){
-                    h.cles += 1;
-                }
-                else if (objNiveau[h.y][h.x][0] == "boomerang" || objNiveau[h.y][h.x][0] == "mastersword" || objNiveau[h.y][h.x][0] == "pencil"){
-                    h.invent.push(objNiveau[h.y][h.x][0]);
-                    h.objet = h.invent.length - 1;
-                }
-                if (objNiveau[h.y][h.x].length > 1) objNiveau[h.y][h.x].splice(0,1);
-                else objNiveau[h.y][h.x][0] = "";
-                
+                if (1 == keys[controlKeys[n][1]]) move(1,n);
+                else if (1 == keys[controlKeys[n][3]]) move(3,n);
+                else if (1 == keys[controlKeys[n][0]]) move(0,n);
+                else if (1 == keys[controlKeys[n][2]]) move(2,n);
             }
-            if (1 == keys[controlKeys[n][1]]) move(1,n);
-            else if (1 == keys[controlKeys[n][3]]) move(3,n);
-            else if (1 == keys[controlKeys[n][0]]) move(0,n);
-            else if (1 == keys[controlKeys[n][2]]) move(2,n);
-        }
-        if (figer == 1) {h.tAura += h.vAura; if (h.tAura == 40 | h.tAura == -40) h.vAura = h.vAura * -1;}
-        else if (h.vx > 0) {h.vx -= 5; if(h.x*50 + scrollX < 0) scrollX += 5;}
-        else if (h.vy > 0) {h.vy -= 5; if(h.y*50 + scrollX < 0) scrollY += 5;}
-        else if (h.vx < 0) {h.vx += 5; if(h.x*50 + scrollX + 50 > W) scrollX -= 5;}
-        else if (h.vy < 0) {h.vy += 5; if(h.y*50 + scrollY + 50 > H) scrollY -= 5;}
-    });
+            if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] && h.g < 5)) h.g += 0.05;
+            else {h.g = 0; h.z = niveau[h.y][h.x];}
+            h.z -= h.g;
+            if (figer == 1) {h.tAura += h.vAura; if (h.tAura == 40 | h.tAura == -40) h.vAura = h.vAura * -1;}
+            else if (h.vx > 0) {h.vx -= 5; if(h.x*50 + scrollX < 0) scrollX += 5;}
+            else if (h.vy > 0) {h.vy -= 5; if(h.y*50 + scrollX < 0) scrollY += 5;}
+            else if (h.vx < 0) {h.vx += 5; if(h.x*50 + scrollX + 50 > W) scrollX -= 5;}
+            else if (h.vy < 0) {h.vy += 5; if(h.y*50 + scrollY + 50 > H) scrollY -= 5;}
+        });
     draw();
 }
 
@@ -295,12 +298,11 @@ function move(d,n){
     if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
     var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0];
     if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 | truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1" | truc == "house0" | truc == "house1" | truc == "house2" | truc == "house3" | truc == "house4" | truc == "pot") return;
-    if (niveau[heros[n].y][heros[n].x] > niveau[heros[n].y][heros[n].x+vecteurs[d][1]]) heros[n].vy = -20*(niveau[heros[n].y][heros[n].x] - niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]);
+    if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     heros[n].x +=  vecteurs[d][1];
     heros[n].y +=  vecteurs[d][0];
     heros[n].vx += -50 * vecteurs[d][1];
     heros[n].vy += -50 * vecteurs[d][0];
-    if (d == 0) heros[n].vy += -20*(niveau[heros[n].y+1][heros[n].x] - niveau[heros[n].y][heros[n].x]);
 }
 
 function changeArme(n){
@@ -319,7 +321,7 @@ function draw() {
         function(e,y){
             e.forEach(
                 function(f,x){
-                    Painter.cell( ctx, x, y, f );    
+                    Painter.cell( ctx, x, y, f );
                     if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
                     else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
                     else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
@@ -368,7 +370,7 @@ function draw() {
                                     }
                                     if ((objNiveau[f.y][f.x][0] == "herbe0" | objNiveau[f.y][f.x][0] == "herbe1" | objNiveau[f.y][f.x][0] == "pot")&&f.alti == niveau[f.y][f.x]) {
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
-                                        else objNiveau[f.y][f.x].splice(0,1); 
+                                        else objNiveau[f.y][f.x].splice(0,1);
                                     }
                                     else if ((objNiveau[f.y][f.x][0] == "rubisVert" | objNiveau[f.y][f.x][0] == "rubisBleu" | objNiveau[f.y][f.x][0] == "rubisRouge" | objNiveau[f.y][f.x][0] == "cle0" | objNiveau[f.y][f.x][0] == "coeur")&&f.alti == niveau[f.y][f.x]) {
                                         f.content.push(objNiveau[f.y][f.x][0]);
@@ -393,12 +395,12 @@ function draw() {
 
 function drawHeros(n){
     if (edition == 1) return;
-    Painter.img( ctx, heros[n].x + heros[n].vx/50, heros[n].y + heros[n].vy/50, niveau[heros[n].y][heros[n].x], imgHeros[heros[n].sens + 4*n] );
+    Painter.img( ctx, heros[n].x + heros[n].vx/50, heros[n].y + heros[n].vy/50, heros[n].z, imgHeros[heros[n].sens + 4*n] );
     if (heros[n].invent[heros[n].objet] != "blank") {
-        Painter.img(ctx,heros[n].x + heros[n].vx/50,heros[n].y + heros[n].vy/50,niveau[heros[n].y][heros[n].x],imgArme[heros[n].invent[heros[n].objet] + heros[n].sens]);
+        Painter.img(ctx,heros[n].x + heros[n].vx/50,heros[n].y + heros[n].vy/50,heros[n].z,imgArme[heros[n].invent[heros[n].objet] + heros[n].sens]);
     }
     if (heros[n].aura != ""){
-        Painter.imgScale(ctx,heros[n].x + heros[n].vx/50,heros[n].y - 1 + heros[n].vy/50,niveau[heros[n].y][heros[n].x],heros[n].tAura/40,imgElement[heros[n].aura]);
+        Painter.imgScale(ctx,heros[n].x + heros[n].vx/50,heros[n].y - 1 + heros[n].vy/50,heros[n].z,heros[n].tAura/40,imgElement[heros[n].aura]);
     }
 }
 
@@ -412,17 +414,17 @@ function drawInterface(){
         function(h,index){
             for (var i = 0;i < h.vieTotale;i++){
                 if (i < 10) ctx.drawImage(imgMenu.coeurVide,5 + i*15,5 + index*35);
-                else ctx.drawImage(imgMenu.coeurVide,5 + (i-10)*15,15 + index*35);
+                else ctx.drawImage(imgMenu.coeurVide,5 + (i-14)*15,15 + index*35);
                 if (h.vie > i){
                     if (h.vie - 0.5 > i){
                         if (i < 10) ctx.drawImage(imgMenu.coeur1,5 + i*15,5 + index*35);
-                        else ctx.drawImage(imgMenu.coeur1,5 + (i-10)*15,15 + index*35);
+                        else ctx.drawImage(imgMenu.coeur1,5 + (i-14)*15,15 + index*35);
                     }
                     else {
                         if (i < 10) ctx.drawImage(imgMenu.coeur05,5 + i*15,5 + index*35);
-                        else ctx.drawImage(imgMenu.coeur05,5 + (i-10)*15,15 + index*35);
+                        else ctx.drawImage(imgMenu.coeur05,5 + (i-14)*15,15 + index*35);
                     }
-                } 
+                }
             }
         }
     );
@@ -447,7 +449,7 @@ function attack(n){
             heros[n].invent.push("pot");
             heros[n].objet = heros[n].invent.length - 1;
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1) objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
-            else objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] = "";
+            else objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "";
         }
     }
     else if (heros[n].invent[heros[n].objet] == "mastersword"){
@@ -485,7 +487,7 @@ function attack(n){
     else if (heros[n].invent[heros[n].objet] == "pot"){
         pots.push({"alti":niveau[heros[n].y][heros[n].x] + 0.9,"g":15,"x":heros[n].x + heros[n].vx / 50,"y":heros[n].y + heros[n].vy / 50,"ox":heros[n].x + vecteurs[heros[n].sens][1] * 3,"oy":heros[n].y + vecteurs[heros[n].sens][0] * 3,"n":0});
         var nPot = pots.length - 1;
-        
+
         while (pots[nPot].oy >= niveau.length){pots[nPot].oy -= 1;}
         while (pots[nPot].oy < 0){pots[nPot].oy += 1;}
         while (pots[nPot].ox >= niveau[0].length){pots[nPot].ox -= 1;}
@@ -536,7 +538,7 @@ function changeColor(){
 function pencil(x,y,action){
     x = Math.floor(x-scrollX);
     y = Math.floor(y-scrollY);
-//    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
+    //    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
     var coor = Painter.case(niveau,x,y);
     if (coor[0] == "ah") return;
     if (action == 1 || action == -1){

@@ -6,12 +6,14 @@ function seaAction(t){
     if (1 == keys[controlKeys[0][0]]) moveBoat(0);
     if (1 == keys[controlKeys[0][2]]) moveBoat(2);
     if (goto != ""){
+        niveau = iles[goto].alti;
         onSea = 0;
         heros[0].x = iles[goto].heros[0][1];
         heros[0].y = iles[goto].heros[0][0];
+        heros[0].z = niveau[heros[0].y][heros[0].x];
         heros[1].x = iles[goto].heros[1][1];
         heros[1].y = iles[goto].heros[1][0];
-        niveau = iles[goto].alti;
+        heros[1].z = niveau[heros[1].y][heros[1].x];
         objNiveau = iles[goto].obj;
         Painter.niveau(niveau);
     }
