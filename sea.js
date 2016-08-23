@@ -14,6 +14,7 @@ function seaAction(t){
         heros[1].x = iles[goto].heros[1][1];
         heros[1].y = iles[goto].heros[1][0];
         heros[1].z = niveau[heros[1].y][heros[1].x];
+        ennemis = iles[goto].ennemis;
         objNiveau = iles[goto].obj;
         Painter.niveau(niveau);
     }
