@@ -1,5 +1,5 @@
 var Painter = function() {
-    var scrollX = 200;
+    var scrollX = 100;
     var scrollY = 130;
     var cellX = 50;  // Largeur d'une cellule.
     var cellY = 35;  // Profondeur.
@@ -216,6 +216,14 @@ var Painter = function() {
                 }
             );
             return result;
+        },
+        scrolling: function(){
+            var x = toX(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
+            var y = toY(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
+            if (x > W-100) scrollX = W-100-(x-scrollX);
+            else if (x < 0) scrollX = -(x-scrollX);
+            if (y > H-70) scrollY = H-70-(y-scrollY);
+            else if (y < 0) scrollY = -(y-scrollY);
         }
     };
 }();

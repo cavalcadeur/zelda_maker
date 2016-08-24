@@ -1,2 +1,6 @@
-
+- système de scrolling
+- intérieur des maisons
+- tous les objets (grapins,bombes,arcs)
+- tous les instruments (ocarina,wind waker,flute de pan)
+- fucking particules
 
