@@ -36,3 +36,12 @@ function drawDebris(type,n,x,y,alti){
     Painter.img( ctx, x + n/25, y, alti, imgDebris[type + "3"] );
     Painter.img( ctx, x  + n/50, y, alti, imgDebris[type + "4"] );
 }
+
+function drawFumee(type,n,x,y,alti){
+    if (n > 9)ctx.globalAlpha = 1 - (n-10)/10;
+    for (var i = 0;i < 8;i ++){
+        Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*n*0.01,y + Math.sin((Math.PI/4)*i)*n*0.01,alti,imgDebris[type]);
+        Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*n*0.02,y + Math.sin((Math.PI/4)*i)*n*0.02,alti,imgDebris[type]);
+    }
+    ctx.globalAlpha = 1;
+}

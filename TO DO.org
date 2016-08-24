@@ -1,6 +1,5 @@
-- système de scrolling
 - intérieur des maisons
-- tous les objets (grapins,bombes,arcs)
+- tous les objets (grapins,bombes,arcs,filet à papillons,canne à pèche,lens of truth,aérouage)
 - tous les instruments (ocarina,wind waker,flute de pan)
-- fucking particules
+- fucking particules (explosion,mort des monstres)
 

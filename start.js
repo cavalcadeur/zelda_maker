@@ -49,7 +49,7 @@ function resize(){
 
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
-    var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4"];
+    var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM"];
     var imgInterface = ["blank","mastersword","boomerang","pencil","boat","pot"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","fragment","coeur"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","boat0","boat1","boat2","boat3","pot0","pot1","pot2","pot3"];
@@ -377,11 +377,13 @@ function draw() {
                     particles.forEach(
                         function(kgb,iii){
                             if (y == kgb.y && x == e.length - 1){
+                                console.log(kgb.type);
                                 if (kgb.type == "herbe") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
+                                else if (kgb.type == "fumeeM") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 kgb.n += 1;
                                 kgb.alti += kgb.g/50;
                                 kgb.g -= 1;
-                                if (kgb.n > 10) particles.splice(iii,1);
+                                if (kgb.n > kgb.lim) particles.splice(iii,1);
                             }
                         }
                     );
@@ -418,7 +420,7 @@ function draw() {
                                     if ((objNiveau[f.y][f.x][0] == "herbe0" | objNiveau[f.y][f.x][0] == "herbe1" | objNiveau[f.y][f.x][0] == "pot")&&f.alti == niveau[f.y][f.x]) {
                                         if (objNiveau[f.y][f.x].length == 1)objNiveau[f.y][f.x][0] = "";
                                         else objNiveau[f.y][f.x].splice(0,1);
-                                        particles.push({n:0,type:"herbe",x:f.x,y:f.y,g:5,alti:niveau[f.y][f.x]});
+                                        particles.push({n:0,type:"herbe",x:f.x,y:f.y,g:5,alti:niveau[f.y][f.x],lim:10});
                                     }
                                     else if ((objNiveau[f.y][f.x][0] == "rubisVert" | objNiveau[f.y][f.x][0] == "rubisBleu" | objNiveau[f.y][f.x][0] == "rubisRouge" | objNiveau[f.y][f.x][0] == "cle0" | objNiveau[f.y][f.x][0] == "coeur")&&f.alti == niveau[f.y][f.x]) {
                                         f.content.push(objNiveau[f.y][f.x][0]);
@@ -544,7 +546,7 @@ function attack(n){
             else {
                 objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = grassContent[rnd(grassContent.length - 1)];
             }
-            if (truc == "herbe0" | truc == "herbe1") particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]]});
+            if (truc == "herbe0" | truc == "herbe1") particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
         }
         else if (truc == "switch0" || truc == "switch1") changeColor();
         ennemis.forEach(
@@ -660,7 +662,7 @@ function hitEnnemis(n,degat,sens){
         ennemis[n].stun = 0;
         return;
     }
-    ennemis[n].pv -= 1;
+    ennemis[n].pv -= degat;
     ennemis[n].sens = (sens + 2)%4;
     ennemis[n].stun = 1;
     if (niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)] == niveau[Math.round(vecteurs[sens][0] + ennemis[n].y)][Math.round(vecteurs[sens][1] + ennemis[n].x)]){
@@ -671,6 +673,7 @@ function hitEnnemis(n,degat,sens){
         ennemis[n].x = Math.round(ennemis[n].x);
         ennemis[n].y = Math.round(ennemis[n].y);
     }
+    if (ennemis[n].pv <= 0) particles.push({n:0,type:"fumeeM",x:ennemis[n].x,y:ennemis[n].y,g:0,alti:ennemis[n].z,lim:40});
 }
 
 function hitHeros(n,degat,sens){
