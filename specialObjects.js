@@ -12,7 +12,7 @@ function drawPot(f,i){
         var choix = objectsB[rnd(objectsB.length - 1)];
         var truc = objNiveau[Math.round(f.oy)][Math.round(f.ox)][0];
         if (objNiveau[Math.round(f.oy)][Math.round(f.ox)].length == 1 && objNiveau[Math.round(f.oy)][Math.round(f.ox)][0] == "") objNiveau[Math.round(f.oy)][Math.round(f.ox)][0] = choix;
-        else if (truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1" | truc == "house0" | truc == "house1" | truc == "house2" | truc == "house3" | truc == "house4" | truc == "pot"){
+        else if (isSolid(Math.round(f.ox),Math.round(f.oy))){
 
         }
         else objNiveau[Math.round(f.oy)][Math.round(f.ox)].splice(0,0,choix);

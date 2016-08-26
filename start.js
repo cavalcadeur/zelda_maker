@@ -3,12 +3,16 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","boat"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0}];
 var ennemis = [];
 var boomerang = [];
 var pots = [];
+var out = 1;
+var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(107,93,66)","rgb(90,70,50)",[20,80,10,10,40,5],"rgb(72,98,178)"]];
 // Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [];
+var quests = {"chef":0,"jehan":0};
+var alerting = 0;
 var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image()];
 var imgDebris = {};
@@ -16,6 +20,7 @@ var imgElement = {};
 var imgMenu = {};
 var imgArme = {};
 var imgMonstre = {};
+var imgPersoN = {};
 var particles = [];
 var imgBoat = new Image();
 imgBoat.src = "images/heros/boat.png";
@@ -24,10 +29,10 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","herbe1","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4"];
+var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","planche0","planche1"];
 var imgEnnemi = ["dark","bokoblin","link"];
 var mouse = [0,0];
-var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3"];
+var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3","lambda0"];
 var editnumber = 1;
 var onSea = 0;
 var waves = [];
@@ -52,8 +57,9 @@ function charge(){
     var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM"];
     var imgInterface = ["blank","mastersword","boomerang","pencil","boat","pot"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","fragment","coeur"];
+    var imgPNJ = ["lambda0","jehan","chef"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","boat0","boat1","boat2","boat3","pot0","pot1","pot2","pot3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4);
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -143,6 +149,16 @@ function charge(){
                     if (chargement == 0) animation();
                 };
             }
+        }
+    );
+    imgPNJ.forEach(
+        function(e,i){
+            imgPersoN[e] = new Image();
+            imgPersoN[e].src = "images/PNJ/"+e+".png";
+            imgPersoN[e].onload = function(){
+                chargement -= 1;
+                if (chargement == 0) animation();
+            };
         }
     );
     var bje = [38,39,40,37,101,99,98,97];
@@ -257,6 +273,7 @@ function action(t){
     heros.forEach(
         function(h,n){
             if (h.vx == 0 && h.vy == 0 && figer == 0){
+                var supress = 0;
                 if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1" && objNiveau[h.y][h.x][0] != "house0" && isSolid(h.x,h.y) == false){
                     if (objNiveau[h.y][h.x][0] == "rubisVert"){
                         h.rubis += 1;
@@ -267,6 +284,9 @@ function action(t){
                     else if (objNiveau[h.y][h.x][0] == "rubisRouge"){
                         h.rubis += 20;
                     }
+                    else if (objNiveau[h.y][h.x][0] == "planche0" || objNiveau[h.y][h.x][0] == "planche1"){
+                        supress = 1;
+                    }
                     else if (objNiveau[h.y][h.x][0] == "coeur"){
                         if (h.vie + 1 <= h.vieTotale){
                             h.vie += 1;
@@ -276,12 +296,38 @@ function action(t){
                     else if (objNiveau[h.y][h.x][0] == "cle0"){
                         h.cles += 1;
                     }
+                    else if (objNiveau[h.y][h.x][0] == "teleport"){
+                        var array = objNiveau[h.y][h.x];
+                        supress = 1;
+                        goto = array[2];
+                        heros[0].x = array[3];
+                        heros[0].y = array[4];
+                        heros[1].x = array[5];
+                        heros[1].y = array[6];
+                        out = array[1];
+                        if (array[1] == 1){
+                            niveau = iles[goto].alti;
+                            ennemis = iles[goto].ennemis;
+                            objNiveau = iles[goto].obj;
+                        }
+                        else{
+                            niveau = interieurs[goto].alti;
+                            ennemis = interieurs[goto].ennemis;
+                            objNiveau = interieurs[goto].obj;
+                        }
+                        onSea = 0;
+                        heros[0].z = niveau[heros[0].y][heros[0].x];
+                        heros[1].z = niveau[heros[1].y][heros[1].x];
+                        Painter.niveau(niveau);
+                    }
                     else if (objNiveau[h.y][h.x][0] == "boomerang" || objNiveau[h.y][h.x][0] == "mastersword" || objNiveau[h.y][h.x][0] == "pencil"){
                         h.invent.push(objNiveau[h.y][h.x][0]);
                         h.objet = h.invent.length - 1;
                     }
-                    if (objNiveau[h.y][h.x].length > 1) objNiveau[h.y][h.x].splice(0,1);
-                    else objNiveau[h.y][h.x][0] = "";
+                    if (supress == 0){
+                        if (objNiveau[h.y][h.x].length > 1) objNiveau[h.y][h.x].splice(0,1);
+                        else objNiveau[h.y][h.x][0] = "";
+                    }
 
                 }
                 if (1 == keys[controlKeys[n][1]]) move(1,n);
@@ -328,7 +374,24 @@ function move(d,n){
     }
     if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
     if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
-    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 || isSolid(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0]) == true) return;
+    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 || isSolid(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0]) == true) {
+        if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house0"){
+            out = 0;
+            goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
+            niveau = interieurs[goto].alti;
+            onSea = 0;
+            heros[0].x = interieurs[goto].heros[0][1];
+            heros[0].y = interieurs[goto].heros[0][0];
+            heros[0].z = niveau[heros[0].y][heros[0].x];
+            heros[1].x = interieurs[goto].heros[1][1];
+            heros[1].y = interieurs[goto].heros[1][0];
+            heros[1].z = niveau[heros[1].y][heros[1].x];
+            ennemis = interieurs[goto].ennemis;
+            objNiveau = interieurs[goto].obj;
+            Painter.niveau(niveau);
+        }
+        return;
+    }
     if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     heros[n].x +=  vecteurs[d][1];
     heros[n].y +=  vecteurs[d][0];
@@ -341,13 +404,15 @@ function changeArme(n){
 }
 
 function draw() {
-    ctx.fillStyle = "rgb(72,98,178)";
+    ctx.fillStyle = colorSet[out][3];
     ctx.fillRect(0,0,W,H);
-    waves.forEach(
-        function(e){
-            waveNiveau(e);
-        }
-    );
+    if (out == 1){
+        waves.forEach(
+            function(e){
+                waveNiveau(e);
+            }
+        );
+    }
     niveau.forEach(
         function(e,y){
             e.forEach(
@@ -355,6 +420,7 @@ function draw() {
                     Painter.cell( ctx, x, y, f );
                     if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
                     else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
+                    else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
                     else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
                     //testTerrain(x,y,f);
                     //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
@@ -518,7 +584,7 @@ function attack(n){
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
     var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
-    if ((truc == "coffre0" || truc == "porte0" || truc == "pot") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
+    if ((truc == "coffre0" || truc == "porte0" || truc == "pot" || truc == "PNJ") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
         if (truc == "coffre0"){
             Crossed.improve();
             objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "coffre1";
@@ -528,6 +594,10 @@ function attack(n){
         else if (truc == "porte0"){
             if (heros[n].cles > 0) {objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = ""; heros[n].cles -= 1;}
             else alert("Cette porte est verouillée.");
+        }
+        else if (truc == "PNJ"){
+            if (alerting == 0) say(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][2]);
+            else unsay();
         }
         else if (truc == "pot"){
             heros[n].invent.push("pot");
@@ -653,6 +723,9 @@ function pencil(x,y,action){
             if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house2");
             else objNiveau[coor[0]][coor[1]+1][0] = "house2";
         }
+        if (action == "lambda0"){
+            objNiveau[coor[0]][coor[1]] = ["PNJ","lambda0","blablabla"];
+        }
     }
 }
 
@@ -687,6 +760,16 @@ function hitHeros(n,degat,sens){
 
 function isSolid(x,y){
     var truc = objNiveau[y][x][0];
-    if (truc == "arbre0" | truc == "coffre0" | truc == "coffre1" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1" | truc == "house0" | truc == "house1" | truc == "house2" | truc == "house3" | truc == "house4" | truc == "pot") return true;
+    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere") return true;
     else return false;
+}
+
+function say(msg){
+    alerting = 1;
+    alert(msg);
+}
+
+function unsay(){
+    alerting = 0;
+    disalert();
 }
