@@ -18,6 +18,7 @@ var Painter = function() {
 
     return {
         niveau: function( level ) {
+			editNumber = 1;
             var rows = level.length;
             var cols = level[0].length;
             walls = [];
