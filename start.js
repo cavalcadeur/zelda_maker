@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","boat"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0}];
 var ennemis = [];
 var boomerang = [];
 var pots = [];
@@ -29,7 +29,7 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","planche0","planche1"];
+var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","planche0","planche1","armure"];
 var imgEnnemi = ["dark","bokoblin","link"];
 var mouse = [0,0];
 var editObject = ["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3","lambda0"];
@@ -596,6 +596,7 @@ function attack(n){
             else alert("Cette porte est verouillée.");
         }
         else if (truc == "PNJ"){
+            questPNJ(heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0]);
             if (alerting == 0) say(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][2]);
             else unsay();
         }
@@ -641,6 +642,7 @@ function attack(n){
         }
     }
     else if (heros[n].invent[heros[n].objet] == "boat"){
+        if (out == 0) return;
         heros[0].x = boatPosition[1];
         heros[0].y = boatPosition[0];
         goto = "";
@@ -760,7 +762,7 @@ function hitHeros(n,degat,sens){
 
 function isSolid(x,y){
     var truc = objNiveau[y][x][0];
-    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere") return true;
+    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure") return true;
     else return false;
 }
 
@@ -772,4 +774,21 @@ function say(msg){
 function unsay(){
     alerting = 0;
     disalert();
+}
+
+function questPNJ(x,y){
+    var perso = objNiveau[y][x][1];
+    if (perso == "chef"){
+        if (quests[perso] == 1){
+            objNiveau[y][x][2] = "Tu veux partir à l'aventure ? Je comprends, c'est la fougue de la jeunesse j'imagine. Tu peux prendre mon bateau si tu veux.";
+            iles["depart"].obj[12][15] = [""];
+            iles["depart"].obj[11][15] = ["PNJ","jehan","Le chef m'a dit que tu pouvais prendre son bateau. Il est dans ce coffre à droite."];
+            quests["jehan"] = 1;
+        }
+    }
+    else if (perso == "jehan"){
+        if (quests[perso] == 0) quests["chef"] = 1;
+    }
+
+
 }
