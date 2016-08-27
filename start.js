@@ -29,10 +29,10 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure"];
+var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","autel","torche","torche1"];
 var imgEnnemi = ["dark","bokoblin","link"];
 var mouse = [0,0];
-var editObject = [["rien","rubisVert","rubisBleu","rubisRouge","coeur","armure","planche0","pot","table0","table1","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","fleur2","tabouret","etagere","lambda0"],["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3","lambda0"]];
+var editObject = [["rien","rubisVert","rubisBleu","rubisRouge","coeur","armure","planche0","pot","table0","table1","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","fleur2","tabouret","autel","torche","torche1","etagere","lambda0"],["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3","lambda0"]];
 var editnumber = 1;
 var onSea = 0;
 var waves = [];
@@ -57,7 +57,7 @@ function charge(){
     var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM"];
     var imgInterface = ["blank","mastersword","boomerang","pencil","boat","pot","lettre"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","fragment","coeur"];
-    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron"];
+    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","boat0","boat1","boat2","boat3","pot0","pot1","pot2","pot3","lettre0","lettre1","lettre2","lettre3"];
     var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length;
     imgRubis.forEach(
@@ -275,37 +275,37 @@ function action(t){
             if (h.vx == 0 && h.vy == 0 && figer == 0){
                 var supress = 0;
                 if (objNiveau[h.y][h.x][0] != "" && objNiveau[h.y][h.x][0] != "herbe0" && objNiveau[h.y][h.x][0] != "herbe1" && objNiveau[h.y][h.x][0] != "bleu1" && objNiveau[h.y][h.x][0] != "rouge0" && objNiveau[h.y][h.x][0] != "bleu0" && objNiveau[h.y][h.x][0] != "rouge1" && objNiveau[h.y][h.x][0] != "house0" && isSolid(h.x,h.y) == false){
-                    if (objNiveau[h.y][h.x][0] == "rubisVert"){
+                    var truc = objNiveau[h.y][h.x];
+                    if (truc[0] == "rubisVert"){
                         h.rubis += 1;
                     }
-                    else if (objNiveau[h.y][h.x][0] == "rubisBleu"){
+                    else if (truc[0] == "rubisBleu"){
                         h.rubis += 5;
                     }
-                    else if (objNiveau[h.y][h.x][0] == "rubisRouge"){
+                    else if (truc[0] == "rubisRouge"){
                         h.rubis += 20;
                     }
-                    else if (objNiveau[h.y][h.x][0] == "planche0" || objNiveau[h.y][h.x][0] == "planche1"){
+                    else if (truc[0] == "planche0" || objNiveau[h.y][h.x][0] == "planche1"){
                         supress = 1;
                     }
-                    else if (objNiveau[h.y][h.x][0] == "coeur"){
+                    else if (truc[0] == "coeur"){
                         if (h.vie + 1 <= h.vieTotale){
                             h.vie += 1;
                         }
                         else if (h.vie + 0.5 <= h.vieTotale) h.vie += 0.5;
                     }
-                    else if (objNiveau[h.y][h.x][0] == "cle0"){
+                    else if (truc[0] == "cle0"){
                         h.cles += 1;
                     }
-                    else if (objNiveau[h.y][h.x][0] == "teleport"){
-                        var array = objNiveau[h.y][h.x];
+                    else if (truc[0] == "teleport"){
                         supress = 1;
-                        goto = array[2];
-                        heros[0].x = array[3];
-                        heros[0].y = array[4];
-                        heros[1].x = array[5];
-                        heros[1].y = array[6];
-                        out = array[1];
-                        if (array[1] == 1){
+                        goto = truc[2];
+                        heros[0].x = truc[3];
+                        heros[0].y = truc[4];
+                        heros[1].x = truc[5];
+                        heros[1].y = truc[6];
+                        out = truc[1];
+                        if (truc[1] == 1){
                             niveau = iles[goto].alti;
                             ennemis = iles[goto].ennemis;
                             objNiveau = iles[goto].obj;
@@ -320,12 +320,12 @@ function action(t){
                         heros[1].z = niveau[heros[1].y][heros[1].x];
                         Painter.niveau(niveau);
                     }
-                    else if (objNiveau[h.y][h.x][0] == "boomerang" || objNiveau[h.y][h.x][0] == "mastersword" || objNiveau[h.y][h.x][0] == "pencil"){
-                        h.invent.push(objNiveau[h.y][h.x][0]);
+                    else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil"){
+                        h.invent.push(truc[0]);
                         h.objet = h.invent.length - 1;
                     }
                     if (supress == 0){
-                        if (objNiveau[h.y][h.x].length > 1) objNiveau[h.y][h.x].splice(0,1);
+                        if (truc.length > 1) objNiveau[h.y][h.x].splice(0,1);
                         else objNiveau[h.y][h.x][0] = "";
                     }
 
@@ -674,6 +674,7 @@ function attack(n){
         );
         document.body.appendChild(link);
         link.click(); 
+        document.body.removeChild(link);
     }
 }
 
@@ -782,7 +783,7 @@ function hitHeros(n,degat,sens){
 
 function isSolid(x,y){
     var truc = objNiveau[y][x][0];
-    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret") return true;
+    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1") return true;
     else return false;
 }
 
