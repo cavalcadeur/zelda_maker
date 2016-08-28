@@ -17,6 +17,9 @@ var Painter = function() {
     }
 
     return {
+        realCoor: function(x,y){
+            return [toX(x,y,1),toY(x,y,1)];
+        },
         niveau: function( level ) {
 			editNumber = 1;
             var rows = level.length;

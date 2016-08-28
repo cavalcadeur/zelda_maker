@@ -8,6 +8,8 @@ var seaLimit = [1200,900];
 var seaScroll = [0,0];
 var ennemis = [];
 var boomerang = [];
+var editPlate = 0;
+var pressurePlate = [];
 var pots = [];
 var out = 1;
 var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(107,93,66)","rgb(90,70,50)",[20,80,10,10,40,5],"rgb(72,98,178)"]];
@@ -31,10 +33,10 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora"];
+var imgArbre = ["arbre0","herbe0","herbe1","fleur2","coffre0","coffre1","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1"];
 var imgEnnemi = ["dark","bokoblin","link","feu"];
 var mouse = [0,0];
-var editObject = [["rien","rubisVert","rubisBleu","rubisRouge","coeur","armure","planche0","pot","table0","lit0","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","fleur2","tabouret","autel","torche","torche1","etagere","lambda0"],["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","mastersword","boomerang","house0","house1","house3","lambda0"]];
+var editObject = [["rien","rubisVert","rubisBleu","rubisRouge","coeur","armure","planche0","pot","table0","lit0","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","plate","fleur2","tabouret","autel","torche","torche1","etagere","lambda0"],["rien","rubisVert","rubisBleu","rubisRouge","coeur","arbre0","herbe0","herbe1","pot","coffre0","coffre1","porte0","cle0","cle1","bleu0","rouge0","switch0","plate","house0","house1","house3","lambda0"]];
 var editnumber = 1;
 var onSea = 0;
 var waves = [];
@@ -287,7 +289,17 @@ function action(t){
                     else if (truc[0] == "rubisRouge"){
                         h.rubis += 20;
                     }
-                    else if (truc[0] == "planche0" || truc[0] == "planche1" || truc[0] == "tableau" || truc[0] == "majora"){
+                    else if (truc[0] == "planche0" || truc[0] == "planche1" || truc[0] == "tableau" || truc[0] == "majora" || truc[0] == "plate1"){
+                        supress = 1;
+                    }
+                    else if (truc[0] == "plate"){
+                        if (truc[3] == "") objNiveau[truc[2]][truc[1]] = [""];
+                        else {
+                            for (var i = truc.length-1;i>2;i--){
+                                objNiveau[truc[2]][truc[1]].splice(0,0,truc[i]);
+                            }
+                        }
+                        truc[0] = "plate1";
                         supress = 1;
                     }
                     else if (truc[0] == "coeur"){
@@ -562,6 +574,11 @@ function drawInterface(){
     if (edition == 1 && editObject[out][editnumber] != "rien"){
         ctx.drawImage(imgElement[editObject[out][editnumber]],mouse[1],mouse[0]- imgElement[editObject[out][editnumber]].height / 2);
     }
+    if (editPlate == 1){
+        ctx.beginPath();
+        ctx.arc(mouse[1],mouse[0],15,-Math.PI,Math.PI);
+        ctx.stroke();
+    }
     heros.forEach(
         function(h,index){
             for (var i = 0;i < h.vieTotale;i++){
@@ -637,7 +654,7 @@ function attack(n){
     }
     else if (heros[n].invent[heros[n].objet] == "pencil"){
         if (edition == 0)edition = 1;
-        else {
+        else if (editPlate == 0){
             edition = 0;
             console.log(JSON.stringify(niveau));
             console.log(JSON.stringify(objNiveau));
@@ -664,18 +681,18 @@ function attack(n){
     }
     else if (heros[n].invent[heros[n].objet] == "lettre"){
         var to = "martin@memora.tolokoban.org";
-	var subject = "Niveau Maker's Pencil";
-	var body = JSON.stringify(niveau) + JSON.stringify(objNiveau);
-  
+        var subject = "Niveau Maker's Pencil";
+        var body = JSON.stringify(niveau) + JSON.stringify(objNiveau);
+
         var link = document.createElement('a');
         link.setAttribute(
-  	    'href', 
-            'mailto:' + to 
+            'href',
+            'mailto:' + to
                 + "?subject=" + encodeURI(subject)
                 + "&body=" + encodeURI(body)
         );
         document.body.appendChild(link);
-        link.click(); 
+        link.click();
         document.body.removeChild(link);
     }
 }
@@ -725,40 +742,66 @@ function pencil(x,y,action){
     //    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
     var coor = Painter.case(niveau,x,y);
     if (coor[0] == "ah") return;
-    if (action == 1 || action == -1){
-        if (niveau[coor[0]][coor[1]] + action > -2)niveau[coor[0]][coor[1]] += action;
-        Painter.niveau(niveau);
+    if (editPlate == 1){
+        editPlate = 0;
+        if (action == 1 || action == -1){
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+1,0,coor[1]);
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+2,0,coor[0]);
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+3,0,"");
+        }
+        else if (action == "delete"){
+            objNiveau[pressurePlate[0]][pressurePlate[1]] = [""];
+        }
+        else{
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+1,0,coor[1]);
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+2,0,coor[0]);
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+3,0,action);
+            if (action == "plate"){
+                editPlate = 1;
+                pressurePlate[2] += 3;
+            }
+        }
     }
-    else if (action == "delete"){
-        if (objNiveau[coor[0]][coor[1]].length > 1) objNiveau[coor[0]][coor[1]].splice(0,1);
-        else objNiveau[coor[0]][coor[1]][0] = "";
+    else {
+        if (action == 1 || action == -1){
+            if (niveau[coor[0]][coor[1]] + action > -2)niveau[coor[0]][coor[1]] += action;
+            Painter.niveau(niveau);
+        }
+        else if (action == "delete"){
+            if (objNiveau[coor[0]][coor[1]].length > 1) objNiveau[coor[0]][coor[1]].splice(0,1);
+            else objNiveau[coor[0]][coor[1]][0] = "";
 
-    }
-    else{
-        if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].splice(0,0,action);
-        else objNiveau[coor[0]][coor[1]][0] = action;
-        if (action == "house3" && coor[1] + 1 != objNiveau[coor[0]].length){
-            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house4");
-            else objNiveau[coor[0]][coor[1]+1][0] = "house4";
         }
-        if (action == "planche0" && coor[1] + 1 != objNiveau[coor[0]].length){
-            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"planche1");
-            else objNiveau[coor[0]][coor[1]+1][0] = "planche1";
-        }
-        if (action == "lit0" && coor[1] + 1 != objNiveau[coor[0]].length){
-            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"lit1");
-            else objNiveau[coor[0]][coor[1]+1][0] = "lit1";
-        }
-        if (action == "table0" && coor[1] + 1 != objNiveau[coor[0]].length){
-            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"table1");
-            else objNiveau[coor[0]][coor[1]+1][0] = "table1";
-        }
-        if (action == "house1" && coor[1] + 1 != objNiveau[coor[0]].length){
-            if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house2");
-            else objNiveau[coor[0]][coor[1]+1][0] = "house2";
-        }
-        if (action == "lambda0"){
-            objNiveau[coor[0]][coor[1]] = ["PNJ","lambda0","blablabla"];
+        else{
+            if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].splice(0,0,action);
+            else objNiveau[coor[0]][coor[1]][0] = action;
+            if (action == "house3" && coor[1] + 1 != objNiveau[coor[0]].length){
+                if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house4");
+                else objNiveau[coor[0]][coor[1]+1][0] = "house4";
+            }
+            if (action == "planche0" && coor[1] + 1 != objNiveau[coor[0]].length){
+                if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"planche1");
+                else objNiveau[coor[0]][coor[1]+1][0] = "planche1";
+            }
+            if (action == "lit0" && coor[1] + 1 != objNiveau[coor[0]].length){
+                if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"lit1");
+                else objNiveau[coor[0]][coor[1]+1][0] = "lit1";
+            }
+            if (action == "table0" && coor[1] + 1 != objNiveau[coor[0]].length){
+                if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"table1");
+                else objNiveau[coor[0]][coor[1]+1][0] = "table1";
+            }
+            if (action == "house1" && coor[1] + 1 != objNiveau[coor[0]].length){
+                if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house2");
+                else objNiveau[coor[0]][coor[1]+1][0] = "house2";
+            }
+            if (action == "lambda0"){
+                objNiveau[coor[0]][coor[1]] = ["PNJ","lambda0","blablabla"];
+            }
+            if (action == "plate"){
+                editPlate = 1;
+                pressurePlate = [coor[0],coor[1],0];
+            }
         }
     }
 }
