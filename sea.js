@@ -34,10 +34,10 @@ function drawSea(){
     );
     sea.forEach(
         function(e){
-            drawIsland(e[0],e[1],e[2]);
+            drawIsland(e[0],e[1]-seaScroll[1],e[2]-seaScroll[0]);
         }
     );
-    ctx.drawImage(imgBoat,heros[0].x - 35,heros[0].y - 35);
+    ctx.drawImage(imgBoat,heros[0].x - 35 - seaScroll[0],heros[0].y - 35 - seaScroll[1]);
 }
 
 function drawIsland(ile,Y,X){
@@ -93,6 +93,14 @@ function waveMove(e){
 function moveBoat(d){
     heros[0].x += vecteurs[d][1] * 5;
     heros[0].y += vecteurs[d][0] * 5;
+    if (heros[0].x < 0) heros[0].x = 0;
+    if (heros[0].y < 0) heros[0].y = 0;
+    if (heros[0].x > seaLimit[0]) heros[0].x = seaLimit[0];
+    if (heros[0].y > seaLimit[1]) heros[0].y = seaLimit[1];
+    if (heros[0].x - seaScroll[0] > W) seaScroll[0] = heros[0].x - W;
+    if (heros[0].x - seaScroll[0] < 0) seaScroll[0] = heros[0].x;
+    if (heros[0].y - seaScroll[1] > H) seaScroll[1] = heros[0].y - H;
+    if (heros[0].y - seaScroll[1] < 0) seaScroll[1] = heros[0].y;
     sea.forEach(
         function(e){
             testIsland(e);
