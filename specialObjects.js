@@ -49,3 +49,10 @@ function drawFumee(type,n,x,y,alti){
 function drawFire(type,n,x,y,alti){
     Painter.img( ctx, x, y, alti,imgDebris[type+(Math.round(n)%4)]);
 }
+
+function drawFlamme(type,n,x,y,alti,kgb){
+    if (alti < -4) kgb.g = 50;
+    if (kgb.g > 0) var number = 0;
+    else number = 1;
+    if (alti > -2) Painter.img( ctx, x, y, alti, imgDebris[type+number]);
+}

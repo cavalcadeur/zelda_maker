@@ -129,7 +129,7 @@ function waveNiveau(e){
         ctx.closePath();
         ctx.fill();
     }
-    if (e[2] == 200) {
+    if (e[2] >= 200) {
         e[2] = -rnd(300)-100;
         e[0] = rnd(W);
         e[1] = rnd(H);
@@ -138,7 +138,7 @@ function waveNiveau(e){
 }
 
 function lavaNiveau(e){
-    ctx.fillStyle = "rgb(209,137,7)";
+    ctx.fillStyle = "rgb(225,115,36)";
     if (e[2] < 100 && e[2] > 0){
         ctx.beginPath();
         ctx.ellipse(e[0],e[1],e[2]*1.5,e[2]*0.5,0,- Math.PI,Math.PI);
@@ -152,7 +152,7 @@ function lavaNiveau(e){
 }
 
 function lavaNiveauUp(e){
-    ctx.fillStyle = "rgb(205,183,3)";
+    ctx.fillStyle = "rgb(223,213,45)";
     if (e[2] < 100 && e[2] > 0){
         ctx.beginPath();
         ctx.ellipse(e[0],e[1],e[2],e[2]*0.25,0,- Math.PI,Math.PI);
