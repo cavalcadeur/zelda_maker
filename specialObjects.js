@@ -45,3 +45,7 @@ function drawFumee(type,n,x,y,alti){
     }
     ctx.globalAlpha = 1;
 }
+
+function drawFire(type,n,x,y,alti){
+    Painter.img( ctx, x, y, alti,imgDebris[type+(Math.round(n)%4)]);
+}

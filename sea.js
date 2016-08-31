@@ -130,9 +130,43 @@ function waveNiveau(e){
         ctx.fill();
     }
     if (e[2] == 200) {
-        e[2] = -rnd(500)+100;
+        e[2] = -rnd(300)-100;
         e[0] = rnd(W);
         e[1] = rnd(H);
     }
     e[2] += 1;    
+}
+
+function lavaNiveau(e){
+    ctx.fillStyle = "rgb(209,137,7)";
+    if (e[2] < 100 && e[2] > 0){
+        ctx.beginPath();
+        ctx.ellipse(e[0],e[1],e[2]*1.5,e[2]*0.5,0,- Math.PI,Math.PI);
+        ctx.fill();
+    }    
+    else if (e[2] < 200 && e[2] > 0){
+        ctx.beginPath();
+        ctx.ellipse(e[0],e[1],(200 - e[2])*1.5,(200 - e[2])*0.5,0,- Math.PI,Math.PI);
+        ctx.fill();
+    }  
+}
+
+function lavaNiveauUp(e){
+    ctx.fillStyle = "rgb(205,183,3)";
+    if (e[2] < 100 && e[2] > 0){
+        ctx.beginPath();
+        ctx.ellipse(e[0],e[1],e[2],e[2]*0.25,0,- Math.PI,Math.PI);
+        ctx.fill();
+    }    
+    else if (e[2] < 200 && e[2] > 0){
+        ctx.beginPath();
+        ctx.ellipse(e[0],e[1],(200 - e[2]),(200 - e[2])*0.25,0,- Math.PI,Math.PI);
+        ctx.fill();
+    }
+    if (e[2] >= 200) {
+        e[2] = -rnd(300);
+        e[0] = rnd(W);
+        e[1] = rnd(H);
+    }
+    e[2] += 0.3; 
 }
