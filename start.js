@@ -58,7 +58,7 @@ function resize(){
 
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
-    var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","feu0","feu1","feu2","feu3","flamme0","flamme1"];
+    var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1"];
     var imgInterface = ["blank","mastersword","boomerang","pencil","boat","pot","lettre","GPS","aiguille"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
     var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel"];
@@ -489,10 +489,10 @@ function draw() {
                         function(kgb,iii){
                             if (y == kgb.y && x == e.length - 1){
                                 if (kgb.type == "herbe") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
-                                else if (kgb.type == "fumeeM") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                                else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
-                                else if (kgb.type == "quake") drawQuake(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
+                                else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
                                 kgb.n += 1;
                                 if (kgb.type == "flamme") kgb.alti += kgb.g/150;
                                 else kgb.alti += kgb.g/50;
@@ -895,7 +895,19 @@ function hitEnnemis(n,degat,sens){
             ennemis[n].v = 0.05;
             ennemis[n].n = 0;
             ennemis.push({x:ennemis[n].x,y:ennemis[n].y,pv:2,img:"feu",sens:sens,z:1,g:0,v:0.05,n:0,ia:"mur",stop:0,stun:0,att:1});
-            niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,-1,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
+            particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
+            particles.push({n:0,type:"fumeeF",x:5,y:2,g:0,alti:0,lim:40});
+            particles.push({n:-14,type:"fumeeF",x:9,y:5,g:0,alti:0,lim:40});
+            particles.push({n:-21,type:"fumeeF",x:7,y:8,g:0,alti:0,lim:40});
+            particles.push({n:-24,type:"fumeeF",x:9,y:10,g:0,alti:0,lim:40});
+            particles.push({n:-33,type:"fumeeF",x:2,y:9,g:0,alti:0,lim:40});
+            if (ennemis[n].pv == 3){
+                niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,-1,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
+            }
+            else {
+                niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
+                particles.splice(0,1);
+            }
             Painter.niveau(niveau);
         }
         else {
@@ -919,7 +931,10 @@ function hitEnnemis(n,degat,sens){
     if (ennemis[n].pv <= 0) {
         particles.push({n:0,type:"fumeeM",x:ennemis[n].x,y:ennemis[n].y,g:0,alti:ennemis[n].z,lim:40});
         if (ennemis[n].img == "bossFeu") {
-            niveau  = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,0,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,-1,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
+            particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
+            particles.push({n:-34,type:"fumeeF",x:10,y:6,g:0,alti:0,lim:40});
+            particles.push({n:-40,type:"fumeeF",x:4,y:7,g:0,alti:0,lim:40});
+            niveau  = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,0,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
             Painter.niveau(niveau);
         }
     }

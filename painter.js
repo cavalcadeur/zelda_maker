@@ -88,6 +88,10 @@ var Painter = function() {
             scrollY = y;
         },
 
+        drawQuake: function( n ) {
+			scrollX += Math.sin(n)*20;
+        },
+
         img: function( ctx, x, y, z, img ) {
             if( !img ) return;
 

@@ -38,6 +38,7 @@ function drawDebris(type,n,x,y,alti){
 }
 
 function drawFumee(type,n,x,y,alti){
+    if (n < 0) return;
     if (n > 9)ctx.globalAlpha = 1 - (n-10)/10;
     for (var i = 0;i < 8;i ++){
         Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*n*0.01,y + Math.sin((Math.PI/4)*i)*n*0.01,alti,imgDebris[type]);
@@ -55,8 +56,4 @@ function drawFlamme(type,n,x,y,alti,kgb){
     if (kgb.g > 0) var number = 0;
     else number = 1;
     if (alti > -2) Painter.img( ctx, x, y, alti, imgDebris[type+number]);
-}
-
-function drawQuake(type,n,x,y,alti,kgb){
-    Painter.scrollX += Math.sin(n)*20;
 }
