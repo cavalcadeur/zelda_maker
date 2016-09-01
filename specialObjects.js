@@ -56,3 +56,7 @@ function drawFlamme(type,n,x,y,alti,kgb){
     else number = 1;
     if (alti > -2) Painter.img( ctx, x, y, alti, imgDebris[type+number]);
 }
+
+function drawQuake(type,n,x,y,alti,kgb){
+    Painter.scrollX += Math.sin(n)*20;
+}

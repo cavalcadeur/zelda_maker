@@ -492,6 +492,7 @@ function draw() {
                                 else if (kgb.type == "fumeeM") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
+                                else if (kgb.type == "quake") drawQuake(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
                                 kgb.n += 1;
                                 if (kgb.type == "flamme") kgb.alti += kgb.g/150;
                                 else kgb.alti += kgb.g/50;
