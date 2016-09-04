@@ -126,32 +126,33 @@ var Painter = function() {
             ctx.restore();
         },
 
-        cell: function( ctx, x, y, z ) {
+        cell: function( ctx, x, y, z ,n) {
      
             //-----------------------------------------------------------------
             
             if( z > -1 ) {
                 var X = toX( x, y, z );
-                var Y = toY( x, y, z );
-                // Partie frontale (verticale)
-                if  (y == niveau.length - 1 || z > niveau[y+1][x]){
-                    ctx.fillStyle = colorSet[out][0];
-                    ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
-                }
-                // Partie latérale (verticale)
-                if  (x == niveau[y].length - 1 || z > niveau[y][x+1]){
-                    ctx.fillStyle = colorSet[out][1];
-                    ctx.beginPath();
-                    ctx.moveTo( X + cellX, Y );
-                    ctx.lineTo( X + cellX + cellS, Y - cellY );
-                    ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
-                    ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
-                    ctx.closePath();
-                    ctx.fill();
-                }
+                var Y = toY( x, y, z );	
+                	// Partie frontale (verticale)
+                	if  (y == niveau.length - 1 || z > niveau[y+1][x]){
+                    	ctx.fillStyle = colorSet[out][0];
+                    	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
+                	}
+                	// Partie latérale (verticale)
+                	if  (x == niveau[y].length - 1 || z > niveau[y][x+1]){
+                    	ctx.fillStyle = colorSet[out][1];
+                    	ctx.beginPath();
+                    	ctx.moveTo( X + cellX, Y );
+                    	ctx.lineTo( X + cellX + cellS, Y - cellY );
+                    	ctx.lineTo( X + cellX + cellS, Y - cellY + (z + 1) * cellZ);
+                    	ctx.lineTo( X + cellX, Y + (z + 1) * cellZ );
+                    	ctx.closePath();
+                    	ctx.fill();
+                	}			
 
                 // Partie horizontale.
                 ctx.fillStyle = "rgb("+(colorSet[out][2][0]+z*colorSet[out][2][3])+","+(colorSet[out][2][1]+z*colorSet[out][2][4])+","+(colorSet[out][2][2]+z*colorSet[out][2][5])+")";
+				if (n == 1) ctx.fillStyle = "rgb(255,255,255)";
                 ctx.beginPath();
                 ctx.moveTo( X, Y );
                 ctx.lineTo( X + cellX + 1, Y );
@@ -159,6 +160,8 @@ var Painter = function() {
                 ctx.lineTo( X + cellS, Y - cellY );
                 ctx.closePath();
                 ctx.fill();
+				
+				if (n == 1) return;
 
                 ctx.strokeStyle = "#000";
                 ctx.lineWidth = 2;
@@ -231,7 +234,7 @@ var Painter = function() {
             if (x > W-100) scrollX = W-100-(x-scrollX);
             else if (x < 0) scrollX = -(x-scrollX);
             if (y > H-70) scrollY = H-70-(y-scrollY);
-            else if (y < 0) scrollY = -(y-scrollY);
+            else if (y < 70) scrollY = 70-(y-scrollY);
         }
     };
 }();
