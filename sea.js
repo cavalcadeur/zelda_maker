@@ -170,3 +170,23 @@ function lavaNiveauUp(e){
     }
     e[2] += 0.3; 
 }
+
+function rondNiveau(e){
+    if (e[2] >= 0 && e[2] < 150) ctx.globalAlpha = 1 - e[2]/152;
+    if (e[2] < 150){
+        for (var i = 0;i < 4;i ++){
+            if (e[2] > 30*i){
+                ctx.beginPath();
+                ctx.ellipse(e[0],e[1],e[2]-30*i,(e[2]-30*i)*0.25,0,- Math.PI,Math.PI);
+                ctx.stroke();
+            }
+        }
+    }
+    ctx.globalAlpha = 1;
+    if (e[2] >= 200) {
+        e[2] = -rnd(300);
+        e[0] = rnd(W);
+        e[1] = rnd(H);
+    }
+    e[2] += 1;
+}
