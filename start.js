@@ -33,13 +33,13 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","houseHelp","templeFeu0","templeFeu1","templeFeu2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie"];
+var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3"];
 var imgEnnemi = ["dark","bokoblin","link","feu","chuchu","bossFeu","bossFeuDead"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","porte0","cle0","cle1","coffre2","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","switch2","porte0","cle0","cle1","coffre2","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -59,6 +59,17 @@ function resize(){
     H = window.innerHeight;
     canvas.setAttribute("width",W);
     canvas.setAttribute("height",H);
+}
+
+function precharge(){
+    ctx.fillrect = "rgb(0,0,0)";
+    ctx.fillRect(0,0,W,H);
+    var fondfond = new Image();
+    fondfond.src = "images/Title.png";
+    fondfond.onload = function(){
+        ctx.drawImage(fondfond,0,0,W,H);
+
+    };
 }
 
 function charge(){
@@ -266,7 +277,7 @@ function start(){
 }
 
 function animation(){
-    alert("Utilisez les flèches pour vous déplacer et maj pour interagir avec la case en face de vous. Le portail aide à gauche vous en dira plus long sur le jeu si vous le désirez. Placez vous une case plus bas et dirigez vous vers lui avec la flèche du haut. Petit rappel des autres touches : j1 : flèches maj et ctrl ; j2 : pavé numérique entrée du pavé et 0 ; Crossed : c");
+    alert("Utilisez les flèches pour vous déplacer et maj pour interagir avec la case en face de vous. La maison tout à gauche vous en dira plus long sur le jeu si vous le désirez. Placez vous une case plus bas et dirigez vous vers elle avec la flèche du haut. Petit rappel des autres touches : j1 : flèches maj et ctrl ; j2 : pavé numérique entrée du pavé et 0 ; Crossed : c");
     var f = function(t) {
         if (Crossed.testCrossed() == 1){
             if (onSea == 0) draw(t);
@@ -304,6 +315,10 @@ function action(t){
                     }
                     else if (truc[0] == "plate"){
                         if (truc[3] == "") objNiveau[truc[2]][truc[1]] = [""];
+                        else if (truc[3] == 1 || truc[3] == -1){
+                            niveau[truc[2]][truc[1]] += truc[3];
+                            Painter.niveau(niveau);
+                        }
                         else {
                             for (var i = truc.length-1;i>2;i--){
                                 objNiveau[truc[2]][truc[1]].splice(0,0,truc[i]);
@@ -547,11 +562,25 @@ function draw() {
                                         else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                     }
                                     else {
-                                        var truc = objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]][0];
-                                        if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | ((truc == "coffre0" | truc == "coffre1" | truc == "arbre0" | truc == "porte0" | truc == "bleu0" | truc == "rouge1" | truc == "switch0" | truc == "switch1") && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
+                                        var machin = objNiveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]];
+                                        var truc = machin[0];
+                                        if (niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] > f.alti | (isSolid(f.x +  + vecteurs[f.sens][1],f.y + vecteurs[f.sens][0]) == true && niveau[f.y + vecteurs[f.sens][0]][f.x +  + vecteurs[f.sens][1]] == f.alti)){
                                             if (f.endu <= 5) f.endu = 1;
                                             else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                             if (truc == "switch0" | truc == "switch1") changeColor();
+                                            else if (truc == "switch2"){
+                                                if (machin[3] == "") objNiveau[machin[2]][machin[1]] = [""];
+                                                else if (machin[3] == 1 || machin[3] == -1){
+                                                    niveau[machin[2]][machin[1]] += machin[3];
+                                                    Painter.niveau(niveau);
+                                                }
+                                                else {
+                                                    for (var i = machin.length-1;i>2;i--){
+                                                        objNiveau[machin[2]][machin[1]].splice(0,0,machin[i]);
+                                                    }
+                                                }
+                                                machin[0] = "switch3";
+                                            }
                                         }
                                         else {
                                             f.y += vecteurs[f.sens][0];
@@ -712,7 +741,8 @@ function attack(n){
         }
     }
     else if (heros[n].invent[heros[n].objet] == "mastersword"){
-        var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
+        var machin = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]];
+        var truc = machin[0];
         if (niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] != niveau[heros[n].y][heros[n].x]) return;
         if (truc == "herbe0" | truc == "herbe1" | truc == "pot"){
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1){
@@ -724,6 +754,19 @@ function attack(n){
             if (truc == "herbe0" | truc == "herbe1") particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
         }
         else if (truc == "switch0" || truc == "switch1") changeColor();
+        else if (truc == "switch2"){
+            if (machin[3] == "") objNiveau[machin[2]][machin[1]] = [""];
+            else if (machin[3] == 1 || machin[3] == -1){
+                niveau[machin[2]][machin[1]] += machin[3];
+                Painter.niveau(niveau);
+            }
+            else {
+                for (var i = machin.length-1;i>2;i--){
+                    objNiveau[machin[2]][machin[1]].splice(0,0,machin[i]);
+                }
+            }
+            machin[0] = "switch3";
+        }
         ennemis.forEach(
             function(e,gg){
                 if (Math.round(e.x) == heros[n].x + vecteurs[heros[n].sens][1] && Math.round(e.y) == heros[n].y + vecteurs[heros[n].sens][0]){
@@ -788,7 +831,7 @@ function attack(n){
 function donnerHeros(obj,n){
     heros[n].sens = 2;
     heros[n].aura = obj;
-    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl puis appuyez sur maj pour déchainer votre créativité.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment.","lettre":"C'est une lettre metaphysique !! Elle vous permet de briser le 4eme mur en envoyant l'île dans laquelle vous vous trouvez au créateur du jeu. Si elle est jugée interessante, elle sera intégrée dans le jeu. A vos pinceaux, créateurs de tous poils !!!","tabouret":"Un vieux tabouret moche. En plus il ne ressemble pas à un tabouret mais plutôt à une table basse.","fleur2":"Un vase rempli de fleur !!! Voilà qui ferait plaisir à votre amant.","table0":"Une moitié de table ... Surtout ne croquez pas dedans !","table1":"C'est une demi-table. C'est aussi inutile que déplaisant à voir.","etagere":"Une etagere. Mais qu'est ce qu'il y a dedans ?","coffre1":"Vous obtenez un coffre déjà ouvert. Gné ????????","house0":"Woaw ! Mais c'est une maison ! Posez la avant d'avoir une crampe aux bras.","house1":"Une moitié de maison. Il est difficile d'avoir un meilleur rapport inutilité/encombrement.","house2":"Vous obtenez une moitié de maison. Vous restez sans voix.","house3":"Mais qu'est ce que c'est que cette horreur ???","house4":"Vous obtenez une moitié de maison. Le doute s'insinue en vous : et si tout était lié ?","armure":"Un bouclier et des épées !!! Pas de bol, c'est en plastique...","torche":"Pourquoi avoir mis une torche dans un coffre ? Pourquoi ?","rubisBlanc":"C'est le légendaire rubis blanc. Il vaut 10 000 fucking rubis verts !!! Votre fortune est faite.","stele":"Ils arrivent ...","aiguille":"Vous avez découvert une aiguille magnetisée. C'est un des trois élements de la boussole.","palmier":"Vous obtenez un palmier. Tout est dit."};
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl puis appuyez sur maj pour déchainer votre créativité.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment.","lettre":"C'est une lettre metaphysique !! Elle vous permet de briser le 4eme mur en envoyant l'île dans laquelle vous vous trouvez au créateur du jeu. Si elle est jugée interessante, elle sera intégrée dans le jeu. A vos pinceaux, créateurs de tous poils !!!","tabouret":"Un vieux tabouret moche. En plus il ne ressemble pas à un tabouret mais plutôt à une table basse.","fleur2":"Un vase rempli de fleur !!! Voilà qui ferait plaisir à votre amant.","table0":"Une moitié de table ... Surtout ne croquez pas dedans !","table1":"C'est une demi-table. C'est aussi inutile que déplaisant à voir.","etagere":"Une etagere. Mais qu'est ce qu'il y a dedans ?","coffre1":"Vous obtenez un coffre déjà ouvert. Gné ????????","house0":"Woaw ! Mais c'est une maison ! Posez la avant d'avoir une crampe aux bras.","house1":"Une moitié de maison. Il est difficile d'avoir un meilleur rapport inutilité/encombrement.","house2":"Vous obtenez une moitié de maison. Vous restez sans voix.","house3":"Mais qu'est ce que c'est que cette horreur ???","house4":"Vous obtenez une moitié de maison. Le doute s'insinue en vous : et si tout était lié ?","armure":"Un bouclier et des épées !!! Pas de bol, c'est en plastique...","torche":"Pourquoi avoir mis une torche dans un coffre ? Pourquoi ?","rubisBlanc":"C'est le légendaire rubis blanc. Il vaut 10 000 fucking rubis verts !!! Votre fortune est faite.","stele":"Ils arrivent ...","aiguille":"Vous avez découvert une aiguille magnetisée. C'est un des trois élements de la boussole.","palmier":"Vous obtenez un palmier. Tout est dit.","plate":"Un interrupteur au sol. Je suis presque certain que ça n'a rien à faire dans vos mains."};
     alert(description[obj]);
     figer = 1;
     if (obj == "rubisVert") heros[n].rubis += 1;
@@ -845,21 +888,24 @@ function pencil(x,y,action){
     //    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
     var coor = Painter.case(niveau,x,y);
     if (coor[0] == "ah") return;
-    if (editPlate == 1){
+    if (editPlate == 1 && action != "return"){
+        if (editM == 1) return;
         editPlate = 0;
         if (action == 1 || action == -1){
             objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+1,0,coor[1]);
             objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+2,0,coor[0]);
-            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+3,0,"");
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+3,0,action);
         }
         else if (action == "delete"){
-            objNiveau[pressurePlate[0]][pressurePlate[1]] = [""];
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+1,0,coor[1]);
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+2,0,coor[0]);
+            objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+3,0,"");
         }
         else{
             objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+1,0,coor[1]);
             objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+2,0,coor[0]);
             objNiveau[pressurePlate[0]][pressurePlate[1]].splice(pressurePlate[2]+3,0,action);
-            if (action == "plate"){
+            if (action == "plate" || action == "switch2"){
                 editPlate = 1;
                 pressurePlate[2] += 3;
             }
@@ -912,7 +958,7 @@ function pencil(x,y,action){
             else if (action == "coffre2"){
                 objNiveau[coor[0]][coor[1]][0] = "coffre3";
             }
-            if (action == "plate"){
+            if (action == "plate" || action == "switch2"){
                 editPlate = 1;
                 pressurePlate = [coor[0],coor[1],0];
             }
@@ -1032,7 +1078,7 @@ function hitHeros(n,degat,sens){
 
 function isSolid(x,y){
     var truc = objNiveau[y][x][0];
-    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1" || truc == "lit0" || truc == "lit1" || truc == "stele" || truc == "houseHelp" || truc == "templeFeu0" || truc == "templeFeu1"|| truc == "templeFeu2" || truc == "palmier" || truc == "arbre1" || truc == "bougie") return true;
+    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1" || truc == "lit0" || truc == "lit1" || truc == "stele" || truc == "houseHelp" || truc == "templeFeu0" || truc == "templeFeu1"|| truc == "templeFeu2" || truc == "palmier" || truc == "arbre1" || truc == "bougie" || truc == "switch2" || truc == "switch3") return true;
     else return false;
 }
 
