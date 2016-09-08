@@ -68,7 +68,7 @@ function precharge(){
     fondfond.src = "images/Title.png";
     fondfond.onload = function(){
         ctx.drawImage(fondfond,0,0,W,H);
-
+        charge();
     };
 }
 
@@ -273,7 +273,7 @@ function start(){
     for(var i = 0;i < 17;i ++){
         waves.push([rnd(W),rnd(H),-rnd(200) + 100]);
     }
-    charge();
+    precharge();
 }
 
 function animation(){
