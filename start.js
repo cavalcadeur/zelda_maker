@@ -118,6 +118,7 @@ function save(){
     window.localStorage.setItem("ilesDif",JSON.stringify(ilesDif));
     window.localStorage.setItem("ilesDifHouse",JSON.stringify(ilesDifHouse));
     window.localStorage.setItem("heros",JSON.stringify(heros));
+    window.localStorage.setItem("quests",JSON.stringify(quests));
     alert("Cette sauvegarde est maintenant terminée. Dites moi en commentaire si le chargement était long. Moi je vous dit au revoir et n'oubliez pas de vous abonner à la chaîne et de liker cette video avant d'aller en voir une autre. MERCI.");
     figer = 0;
 }
@@ -169,17 +170,20 @@ function precharge(){
             );
             heros = JSON.parse(window.localStorage.getItem("heros"));
             var where = JSON.parse(window.localStorage.getItem("whereAmI"));
+            quests = JSON.parse(window.localStorage.getItem("quests"));
             out = where[0];
             goto = where[1];
-            if (out == 1){
-                niveau = iles[goto].alti;
-                objNiveau = iles[goto].obj;
+            if (goto != ""){
+                if (out == 1){
+                    niveau = iles[goto].alti;
+                    objNiveau = iles[goto].obj;
+                }
+                else{
+                    niveau = interieurs[goto].alti;
+                    objNiveau = interieurs[goto].obj;
+                }
+                Painter.niveau( niveau );
             }
-            else{
-                niveau = interieurs[goto].alti;
-                objNiveau = interieurs[goto].obj;
-            }
-            Painter.niveau( niveau );
         }
         charge();
     };
