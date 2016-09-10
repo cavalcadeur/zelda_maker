@@ -38,6 +38,53 @@ function choseDirection(n){
         }
         return cc;
     }
+    else if (ennemis[n].ia == "fonce"){
+        if (final.indexOf(ennemis[n].sens) != -1){
+            return ennemis[n].sens;
+        }
+        else {
+            if ((ennemis[n].x == ennemis[n].ox && ennemis[n].y == ennemis[n].oy) || ennemis[n].vit == 0.05){
+                ennemis[n].vit = 0;
+                ennemis[n].ia = "wait";
+                return 4;
+            }
+            ennemis[n].vit = 0.05;
+            return (ennemis[n].sens+2)%4;
+        }
+    }
+    else if (ennemis[n].ia == "wait"){
+        var zeta = 4;
+        heros.forEach(
+            function(e){
+                if (e.x == ennemis[n].x){
+                    if (e.y < ennemsi[n].y){
+                        ennemsi[n].vit = 0.15;
+                        ennemis[n].ia = "fonce";
+                        zeta = 0;
+                    }
+                    else {
+                        ennemsi[n].vit = 0.15;
+                        ennemis[n].ia = "fonce";
+                        zeta = 2;
+                    }
+                }
+                else if (e.y == ennemis[n].y){
+                    if (e.x < ennemsi[n].x){
+                        ennemsi[n].vit = 0.15;
+                        ennemis[n].ia = "fonce";
+                        zeta = 3;
+                    }
+                    else {
+                        ennemsi[n].vit = 0.15;
+                        ennemis[n].ia = "fonce";
+                        zeta = 1;
+                    }
+                }
+            }
+        );
+        if (final.indexOf(zeta) != -1) return zeta;
+        else return 4;
+    }
     else if (ennemis[n].ia == "mur"){
         for(var i = 0;i < 4;i++){
             if (final.indexOf(((ennemis[n].sens+3) + i)%4) != -1) return ((ennemis[n].sens+3) + i)%4;
