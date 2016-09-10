@@ -308,6 +308,8 @@ function start(){
     ctx = canvas.getContext("2d");
     W = canvas.width;
     H = canvas.height;
+    goto = "depart";
+    out = 1;
     niveau = iles["depart"].alti;
     objNiveau = iles["depart"].obj;
     Painter.niveau( niveau );
