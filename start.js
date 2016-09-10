@@ -835,6 +835,14 @@ function drawInterface(){
 }
 
 function attack(n){
+    if (heros[n].invent[heros[n].objet] == "boat"){
+        if (out != 1) return;
+        heros[0].x = boatPosition[1];
+        heros[0].y = boatPosition[0];
+        goto = "";
+        onSea = 1;
+        return;
+    }
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
     var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
@@ -917,13 +925,6 @@ function attack(n){
             console.log(JSON.stringify(niveau));
             console.log(JSON.stringify(objNiveau));
         }
-    }
-    else if (heros[n].invent[heros[n].objet] == "boat"){
-        if (out != 1) return;
-        heros[0].x = boatPosition[1];
-        heros[0].y = boatPosition[0];
-        goto = "";
-        onSea = 1;
     }
     else if (heros[n].invent[heros[n].objet] == "pot"){
         pots.push({"alti":niveau[heros[n].y][heros[n].x] + 0.9,"g":15,"x":heros[n].x + heros[n].vx / 50,"y":heros[n].y + heros[n].vy / 50,"ox":heros[n].x + vecteurs[heros[n].sens][1] * 3,"oy":heros[n].y + vecteurs[heros[n].sens][0] * 3,"n":0});
