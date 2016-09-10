@@ -34,12 +34,12 @@ var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint"];
-var imgEnnemi = ["dark","bokoblin","link","feu","chuchu","bossFeu","bossFeuDead","scie"];
+var imgEnnemi = ["dark","bokoblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","switch2","porte0","cle0","cle1","coffre2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","scie","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","switch2","porte0","cle0","cle1","coffre2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -169,8 +169,8 @@ function precharge(){
                 }
             );
             heros = JSON.parse(window.localStorage.getItem("heros"));
-            heros[0].object = 0;
-            heros[1].object = 0;
+            heros[0].objet = 0;
+            heros[1].objet = 0;
             var where = JSON.parse(window.localStorage.getItem("whereAmI"));
             quests = JSON.parse(window.localStorage.getItem("quests"));
             out = where[0];
@@ -770,7 +770,7 @@ function drawEnnemi(n){
         ennemis[n].z = altitude;
     }
     if (edition == 0 && figer == 0){
-        if (ennemis[n].n == 1/ennemis[n].v){
+        if (ennemis[n].n == Math.round(1/ennemis[n].v)){
             if (ennemis[n].img == "feu"){
                 try {
                     if (niveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]] == altitude){
@@ -1096,6 +1096,14 @@ function pencil(x,y,action){
 function hitEnnemis(n,degat,sens){
     if (ennemis[n].pv == 0) return;
     if (ennemis[n].img == "feu") return;
+    if (ennemis[n].ia == "ball"){
+        console.log("ball !!!");
+        ennemis[n].sens = sens;
+        if (degat == 0) ennemis[n].v = 0.05;
+        else ennemis[n].v = 0.1;
+        ennemis[n].n = Math.round(1/ennemis[n].v);
+        return;
+    }
     if (ennemis[n].img == "bossFeu"){
         if (degat == 0) {
             ennemis[n].img = "bossFeuDead";
@@ -1186,6 +1194,7 @@ function hitEnnemis(n,degat,sens){
 
 function hitHeros(n,degat,sens){
     if (heros[n].mortal > 0) return;
+    if (degat == -1) return;
     heros[n].vx = 0;
     heros[n].vy = 0;
     if ((heros[n].y + vecteurs[sens][0]) < niveau.length){

@@ -62,6 +62,20 @@ function choseDirection(n){
             return 4;
         }
     }
+    else if (ennemis[n].ia == "ball"){
+        if (ennemis[n].v == 0.025) return 4;
+        else {
+            if (final.indexOf(ennemis[n].sens) == -1){
+                ennemis[n].sens = (ennemis[n].sens +2)%4;
+            }
+            if (ennemis[n].nn == 0) ennemis[n].nn = 1;
+            else {
+                ennemis[n].nn = 0;
+                ennemis[n].v = ennemis[n].v / 2;
+            }
+            return ennemis[n].sens;
+        }
+    }
     else if (ennemis[n].ia == "wait"){
         var zeta = 4;
         heros.forEach(
