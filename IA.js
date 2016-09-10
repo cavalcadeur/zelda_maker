@@ -40,42 +40,48 @@ function choseDirection(n){
     }
     else if (ennemis[n].ia == "fonce"){
         if (final.indexOf(ennemis[n].sens) != -1){
+            ennemis[n].endu += 1;
             return ennemis[n].sens;
         }
         else {
-            if ((ennemis[n].x == ennemis[n].ox && ennemis[n].y == ennemis[n].oy) || ennemis[n].vit == 0.05){
-                ennemis[n].vit = 0;
-                ennemis[n].ia = "wait";
-                return 4;
-            }
-            ennemis[n].vit = 0.05;
+            ennemis[n].ia = "retour";
             return (ennemis[n].sens+2)%4;
+        }
+    }
+    else if (ennemis[n].ia == "retour"){
+        if (ennemis[n].endu == 0) {
+            ennemis[n].ia = "wait";
+            return 4;
+        }
+        if (final.indexOf(ennemis[n].sens) != -1){
+            ennemis[n].endu -= 1;
+            return ennemis[n].sens;
+        }
+        else {
+            ennemis[n].ia = "wait";
+            return 4;
         }
     }
     else if (ennemis[n].ia == "wait"){
         var zeta = 4;
         heros.forEach(
             function(e){
-                if (e.x == ennemis[n].x){
-                    if (e.y < ennemsi[n].y){
-                        ennemsi[n].vit = 0.15;
+                if (e.x == Math.round(ennemis[n].x)){
+                    if (e.y < Math.round(ennemis[n].y)){
                         ennemis[n].ia = "fonce";
                         zeta = 0;
                     }
                     else {
-                        ennemsi[n].vit = 0.15;
                         ennemis[n].ia = "fonce";
                         zeta = 2;
                     }
                 }
-                else if (e.y == ennemis[n].y){
-                    if (e.x < ennemsi[n].x){
-                        ennemsi[n].vit = 0.15;
+                else if (e.y == Math.round(ennemis[n].y)){
+                    if (e.x < Math.round(ennemis[n].x)){
                         ennemis[n].ia = "fonce";
                         zeta = 3;
                     }
                     else {
-                        ennemsi[n].vit = 0.15;
                         ennemis[n].ia = "fonce";
                         zeta = 1;
                     }

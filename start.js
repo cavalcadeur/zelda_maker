@@ -169,6 +169,8 @@ function precharge(){
                 }
             );
             heros = JSON.parse(window.localStorage.getItem("heros"));
+            heros[0].object = 0;
+            heros[1].object = 0;
             var where = JSON.parse(window.localStorage.getItem("whereAmI"));
             quests = JSON.parse(window.localStorage.getItem("quests"));
             out = where[0];
