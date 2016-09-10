@@ -33,13 +33,13 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3"];
+var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint"];
 var imgEnnemi = ["dark","bokoblin","link","feu","chuchu","bossFeu","bossFeuDead"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","switch2","porte0","cle0","cle1","coffre2","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","switch2","porte0","cle0","cle1","coffre2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -47,6 +47,7 @@ var boatPosition = [220,220];
 var casePencil = [0,0];
 var editM = 0;
 var objetMort = 0;
+var savedMap,savedHouseMap;
 
 // programme
 
@@ -61,6 +62,71 @@ function resize(){
     canvas.setAttribute("height",H);
 }
 
+function save(){
+    figer = 1;
+    alert("Sauvegarde en cours, cela peut prendre du temps mais pas toujours. Tout dépends du ressenti que vous en avez et de la réelle longueur du chargement. Parce que mine de rien, il y en a des choses à sauvegarder dans ce jeu. Surtout si vous avez eu l'aimable sauvagerie de couper toutes les herbes ou de défigurer mes jolies petites îles avec le pinceau.");
+    var ilesDif = [];
+    var i = 0;
+    for(var key in iles){
+        ilesDif[i] = [key,[],[]];
+        savedMap[key].obj.forEach(
+            function(e,y){
+                e.forEach(
+                    function(f,x){
+                        if (f != iles[key].obj[y][x]) ilesDif[i][1].push([y,x,iles[key].obj[y][x]]);
+                    }
+                );
+            }
+        );
+        savedMap[key].alti.forEach(
+            function(e,y){
+                e.forEach(
+                    function(f,x){
+                        if (f != iles[key].alti[y][x]) ilesDif[i][2].push([y,x,iles[key].alti[y][x]]);
+                    }
+                );
+            }
+        );
+        i ++;
+    }
+    var ilesDifHouse = [];
+    var i = 0;
+    for(var key in interieurs){
+        ilesDifHouse[i] = [key,[],[]];
+        savedHouseMap[key].obj.forEach(
+            function(e,y){
+                e.forEach(
+                    function(f,x){
+                        if (f != interieurs[key].obj[y][x]) ilesDifHouse[i][1].push([y,x,interieurs[key].obj[y][x]]);
+                    }
+                );
+            }
+        );
+        savedHouseMap[key].alti.forEach(
+            function(e,y){
+                e.forEach(
+                    function(f,x){
+                        if (f != interieurs[key].alti[y][x]) ilesDifHouse[i][2].push([y,x,interieurs[key].alti[y][x]]);
+                    }
+                );
+            }
+        );
+        i ++;
+    }
+    var whereAmI = [out,goto];
+    window.localStorage.setItem("whereAmI",JSON.stringify(whereAmI));
+    window.localStorage.setItem("ilesDif",JSON.stringify(ilesDif));
+    window.localStorage.setItem("ilesDifHouse",JSON.stringify(ilesDifHouse));
+    window.localStorage.setItem("heros",JSON.stringify(heros));
+    alert("Cette sauvegarde est maintenant terminée. Dites moi en commentaire si le chargement était long. Moi je vous dit au revoir et n'oubliez pas de vous abonner à la chaîne et de liker cette video avant d'aller en voir une autre. MERCI.");
+    figer = 0;
+}
+
+function unSave(){
+    window.localStorage.setItem("ilesDif",JSON.stringify(-1));
+    window.location.reload();
+}
+
 function precharge(){
     ctx.fillrect = "rgb(0,0,0)";
     ctx.fillRect(0,0,W,H);
@@ -68,6 +134,53 @@ function precharge(){
     fondfond.src = "images/Title.png";
     fondfond.onload = function(){
         ctx.drawImage(fondfond,0,0,W,H);
+        savedMap = JSON.parse(JSON.stringify(iles));
+        savedHouseMap = JSON.parse(JSON.stringify(interieurs));
+        var ilesDif = JSON.parse(window.localStorage.getItem("ilesDif"));
+        if (ilesDif != null && ilesDif != -1){
+            ilesDif.forEach(
+                function(e){
+                    e[1].forEach(
+                        function(f){
+                            iles[e[0]].obj[f[0]][f[1]] = f[2];
+                        }
+                    );
+                    e[2].forEach(
+                        function(f){
+                            iles[e[0]].alti[f[0]][f[1]] = f[2];
+                        }
+                    );
+                }
+            );
+            var ilesDifHouse = JSON.parse(window.localStorage.getItem("ilesDifHouse"));
+            ilesDifHouse.forEach(
+                function(e){
+                    e[1].forEach(
+                        function(f){
+                            interieurs[e[0]].obj[f[0]][f[1]] = f[2];
+                        }
+                    );
+                    e[2].forEach(
+                        function(f){
+                            interieurs[e[0]].alti[f[0]][f[1]] = f[2];
+                        }
+                    );
+                }
+            );
+            heros = JSON.parse(window.localStorage.getItem("heros"));
+            var where = JSON.parse(window.localStorage.getItem("whereAmI"));
+            out = where[0];
+            goto = where[1];
+            if (out == 1){
+                niveau = iles[goto].alti;
+                objNiveau = iles[goto].obj;
+            }
+            else{
+                niveau = interieurs[goto].alti;
+                objNiveau = interieurs[goto].obj;
+            }
+            Painter.niveau( niveau );
+        }
         charge();
     };
 }
@@ -717,7 +830,7 @@ function attack(n){
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     var grassContent = ["","","","rubisVert","rubisVert","rubisBleu"];
     var truc = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0];
-    if ((truc == "coffre0" || truc == "porte0" || truc == "pot" || truc == "PNJ") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
+    if ((truc == "coffre0" || truc == "porte0" || truc == "pot" || truc == "PNJ" || truc == "checkPoint" || truc == "unCheckPoint") && niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] == niveau[heros[n].y][heros[n].x]){
         if (truc == "coffre0"){
             Crossed.improve();
             objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "coffre1";
@@ -738,6 +851,12 @@ function attack(n){
             heros[n].objet = heros[n].invent.length - 1;
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1) objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
             else objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "";
+        }
+        else if (truc == "checkPoint"){
+            save();
+        }
+        else if (truc == "unCheckPoint"){
+            unSave();
         }
     }
     else if (heros[n].invent[heros[n].objet] == "mastersword"){
@@ -1078,7 +1197,7 @@ function hitHeros(n,degat,sens){
 
 function isSolid(x,y){
     var truc = objNiveau[y][x][0];
-    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1" || truc == "lit0" || truc == "lit1" || truc == "stele" || truc == "houseHelp" || truc == "templeFeu0" || truc == "templeFeu1"|| truc == "templeFeu2" || truc == "palmier" || truc == "arbre1" || truc == "bougie" || truc == "switch2" || truc == "switch3") return true;
+    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1" || truc == "lit0" || truc == "lit1" || truc == "stele" || truc == "houseHelp" || truc == "templeFeu0" || truc == "templeFeu1"|| truc == "templeFeu2" || truc == "palmier" || truc == "arbre1" || truc == "bougie" || truc == "switch2" || truc == "switch3" || truc == "checkPoint" || truc == "unCheckPoint") return true;
     else return false;
 }
 
