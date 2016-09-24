@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1}];
 var seaLimit = [1200,900];
 var seaScroll = [0,0];
 var ennemis = [];
@@ -13,7 +13,6 @@ var pressurePlate = [];
 var pots = [];
 var out = 1;
 var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(107,93,66)","rgb(90,70,50)",[20,80,10,10,40,5],"rgb(72,98,178)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"]];
-// Il faut bien noter que les altitudes négatives sont interdites au dela de -1 pour cause de bugs graphiques
 var niveau = [];
 var quests = {"chef":0,"jehan":0,"garcon":0,"boussole":0,"boussoleF":0};
 var alerting = 0;
@@ -33,21 +32,23 @@ var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint"];
-var imgEnnemi = ["dark","bokoblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon"];
+var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau"];
+var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","stele","plate","switch2","porte0","cle0","cle1","coffre2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","coffre0","coffre1","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","feu","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","stele","plate","switch2","porte0","cle0","cle1","coffre2","checkPoint","tele","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","mastersword","boomerang","hookShot","boat","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
 var boatPosition = [220,220];
 var casePencil = [0,0];
 var editM = 0;
+var hookShots = [];
 var objetMort = 0;
 var savedMap,savedHouseMap;
+var respawnPoint = [0,0];
 
 // programme
 
@@ -175,6 +176,8 @@ function precharge(){
             quests = JSON.parse(window.localStorage.getItem("quests"));
             out = where[0];
             goto = where[1];
+            respawnPoint[0] = heros[0].x;
+            respawnPoint[1] = heros[0].y;
             if (goto != ""){
                 if (out == 1){
                     niveau = iles[goto].alti;
@@ -193,8 +196,8 @@ function precharge(){
 
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
-    var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1"];
-    var imgInterface = ["blank","mastersword","boomerang","pencil","boat","pot","lettre","GPS","aiguille"];
+    var debris = ["pot0","pot1","pot2","pot3","pot4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB"];
+    var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
     var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","boat0","boat1","boat2","boat3","pot0","pot1","pot2","pot3","lettre0","lettre1","lettre2","lettre3"];
@@ -321,6 +324,7 @@ function start(){
     Painter.niveau( niveau );
     resize();
     Crossed.init(W,H);
+    respawnPoint = [8,13];
     //    canvas.addEventListener("click",function(evt) {
     //                           evt.stopPropagation();
     //                        evt.preventDefault();
@@ -418,7 +422,64 @@ function action(t){
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
     heros.forEach(
         function(h,n){
-            if (h.vx == 0 && h.vy == 0 && figer == 0){
+            if (h.grap > 0){
+                if (h.grap == 1){
+                    h.grapD += 2;
+                    var gx = h.x + (vecteurs[h.sens][1] * ((h.grapD+10)/10));
+                    var gy = h.y + (vecteurs[h.sens][0] * ((h.grapD+10)/10));
+                    hookShots[heros[n].nGrap].x = gx;
+                    hookShots[heros[n].nGrap].y = gy;
+                    if (h.grapD/10 == Math.floor(h.grapD/10)){
+                        if (gy == niveau.length || gy < 0 || gx < 0 || gx == niveau[0].length){
+                            h.grap = 2;
+                        }
+                        else if (niveau[gy][gx] > h.z) h.grap = 2;
+                        else if (h.grapD > 50) h.grap = 2;
+                        else if (niveau[gy][gx] == Math.floor(h.z)){
+                            if (isSolid(gx,gy) == true) h.grap = 3;
+                        }
+                    }
+                }
+                else if (h.grap == 2){
+                    h.grapD -= 2;
+                    var gx = h.x + (vecteurs[h.sens][1] * ((h.grapD+10)/10));
+                    var gy = h.y + (vecteurs[h.sens][0] * ((h.grapD+10)/10));
+                    hookShots[heros[n].nGrap].x = gx;
+                    hookShots[heros[n].nGrap].y = gy;
+                    if (h.grapD == 0) {
+                        h.grap = 0;
+                        hookShots.splice(h.nGrap,1);
+                        if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
+                        heros[n].nGrap = -1;
+                    }
+                }
+                else if (h.grap == 3){
+                    if (h.vx == 0 && h.vy == 0){
+                        var gx = h.x + (vecteurs[h.sens][1] * (h.grapD/10));
+                        var gy = h.y + (vecteurs[h.sens][0] * (h.grapD/10));
+                        if (isSolid(h.x + vecteurs[h.sens][1],h.y + vecteurs[h.sens][0]) == true){ 
+                            h.grap = 0;
+                            hookShots.splice(h.nGrap,1);
+                            if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
+                            heros[n].nGrap = -1;
+                        }
+                        else move(h.sens,n,1);
+                    }
+                }
+                if (h.grap != 0){
+                    var hx = h.x + h.vx/50;
+                    var hy = h.y + h.vy/50;
+                    var cx = (hookShots[h.nGrap].x - hx)/6;
+                    var cy = (hookShots[h.nGrap].y - hy)/6;
+                    hookShots[h.nGrap].chaine.forEach(
+                        function(m,i){
+                            m[0] = hx + cx*(i+1);
+                            m[1] = hy + cy*(i+1);
+                        }
+                    );
+                }
+            }
+            else if (h.vx == 0 && h.vy == 0 && figer == 0){
                 var supress = 1;
                 if (objNiveau[h.y][h.x][0] != "" && isSolid(h.x,h.y) == false){
                     var truc = objNiveau[h.y][h.x];
@@ -459,34 +520,9 @@ function action(t){
                         supress = 0;
                     }
                     else if (truc[0] == "teleport"){
-                        goto = truc[2];
-                        heros[0].x = truc[3];
-                        heros[0].y = truc[4];
-                        heros[1].x = truc[5];
-                        heros[1].y = truc[6];
-                        out = truc[1];
-                        if (truc[1] == 1){
-                            niveau = iles[goto].alti;
-                            ennemis = iles[goto].ennemis;
-                            objNiveau = iles[goto].obj;
-                        }
-                        else{
-                            if (interieurs[goto].particles == undefined){
-                                particles = [];
-                            }
-                            else {
-                                particles = interieurs[goto].particles;
-                            }
-                            niveau = interieurs[goto].alti;
-                            ennemis = interieurs[goto].ennemis;
-                            objNiveau = interieurs[goto].obj;
-                        }
-                        onSea = 0;
-                        heros[0].z = niveau[heros[0].y][heros[0].x];
-                        heros[1].z = niveau[heros[1].y][heros[1].x];
-                        Painter.niveau(niveau);
+                        goToLevel(truc[1],truc[2],truc[3],truc[4],truc[5],truc[6]);
                     }
-                    else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil"){
+                    else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot"){
                         h.invent.push(truc[0]);
                         h.objet = h.invent.length - 1;
                         supress = 0;
@@ -497,10 +533,10 @@ function action(t){
                     }
 
                 }
-                if (1 == keys[controlKeys[n][1]]) move(1,n);
-                else if (1 == keys[controlKeys[n][3]]) move(3,n);
-                else if (1 == keys[controlKeys[n][0]]) move(0,n);
-                else if (1 == keys[controlKeys[n][2]]) move(2,n);
+                if (1 == keys[controlKeys[n][1]]) move(1,n,0);
+                else if (1 == keys[controlKeys[n][3]]) move(3,n,0);
+                else if (1 == keys[controlKeys[n][0]]) move(0,n,0);
+                else if (1 == keys[controlKeys[n][2]]) move(2,n,0);
             }
             ennemis.forEach(
                 function(e){
@@ -511,13 +547,35 @@ function action(t){
                         else if (h.vy < 0) var Sens = 0;
                         else if (h.vy < 0) var Sens = 2;
                         else var Sens = e.sens;
-                        hitHeros(n,e.att,Sens);
+                        if (e.img == "main") {
+                            goToLevel(e.out,e.goto,e.xx,e.yy,e.xx,e.yy);
+                            particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
+                        }
+                        else hitHeros(n,e.att,Sens);
                     }
                 }
             );
-            if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] && h.g < 5)) h.g += 0.05;
-            else {h.g = 0; h.z = niveau[h.y][h.x];}
-            h.z -= h.g;
+            if (h.grap == 0){
+                if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] && h.g < 5)) h.g += 0.05;
+                else {h.g = 0; h.z = niveau[h.y][h.x];
+                      if (h.z < 0){
+                          if (out == 1 || out == 3){
+                              particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
+                              particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+                          }
+                          else if (out == 2){
+                              particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
+                              particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
+                          }
+                          heros[n].x = respawnPoint[0];
+                          heros[n].y = respawnPoint[1];
+                          heros[n].vie -= 0.5;
+                          heros[n].stun = 20;
+                          heros[n].mortal = 60;
+                      }
+                     }
+                h.z -= h.g;
+            }
             if (figer == 1) {h.tAura += h.vAura; if (h.tAura == 40 | h.tAura == -40) h.vAura = h.vAura * -1;}
             else if (h.vx > 0) {h.vx -= 5; if(h.x*50 + scrollX < 0) scrollX += 5;}
             else if (h.vy > 0) {h.vy -= 5; if(h.y*50 + scrollX < 0) scrollY += 5;}
@@ -528,7 +586,7 @@ function action(t){
     draw();
 }
 
-function move(d,n){
+function move(d,n,gg){
     if (heros[n].stun > 0) return;
     if (heros[n].sens != d){
         heros[n].sens = d;
@@ -539,36 +597,23 @@ function move(d,n){
         heros[n].delay -= 1;
         return;
     }
-    if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
-    if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
-    if (niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] == -1 || isSolid(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0]) == true) {
-        if (heros[n].sens == 0){
-            if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house0" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house3" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "houseHelp" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "templeFeu1"){
-                goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
-                if (interieurs[goto].particles == undefined){
-                    particles = [];
+    if (gg == 0){
+        if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
+        if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
+
+        if (isSolid(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0]) == true) {
+            if (heros[n].sens == 0){
+                if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house0" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house3" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "houseHelp" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "templeFeu1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "templeEau1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "miniTempleEau"){
+                    goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
+                    out = interieurs[goto].out;
+                    goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
+                    if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
                 }
-                else {
-                    particles = interieurs[goto].particles;
-                }
-                out = interieurs[goto].out;
-                niveau = interieurs[goto].alti;
-                onSea = 0;
-                heros[0].x = interieurs[goto].heros[0][1];
-                heros[0].y = interieurs[goto].heros[0][0];
-                heros[0].z = niveau[heros[0].y][heros[0].x];
-                heros[1].x = interieurs[goto].heros[1][1];
-                heros[1].y = interieurs[goto].heros[1][0];
-                heros[1].z = niveau[heros[1].y][heros[1].x];
-                ennemis = interieurs[goto].ennemis;
-                objNiveau = interieurs[goto].obj;
-                Painter.niveau(niveau);
-                if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
             }
+            return;
         }
-        return;
+        if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     }
-    if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     heros[n].x +=  vecteurs[d][1];
     heros[n].y +=  vecteurs[d][0];
     heros[n].vx += -50 * vecteurs[d][1];
@@ -603,8 +648,8 @@ function draw() {
     }
     else if (out == 3){
         waves.forEach(
-            function(e){
-                rondNiveau(e);
+            function(e,n){
+                if (n < 7) rondNiveau(e);
             }
         );
     }
@@ -614,10 +659,29 @@ function draw() {
                 function(f,x){
                     Painter.cell( ctx, x, y, f ,0);
                     if (objNiveau[y][x][0] == "coffre3") objetMort = 1;
-                    if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
-                    else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
-                    else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
-                    else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                    else if (objNiveau[y][x][0] == "main0"){
+                        if (edition == 0 && figer == 0){
+                            objNiveau[y][x][1] -=1;
+                            if (objNiveau[y][x][1] == 0){
+                                objNiveau[y][x][0] = "main1";
+                                boomerang.push({"x":x,"y":y,"vx":0,"vy":0,"sx":x,"sy":x,"r":0,"alti":niveau[y][x],"sens":objNiveau[y][x][2],"endu":10,"content":[]});
+                            }
+                        }
+                    }
+                    if (niveau[y][x] < 0){
+                        if (isFloodable(x,y) == false){
+                            if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
+                            else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
+                            else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
+                            else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                        }
+                    }
+                    else{
+                        if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
+                        else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
+                        else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
+                        else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                    }
                     //testTerrain(x,y,f);
                     //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
                     heros.forEach(
@@ -636,23 +700,19 @@ function draw() {
                             if (y == Math.round(g.y + g.n*((g.oy - g.y)/32)) && x == e.length - 1) drawPot(g,i);
                         }
                     );
-                    particles.forEach(
-                        function(kgb,iii){
-                            if (y == kgb.y && x == e.length - 1){
-                                if (kgb.type == "herbe") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
-                                else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                                else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                                else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
-                                else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
-                                kgb.n += 1;
-                                if (kgb.type == "flamme") kgb.alti += kgb.g/150;
-                                else kgb.alti += kgb.g/50;
-                                kgb.g -= 1;
-                                if (kgb.n == kgb.lim) {
-                                    if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
-                                    particles.splice(iii,1);
-                                }
+                    hookShots.forEach(
+                        function(omg){
+                            if (y == Math.round(omg.y) && x == Math.round(omg.x)){
+                                var rr = (omg.s * Math.PI)/2;
+                                Painter.imgBoomerang(ctx,omg.x,omg.y,omg.z,rr,imgDebris["hook"]);
                             }
+                            omg.chaine.forEach(
+                                function(m){
+                                    if (y == Math.round(m[1]) && x == Math.ceil(m[0])){
+                                        Painter.img(ctx,m[0],m[1],omg.z,imgDebris["chaineA"]);
+                                    }
+                                }
+                            );
                         }
                     );
                     boomerang.forEach(
@@ -675,7 +735,8 @@ function draw() {
                                     if (f.endu == 0){
                                         objNiveau[f.y][f.x].splice(0,0,"boomerang");
                                         f.content.forEach(function(g){objNiveau[f.y][f.x].splice(1,0,g);});
-                                        boomerang.splice(i,1);return;
+                                        boomerang.splice(i,1);
+                                        return;
                                     }
                                     else if (f.endu == 5) f.sens = (f.sens+2)%4;
                                     if ((f.y + vecteurs[f.sens][0]) <= -1 | (f.x + vecteurs[f.sens][1]) <= -1 | (f.y + vecteurs[f.sens][0]) >= niveau.length | (f.x + vecteurs[f.sens][1]) >= niveau[f.y].length){
@@ -689,6 +750,8 @@ function draw() {
                                             if (f.endu <= 5) f.endu = 1;
                                             else {f.endu = 11 - f.endu; f.sens = (f.sens+2)%4;}
                                             if (truc == "switch0" | truc == "switch1") changeColor();
+                                            else if (truc == "wSwitch0") {waterLevel(1);machin[0] = "wSwitch1";}
+                                            else if (truc == "wSwitch1") {waterLevel(-1);machin[0] = "wSwitch0";}
                                             else if (truc == "switch2"){
                                                 if (machin[3] == "") objNiveau[machin[2]][machin[1]] = [""];
                                                 else if (machin[3] == 1 || machin[3] == -1){
@@ -701,6 +764,12 @@ function draw() {
                                                     }
                                                 }
                                                 machin[0] = "switch3";
+                                            }
+                                            else if (truc == "main1"){
+                                                machin[0] = "main0";
+                                                machin[1] = 120;
+                                                boomerang.splice(i,1);
+                                                return;
                                             }
                                         }
                                         else {
@@ -726,6 +795,29 @@ function draw() {
                                 else if (f.vy < 0) f.vy += 5;
                                 else if (f.vx > 0) f.vx -= 5;
                                 else if (f.vx < 0) f.vx += 5;
+                            }
+                        }
+                    );
+                    particles.forEach(
+                        function(kgb,iii){
+                            if (y == kgb.y && x == e.length - 1){
+                                if (kgb.type == "herbe") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
+                                else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                                else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                                else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
+                                else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
+                                else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                                else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
+                                else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
+                                else if (kgb.type == "fadeOut") drawFade(kgb.n);
+                                kgb.n += 1;
+                                if (kgb.type == "flamme") kgb.alti += kgb.g/150;
+                                else kgb.alti += kgb.g/50;
+                                kgb.g -= 1;
+                                if (kgb.n == kgb.lim) {
+                                    if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
+                                    particles.splice(iii,1);
+                                }
                             }
                         }
                     );
@@ -761,7 +853,7 @@ function drawEnnemi(n){
     if (ennemis[n].pv == 0) return;
     Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[String(ennemis[n].img + ennemis[n].sens)] );
     var altitude = niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)];
-    if (ennemis[n].z > altitude) {
+    if (ennemis[n].z > altitude && ennemis[n].img != "mPierreA" && ennemis[n].img != "mPierreB") {
         ennemis[n].z -= ennemis[n].g;
         ennemis[n].g += 0.05;
     }
@@ -809,7 +901,7 @@ function drawInterface(){
         if (editM == 0 || editHand[editnumber] == "return") ctx.drawImage(imgElement[editHand[editnumber]],mouse[1],mouse[0]- imgElement[editHand[editnumber]].height / 2);
         else ctx.drawImage(imgMonstre[editHand[editnumber]+2],mouse[1],mouse[0]- imgMonstre[editHand[editnumber]+2].height / 2);
     }
-    if (editPlate == 1){
+    if (editPlate == 1 || editPlate == 2){
         ctx.beginPath();
         ctx.arc(mouse[1],mouse[0],15,-Math.PI,Math.PI);
         ctx.stroke();
@@ -901,6 +993,8 @@ function attack(n){
             if (truc == "herbe0" | truc == "herbe1") particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
         }
         else if (truc == "switch0" || truc == "switch1") changeColor();
+        else if (truc == "wSwitch0") {waterLevel(1);machin[0] = "wSwitch1";}
+        else if (truc == "wSwitch1") {waterLevel(-1);machin[0] = "wSwitch0";}
         else if (truc == "switch2"){
             if (machin[3] == "") objNiveau[machin[2]][machin[1]] = [""];
             else if (machin[3] == 1 || machin[3] == -1){
@@ -936,6 +1030,7 @@ function attack(n){
             edition = 0;
             console.log(JSON.stringify(niveau));
             console.log(JSON.stringify(objNiveau));
+            console.log(JSON.stringify(ennemis));
         }
     }
     else if (heros[n].invent[heros[n].objet] == "pot"){
@@ -949,6 +1044,14 @@ function attack(n){
         while (niveau[pots[nPot].oy][pots[nPot].ox] > pots[nPot].alti) {pots[nPot].ox -= vecteurs[heros[n].sens][1];pots[nPot].oy -= vecteurs[heros[n].sens][0];}
         heros[n].invent.splice(heros[n].objet,1);
         if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
+    }
+    else if (heros[n].invent[heros[n].objet] == "hookShot"){
+        if (heros[n].grap == 0 && heros[n].g == 0){
+            heros[n].grap = 1;
+            heros[n].grapD = 0;
+            heros[n].nGrap = hookShots.length;
+            hookShots.push({x:heros[n].x,y:heros[n].y,s:heros[n].sens,z:heros[n].z,chaine:[[heros[n].x,heros[n].y],[heros[n].x,heros[n].y],[heros[n].x,heros[n].y],[heros[n].x,heros[n].y],[heros[n].x,heros[n].y]]});
+        }
     }
     else if (heros[n].invent[heros[n].objet] == "lettre"){
         var to = "martin@memora.tolokoban.org";
@@ -971,13 +1074,14 @@ function attack(n){
 function donnerHeros(obj,n){
     heros[n].sens = 2;
     heros[n].aura = obj;
-    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl puis appuyez sur maj pour déchainer votre créativité.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures. Pour cela, mettez vous face à une case de mer et appuyez sur maj.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment.","lettre":"C'est une lettre metaphysique !! Elle vous permet de briser le 4eme mur en envoyant l'île dans laquelle vous vous trouvez au créateur du jeu. Si elle est jugée interessante, elle sera intégrée dans le jeu. A vos pinceaux, créateurs de tous poils !!!","tabouret":"Un vieux tabouret moche. En plus il ne ressemble pas à un tabouret mais plutôt à une table basse.","fleur2":"Un vase rempli de fleur !!! Voilà qui ferait plaisir à votre amant.","table0":"Une moitié de table ... Surtout ne croquez pas dedans !","table1":"C'est une demi-table. C'est aussi inutile que déplaisant à voir.","etagere":"Une etagere. Mais qu'est ce qu'il y a dedans ?","coffre1":"Vous obtenez un coffre déjà ouvert. Gné ????????","house0":"Woaw ! Mais c'est une maison ! Posez la avant d'avoir une crampe aux bras.","house1":"Une moitié de maison. Il est difficile d'avoir un meilleur rapport inutilité/encombrement.","house2":"Vous obtenez une moitié de maison. Vous restez sans voix.","house3":"Mais qu'est ce que c'est que cette horreur ???","house4":"Vous obtenez une moitié de maison. Le doute s'insinue en vous : et si tout était lié ?","armure":"Un bouclier et des épées !!! Pas de bol, c'est en plastique...","torche":"Pourquoi avoir mis une torche dans un coffre ? Pourquoi ?","rubisBlanc":"C'est le légendaire rubis blanc. Il vaut 10 000 fucking rubis verts !!! Votre fortune est faite.","stele":"Ils arrivent ...","aiguille":"Vous avez découvert une aiguille magnetisée. C'est un des trois élements de la boussole.","palmier":"Vous obtenez un palmier. Tout est dit.","plate":"Un interrupteur au sol. Je suis presque certain que ça n'a rien à faire dans vos mains."};
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl puis appuyez sur maj pour déchainer votre créativité.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures. Pour cela, mettez vous face à une case de mer et appuyez sur maj.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment.","lettre":"C'est une lettre metaphysique !! Elle vous permet de briser le 4eme mur en envoyant l'île dans laquelle vous vous trouvez au créateur du jeu. Si elle est jugée interessante, elle sera intégrée dans le jeu. A vos pinceaux, créateurs de tous poils !!!","tabouret":"Un vieux tabouret moche. En plus il ne ressemble pas à un tabouret mais plutôt à une table basse.","fleur2":"Un vase rempli de fleur !!! Voilà qui ferait plaisir à votre amant.","table0":"Une moitié de table ... Surtout ne croquez pas dedans !","table1":"C'est une demi-table. C'est aussi inutile que déplaisant à voir.","etagere":"Une etagere. Mais qu'est ce qu'il y a dedans ?","coffre1":"Vous obtenez un coffre déjà ouvert. Gné ????????","house0":"Woaw ! Mais c'est une maison ! Posez la avant d'avoir une crampe aux bras.","house1":"Une moitié de maison. Il est difficile d'avoir un meilleur rapport inutilité/encombrement.","house2":"Vous obtenez une moitié de maison. Vous restez sans voix.","house3":"Mais qu'est ce que c'est que cette horreur ???","house4":"Vous obtenez une moitié de maison. Le doute s'insinue en vous : et si tout était lié ?","armure":"Un bouclier et des épées !!! Pas de bol, c'est en plastique...","torche":"Pourquoi avoir mis une torche dans un coffre ? Pourquoi ?","rubisBlanc":"C'est le légendaire rubis blanc. Il vaut 10 000 fucking rubis verts !!! Votre fortune est faite.","stele":"Ils arrivent ...","aiguille":"Vous avez découvert une aiguille magnetisée. C'est un des trois élements de la boussole.","palmier":"Vous obtenez un palmier. Tout est dit.","plate":"Un interrupteur au sol. Je suis presque certain que ça n'a rien à faire dans vos mains.","hookShot":"C'est un grappin, il permet d'aggriper un objet solide afin d'être tracté jusqu'à lui. Assignez le avec ctrl et utilisez le avec maj. Il peut parcourir jusqu'à 5 cases !","statue0":"C'est une statue, elle vous dit quelque chose mais un détail vous fait douter ... Peut-être est-ce le fait que la tête soit une main ?","vitre":"Vous avez découvert une vitre de boussole. C'est un des trois éléments nécéssaires à la fabrication de la boussole des éléments. C'est sans doute peu utile une vitre, vu comme ça mais c'est très pratique pour éviter que le cadran soit plein de poussière !"};
     alert(description[obj]);
     figer = 1;
     if (obj == "rubisVert") heros[n].rubis += 1;
     else if (obj == "rubisBleu") heros[n].rubis += 5;
     else if (obj == "rubisRouge") heros[n].rubis += 20;
     else if (obj == "mastersword") {heros[n].invent.push("mastersword");heros[n].objet = heros[n].invent.length - 1;}
+    else if (obj == "hookShot") {heros[n].invent.push("hookShot");heros[n].objet = heros[n].invent.length - 1;}
     else if (obj == "boomerang") {heros[n].invent.push("boomerang");heros[n].objet = heros[n].invent.length - 1;}
     else if (obj == "pencil") {heros[n].invent.push("pencil");heros[n].objet = heros[n].invent.length - 1;}
     else if (obj == "lettre") {heros[n].invent.push("lettre");heros[n].objet = heros[n].invent.length - 1;}
@@ -988,6 +1092,7 @@ function donnerHeros(obj,n){
     else if (obj == "fragment") {if (heros[n].vieTotale<20){heros[n].vieTotale += 1;}heros[n].vie = heros[n].vieTotale;}
     else if (obj == "rubisRouge") heros[n].rubis += 10000;
     else if (obj == "aiguille") quests.boussole += 2;
+    else if (obj == "vitre") quests.boussole += 3;
 }
 
 function changeColor(){
@@ -1028,7 +1133,23 @@ function pencil(x,y,action){
     //    if (x < 0 | y < 0 | x > (niveau[0].length)*50 | y > (niveau.length)*50) return;
     var coor = Painter.case(niveau,x,y);
     if (coor[0] == "ah") return;
-    if (editPlate == 1 && action != "return"){
+    if (editPlate == 2){
+        if (Math.abs(coor[0]-pressurePlate[0]) > Math.abs(coor[1] - pressurePlate[1])){
+            if (coor[0] > pressurePlate[0]){
+                var ss = 2;
+            }
+            else var ss = 0;
+        }
+        else{
+            if (coor[1] > pressurePlate[1]){
+                var ss = 1;
+            }
+            else var ss = 3;
+        }
+        objNiveau[pressurePlate[0]][pressurePlate[1]][2] = ss;
+        editPlate = 0;
+    }
+    else if (editPlate == 1 && action != "return"){
         if (editM == 1) return;
         editPlate = 0;
         if (action == 1 || action == -1){
@@ -1098,6 +1219,19 @@ function pencil(x,y,action){
             else if (action == "coffre2"){
                 objNiveau[coor[0]][coor[1]][0] = "coffre3";
             }
+            else if (action == "tele"){
+                objNiveau[coor[0]][coor[1]] = ["teleport",1,"depart",8,13,9,13];
+            }
+            else if (action == "main0"){
+                objNiveau[coor[0]][coor[1]] = ["main0",50];
+                editPlate = 2;
+                pressurePlate = [coor[0],coor[1]];
+            }
+            else if (action == "main1"){
+                objNiveau[coor[0]][coor[1]] = ["main1",50];
+                editPlate = 2;
+                pressurePlate = [coor[0],coor[1]];
+            }
             if (action == "plate" || action == "switch2"){
                 editPlate = 1;
                 pressurePlate = [coor[0],coor[1],0];
@@ -1107,10 +1241,14 @@ function pencil(x,y,action){
 }
 
 function hitEnnemis(n,degat,sens){
-    if (ennemis[n].pv == 0) return;
-    if (ennemis[n].img == "feu") return;
+    if (ennemis[n].pv <= 0) return;
+    if (ennemis[n].img == "feu" || ennemis[n].img == "scie") return;
+    if (ennemis[n].img == "moblin"){
+        if (ennemis[n].sens == (sens+2)%4 && sens != 4){
+            degat = 0;
+        }
+    }
     if (ennemis[n].ia == "ball"){
-        console.log("ball !!!");
         ennemis[n].sens = sens;
         if (degat == 0) ennemis[n].v = 0.05;
         else ennemis[n].v = 0.1;
@@ -1154,20 +1292,23 @@ function hitEnnemis(n,degat,sens){
     ennemis[n].pv -= degat;
     ennemis[n].sens = (sens + 2)%4;
     ennemis[n].stun = 1;
-    if (degat == 0) ennemis[n].stun = 2;
+    if (degat == 0) {ennemis[n].stun = 2;particles.push({n:0,type:"hitB",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});}
+    else particles.push({n:0,type:"hitA",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});
     ennemis[n].x = Math.round(ennemis[n].x);
     ennemis[n].y = Math.round(ennemis[n].y);
-    if (Math.round(ennemis[n].y) + vecteurs[sens][0] < niveau.length){
-        if (Math.round(ennemis[n].x) + vecteurs[sens][1] < niveau[Math.round(ennemis[n].y) + vecteurs[sens][0]].length){
-            if (niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)] == niveau[Math.round(vecteurs[sens][0] + ennemis[n].y)][Math.round(vecteurs[sens][1] + ennemis[n].x)]){
-                ennemis[n].x = Math.round(vecteurs[sens][1] + ennemis[n].x);
-                ennemis[n].y = Math.round(vecteurs[sens][0] + ennemis[n].y);
+    if (sens < 4 && ennemis[n].img != "mCorps"){
+        if (Math.round(ennemis[n].y) + vecteurs[sens][0] < niveau.length){
+            if (Math.round(ennemis[n].x) + vecteurs[sens][1] < niveau[Math.round(ennemis[n].y) + vecteurs[sens][0]].length){
+                if (niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)] == niveau[Math.round(vecteurs[sens][0] + ennemis[n].y)][Math.round(vecteurs[sens][1] + ennemis[n].x)]){
+                    ennemis[n].x = Math.round(vecteurs[sens][1] + ennemis[n].x);
+                    ennemis[n].y = Math.round(vecteurs[sens][0] + ennemis[n].y);
+                }
             }
         }
     }
     if (ennemis[n].pv <= 0) {
-        particles.push({n:0,type:"fumeeM",x:ennemis[n].x,y:ennemis[n].y,g:0,alti:ennemis[n].z,lim:40});
-        console.log(objetMort);
+        particles.push({n:0,type:"fumeeM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:40});
+        ennemis[n].pv = 0;
         if (objetMort > 0){
             var xxx = 0;
             ennemis.forEach(
@@ -1202,21 +1343,30 @@ function hitEnnemis(n,degat,sens){
             niveau  = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,0,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
             Painter.niveau(niveau);
         }
+        else if (ennemis[n].img == "mCorps"){
+            ennemis.forEach(
+                function (e,n){
+                    hitEnnemis(n,10000,4); 
+                }
+            );
+        }
     }
 }
 
 function hitHeros(n,degat,sens){
     if (heros[n].mortal > 0) return;
     if (degat == -1) return;
+    heros[n].grap = 0;
+    hookShots.splice(heros[n].nGrap,1);
+    if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
+    heros[n].nGrap = -1;
     heros[n].vx = 0;
     heros[n].vy = 0;
     if ((heros[n].y + vecteurs[sens][0]) < niveau.length){
-        if (niveau[heros[n].y + vecteurs[sens][0]][heros[n].x + vecteurs[sens][1]] != -1) {
-            if (niveau[heros[n].y][heros[n].x] >= niveau[heros[n].y + vecteurs[sens][0]][heros[n].x + vecteurs[sens][1]] && (heros[n].x + vecteurs[sens][1]) < niveau[heros[n].y + vecteurs[sens][0]].length){
-                if (isSolid(heros[n].x + vecteurs[sens][1],heros[n].y + vecteurs[sens][0]) == false){
-                    heros[n].x += vecteurs[sens][1];
-                    heros[n].y += vecteurs[sens][0];
-                }
+        if (niveau[heros[n].y][heros[n].x] >= niveau[heros[n].y + vecteurs[sens][0]][heros[n].x + vecteurs[sens][1]] && (heros[n].x + vecteurs[sens][1]) < niveau[heros[n].y + vecteurs[sens][0]].length){
+            if (isSolid(heros[n].x + vecteurs[sens][1],heros[n].y + vecteurs[sens][0]) == false){
+                heros[n].x += vecteurs[sens][1];
+                heros[n].y += vecteurs[sens][0];
             }
         }
     }
@@ -1225,9 +1375,47 @@ function hitHeros(n,degat,sens){
     heros[n].mortal = 60;
 }
 
+function waterLevel(n){
+    niveau.forEach(
+        function(e,y){
+            e.forEach(
+                function(fff,x){
+                    niveau[y][x] += n;
+                }
+            );
+        }
+    );
+    Painter.niveau(niveau);
+    Painter.scrollYPlus(30*n);
+    heros.forEach(
+        function (e){
+            e.z += n;
+        }
+    );
+    ennemis.forEach(
+        function (e,n){
+            e.z += n;
+            if (e.z < 0){
+                ennemis[n].pv = 0;
+            }
+        }
+    );
+    boomerang.forEach(
+        function(e){
+            e.alti += n;
+        }
+    );
+}
+
 function isSolid(x,y){
     var truc = objNiveau[y][x][0];
-    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1" || truc == "lit0" || truc == "lit1" || truc == "stele" || truc == "houseHelp" || truc == "templeFeu0" || truc == "templeFeu1"|| truc == "templeFeu2" || truc == "palmier" || truc == "arbre1" || truc == "bougie" || truc == "switch2" || truc == "switch3" || truc == "checkPoint" || truc == "unCheckPoint") return true;
+    if (truc == "arbre0" || truc == "coffre0" || truc == "coffre1" || truc == "porte0" || truc == "bleu0" || truc == "rouge1" || truc == "switch0" || truc == "switch1" || truc == "house0" || truc == "house1" || truc == "house2" || truc == "house3" || truc == "house4" || truc == "pot" || truc == "PNJ" || truc == "fleur2" || truc == "table0" || truc == "table1" || truc == "etagere" || truc == "armure" || truc == "tabouret" || truc == "autel" || truc == "torche" || truc == "torche1" || truc == "lit0" || truc == "lit1" || truc == "stele" || truc == "houseHelp" || truc == "templeFeu0" || truc == "templeEau0" || truc == "templeFeu1"|| truc == "templeFeu2" || truc == "templeEau1"|| truc == "templeEau2" || truc == "palmier" || truc == "arbre1" || truc == "bougie" || truc == "switch2" || truc == "switch3" || truc == "checkPoint" || truc == "unCheckPoint" || truc == "wSwitch0" || truc == "wSwitch1" || truc == "main0" || truc == "main1" || truc == "statue0" || truc == "miniTempleEau") return true;
+    else return false;
+}
+
+function isFloodable(x,y){
+    var truc = objNiveau[y][x][0];
+    if (truc == "herbe0" || truc == "pot" || truc == "coffre0" || truc == "coffre1" || truc == "switch0" || truc == "switch1" || truc == "switch2" || truc == "switch3" || truc == "checkPoint" || truc == "herbe1" || truc == "PNJ" || truc == "armure" || truc == "table0" || truc == "table1" || truc == "unCheckPoint" || truc == "fleur2" || truc == "coeur" || truc == "rubisVert" || truc == "rubisRouge" || truc == "rubisBleu" || truc == "rubisBlanc" || truc == "statue0") return true;
     else return false;
 }
 

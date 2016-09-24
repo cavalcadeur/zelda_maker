@@ -10,6 +10,16 @@ function choseDirection(n){
                     if (niveau[y][x] > -1 && niveau[y][x] == Math.round(ennemis[n].z)){
                         if (isSolid(x,y) == false){ final.push(e);}
                     }
+                    else if (ennemis[n].img == "main"){
+                        if (Math.abs(niveau[y][x] - Math.round(ennemis[n].z)) < 2){
+                            if (isSolid(x,y) == false && niveau[y][x] > -1){ final.push(e);}
+                        }
+                    }
+                    else if (ennemis[n].img == "mPierreA" || ennemis[n].img == "mPierreB"){
+                        if (niveau[y][x] <= Math.round(ennemis[n].z)){
+                            if (isSolid(x,y) == false) final.push(e);
+                        }
+                    }
                 }
             }
         }
@@ -110,5 +120,27 @@ function choseDirection(n){
             if (final.indexOf(((ennemis[n].sens+3) + i)%4) != -1) return ((ennemis[n].sens+3) + i)%4;
         }
     return 4;
+    }
+    else if (ennemis[n].ia == "waitS"){
+        ennemis[n].nnn += 1;
+        if (ennemis[n].nnn == 2){
+            particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
+            particles.push({n:-33,type:"fumeeF",x:5,y:2,g:0,alti:0,lim:40});
+            particles.push({n:-14,type:"fumeeF",x:9,y:5,g:0,alti:0,lim:40});
+            particles.push({n:-21,type:"fumeeF",x:7,y:8,g:0,alti:0,lim:40});
+            particles.push({n:-24,type:"fumeeF",x:9,y:10,g:0,alti:0,lim:40});
+            particles.push({n:0,type:"fumeeF",x:ennemis[n].x,y:ennemis[n].y,g:0,alti:0,lim:40});
+            ennemis[n].img = "mCorps";
+            ennemis[n].pv = 5;
+            ennemis[n].ia = "stop";
+            ennemis.push({"x":ennemis[n].x + 1,"y":ennemis[n].y,"endu":0,"pv":2,"img":"mPierreA","sens":2,"z":0,"g":0,"v":0.1,"n":10,"nn":0,"ia":"wait","stop":0,"stun":0,"att":1});
+            ennemis.push({"x":ennemis[n].x - 1,"y":ennemis[n].y,"endu":0,"pv":2,"img":"mPierreB","sens":2,"z":0,"g":0,"v":0.1,"n":10,"nn":0,"ia":"wait","stop":0,"stun":0,"att":1});
+        }
+        return 4;
+    }
+    else if (ennemis[n].ia == "stop") {
+        ennemis[n].g = -0.2;
+        ennemis[n].z += 0.05;
+        return 4;
     }
 }

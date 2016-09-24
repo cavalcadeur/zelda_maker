@@ -58,18 +58,21 @@ var Painter = function() {
 
                     if( x == 0 ) lineA = z + 1;
                     else if( level[y][x - 1] < z ) {
-                        lineA = z - level[y][x - 1];
+                        if (level[y][x-1] < -1) lineA = z + 1;
+                        else lineA = z - level[y][x - 1];
                     }
                     lineC = y == 0 ? z + 1 : 0;
                     if( y > 0 && level[y - 1][x] < z ) {
-                        lineC = z - level[y - 1][x];
+                        if (level[y-1][x] < -1) lineC = z + 1;
+                        else lineC = z - level[y-1][x];
                     }
                     if( x < cols - 1 ) {
                         lineC = Math.min( lineC, Math.max( 0, z - level[y][x + 1] ) );
                     }
                     lineB = z + 1;
                     if( x < cols - 1 && level[y][x + 1] <= z ) {
-                        lineB = z - level[y][x + 1];
+                        if (level[y][x+1] < -1) lineB = z + 1;
+                        else lineB = z - level[y][x + 1];
                     }
                     else if(x < cols - 1 && level[y][x + 1] >= z) lineB = 0;
                     if( y < rows - 1 ) {
@@ -87,9 +90,22 @@ var Painter = function() {
             scrollX = x;
             scrollY = y;
         },
+        
+        scrollYPlus: function(a) {
+            scrollY += a;
+        },
 
         drawQuake: function( n ) {
 			scrollX += Math.sin(n)*20;
+        },
+
+        drawChain: function(ctx,x,y,x2,y2,z) {
+            z += 0.5;
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.moveTo(toX(x,y,z) + cellX / 2,toY(x,y,z) - cellY / 1.5);
+            ctx.lineTo(toX(x2,y2,z) + cellX / 2,toY(x2,y2,z) - cellY / 2);
+            ctx.stroke();
         },
 
         img: function( ctx, x, y, z, img ) {
@@ -121,6 +137,31 @@ var Painter = function() {
 
             ctx.save();
             ctx.translate(X+12,Y);
+            ctx.scale(s,1);
+            ctx.drawImage(img,-img.width/2,-img.height/2);
+            ctx.restore();
+        },       
+        imgScaleTot: function( ctx, x, y, z, s, img ) {
+            if( !img ) return;
+
+            var X = toX( x, y, z ) + cellS / 2 + (cellX - img.width) / 2;
+            var Y = toY( x, y, z ) - img.height - cellY / 2;
+
+            ctx.save();
+            ctx.translate(X+12,Y);
+            ctx.scale(s,s);
+            ctx.drawImage(img,-img.width/2,-img.height/2);
+            ctx.restore();
+        },
+        imgScaleRot: function( ctx, x, y, z, s, r, img ) {
+            if( !img ) return;
+
+            var X = toX( x, y, z ) + cellS / 2 + (cellX - img.width) / 2;
+            var Y = toY( x, y, z ) - img.height - cellY / 2;
+
+            ctx.save();
+            ctx.translate(X+12,Y);
+	    ctx.rotate(r);
             ctx.scale(s,1);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();

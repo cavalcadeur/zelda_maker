@@ -57,3 +57,29 @@ function drawFlamme(type,n,x,y,alti,kgb){
     else number = 1;
     if (alti > -2) Painter.img( ctx, x, y, alti, imgDebris[type+number]);
 }
+
+function drawHit(type,x,y,alti){
+    Painter.img(ctx,x,y,alti,imgDebris[type]);
+}
+
+function drawRond(n,x,y,s,alti,type){
+    ctx.globalAlpha = (30-n)/30;
+    Painter.imgScaleTot(ctx,x+0.3,y,alti-2,s+n/30,imgDebris[type]);
+    ctx.globalAlpha = 1;
+}
+
+function drawEclabousse(n,x,y,alti,type){
+    var points = [[20,20,1],[20,-20,4],[-20,-20,-1],[-20,20,0],[0,0,15]];
+    points.forEach(
+        function (e){
+            Painter.img(ctx,x+(e[0]/100)*(1+n/30),y+(e[1]/100)*(1+n/30),alti+e[2]/100,imgDebris[type]);
+        }
+    );
+}
+
+function drawFade(n){
+    ctx.globalAlpha = 1 - n/30;
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillRect(0,0,W,H);
+    ctx.globalAlpha = 1;
+}
