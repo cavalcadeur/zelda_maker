@@ -1,0 +1,101 @@
+function TPisland(){
+    ctx.fillStyle = "rgb(192,196,186)";
+    ctx.fillRect(0,0,W,H);
+    // miniMap
+    if (islandData.select == 0){
+        ctx.fillStyle = colorSet[islandData.out][3];
+        ctx.fillRect(W-W/5,0,W/5,H/3);
+        var rgb = colorSet[islandData.out][2];
+        ctx.fillStyle = "rgb(" + rgb[0] + "," + rgb[1] + "," +  rgb[0] + ")";
+        ctx.fillRect(W-W/5 + W/20,H/12,W/5 - W/10,H/3 - H/6);
+        ctx.strokeRect(W-W/5 + W/20,H/12,W/5 - W/10,H/3 - H/6);
+
+        ctx.fillStyle = "rgb(109,133,35)";
+    }
+    else {
+        ctx.fillStyle = "rgb(100,100,100)";
+        ctx.fillRect(W-W/5,0,W/5,H/3);
+    }
+    // fleches out
+    ctx.beginPath();
+    ctx.moveTo(W - W/5 + W/30,H/3 + H/6);
+    ctx.lineTo(W - W/5 + W/15,H/3 + H/12);
+    ctx.lineTo(W - W/5 + W/15,H/3 + H/12 + H/6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(W - W/30,H/3 + H/6);
+    ctx.lineTo(W - W/15,H/3 + H/12);
+    ctx.lineTo(W - W/15,H/3 + H/12 + H/6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // fleche select Island
+    ctx.fillStyle = "rgb(106,207,25)";
+    ctx.beginPath();
+    ctx.moveTo(W - W/5 - W/15,H/3 + H/3);
+    ctx.lineTo(W - W/5 - W/15 - W/15,H/3 + H/3 - H/12);
+    ctx.lineTo(W - W/5 - W/15 - W/15,H/3 + H/3 + H/12);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    // selection d'iles
+    drawMiniIsland(interieurs.vide.alti,islandData.out,0,H/3,W/5,H/3,0);
+    for (var i = 1;i<6;i++){
+        if (markedLevels[i-1+(islandData.ileSet * 5)] != undefined){
+            if (i > 2) var superN = 1;
+            else var superN = 0;
+            var weirdArray = markedLevels[i-1+(islandData.ileSet * 5)];
+            if (weirdArray[1] == 1){
+                drawMiniIsland(iles[weirdArray[0]].alti,1,(W/5)*(i%3),H/3+(H/3)*superN,W/5,H/3,i+(islandData.ileSet * 5));
+            }
+            else drawMiniIsland(interieurs[weirdArray[0]].alti,weirdArray[1],(W/5)*(i%3),H/3+(H/3)*superN,W/5,H/3,i+(islandData.ileSet * 5));
+
+        }
+    }
+    // ile selectionnee
+    var nSelect = islandData.select - (islandData.ileSet * 5);
+    if (nSelect > 2) var superN = 1;
+    else var superN = 0;
+    ctx.beginPath();
+    ctx.arc(W/10 + (W/5)*(nSelect%3),H/3 + H/6 + (H/3)*superN,W/10,Math.PI,-Math.PI);
+    ctx.stroke();
+    ctx.drawImage(imgElement.okBouton,W - W/5,H/3 * 2+H/12,W/5,H/6);
+}
+
+function drawMiniIsland(alti,outout,x,y,w,h,n){
+    var rgb = colorSet[outout][2];
+    var cote = 0;
+    if ((w - w/5) / alti[0].length > (h - h/5) / alti.length) cote = (h - h/5) / alti.length;
+    else cote = (w - w/5) / alti[0].length;
+    alti.forEach(
+        function(e,yy){
+            e.forEach(
+                function(f,xx){
+                    if (f >= 0){
+                        ctx.fillStyle = "rgb("+(rgb[0]+f*rgb[3])+","+(rgb[1]+f*rgb[4])+","+(rgb[2]+f*rgb[5])+")";
+                        if (n == islandData.select){
+                            if (xx == islandData.x && yy == islandData.y) ctx.fillStyle = "rgb(255,255,255)";
+                        }
+                        ctx.fillRect(x + w/10 + xx*cote,y + h/10 + yy*cote,cote,cote);
+                    }
+                }
+            );
+        }
+    );
+}
+
+function TPclick(x,y){
+    if (x > W - W/5){
+        if (y > H - H/3) defineTP();
+        else if (y > H/3) {
+            
+
+        }
+
+
+    }
+
+
+}

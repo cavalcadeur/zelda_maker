@@ -209,11 +209,17 @@ function goToLevel(oo,go,x,y,x2,y2){
         }
     );
     boomerang = [];
+    if (oo == -1 || go == "void"){
+        onSea = 5;
+        islandData = {out:1,ileSet:0,x:0,y:0,select:0};
+        return;
+    }
     heros[0].x = x;
     heros[0].y = y;
     heros[1].x = x2;
     heros[1].y = y2;
     out = oo;
+    goto = go;
     if (oo == 1){
         niveau = iles[go].alti;
         ennemis = iles[go].ennemis;
@@ -235,4 +241,15 @@ function goToLevel(oo,go,x,y,x2,y2){
     heros[0].z = niveau[heros[0].y][heros[0].x];
     heros[1].z = niveau[heros[1].y][heros[1].x];
     Painter.niveau(niveau);
+}
+
+function defineTele(gg,outa){
+    if (objNiveau[teleport[0]][teleport[1]][0] == "teleport"){
+        objNiveau[teleport[0]][teleport[1]][1] = outa;
+        objNiveau[teleport[0]][teleport[1]][2] = gg;
+    }
+    else {
+        objNiveau[teleport[0]][teleport[1]][1] = gg;
+    }
+
 }

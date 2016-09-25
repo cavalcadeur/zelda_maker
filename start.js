@@ -31,14 +31,15 @@ var figer = 0;
 var edition = 0;
 var scrollX = 0;
 var scrollY = 0;
+var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau"];
+var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","okBouton"];
 var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","stele","plate","switch2","porte0","cle0","cle1","coffre2","checkPoint","tele","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","mastersword","boomerang","hookShot","boat","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","coffre2","checkPoint","tele","mark","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","boat","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -49,6 +50,8 @@ var hookShots = [];
 var objetMort = 0;
 var savedMap,savedHouseMap;
 var respawnPoint = [0,0];
+var markedLevels = [];
+var islandData = {};
 
 // programme
 
@@ -342,7 +345,8 @@ function start(){
             var rect = canvas.getBoundingClientRect();
             var x = event.clientX;
             var y = event.clientY;
-            if (edition == 0) {
+            if (onSea == 5) TPclick(x,y);
+            else if (edition == 0) {
                 if (heros[1].invent[heros[1].objet] == "GPS") GPS(x,y);
                 return;
             }
@@ -411,6 +415,7 @@ function animation(){
         }
         else{
             if (onSea == 0) action(t);
+            else if (onSea == 5) TPisland();
             else seaAction(t);
             window.requestAnimationFrame(f);
         }
@@ -520,6 +525,7 @@ function action(t){
                         supress = 0;
                     }
                     else if (truc[0] == "teleport"){
+                        teleport = [h.y,h.x];
                         goToLevel(truc[1],truc[2],truc[3],truc[4],truc[5],truc[6]);
                     }
                     else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot"){
@@ -547,7 +553,7 @@ function action(t){
                         else if (h.vy < 0) var Sens = 0;
                         else if (h.vy < 0) var Sens = 2;
                         else var Sens = e.sens;
-                        if (e.img == "main") {
+                        if (e.img == "main") {                            
                             goToLevel(e.out,e.goto,e.xx,e.yy,e.xx,e.yy);
                             particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
                         }
@@ -604,10 +610,22 @@ function move(d,n,gg){
         if (isSolid(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0]) == true) {
             if (heros[n].sens == 0){
                 if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house0" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "house3" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "houseHelp" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "templeFeu1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "templeEau1" || objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][0] == "miniTempleEau"){
-                    goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
-                    out = interieurs[goto].out;
-                    goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
-                    if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
+                    teleport = [heros[n].y+vecteurs[d][0],heros[n].x+vecteurs[d][1]];
+                    if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1] == "void"){
+                        goToLevel(out,"void",0,0,0,0);
+                    }
+                    else {
+                        goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
+                        if (interieurs[goto] == undefined){
+                            out = 1;
+                            goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
+                        }
+                        else {
+                            out = interieurs[goto].out;
+                            goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
+                        }                    
+                        if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
+                    }
                 }
             }
             return;
@@ -1028,6 +1046,7 @@ function attack(n){
         if (edition == 0)edition = 1;
         else if (editPlate == 0){
             edition = 0;
+            casePencil = ["ah","ah"];
             console.log(JSON.stringify(niveau));
             console.log(JSON.stringify(objNiveau));
             console.log(JSON.stringify(ennemis));
@@ -1068,6 +1087,35 @@ function attack(n){
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        markedLevels.forEach(
+            function (ee){
+                if (ee[0] != goto){
+                    if (ee[1] == 1){
+                        var llevel = iles[ee[0]];
+                    }
+                    else {
+                        var llevel = interieurs[ee[0]];
+                    }
+                    var nnn = llevel.alti;
+                    var ooo = llevel.obj;
+                    var eee = llevel.ennemis;
+                    var to = "martin@memora.tolokoban.org";
+                    var subject = "Niveau Maker's Pencil " + ee[0] + " out=" + ee[1];
+                    var body = JSON.stringify(nnn) + JSON.stringify(ooo) + JSON.stringify(eee);
+                    
+                    var link = document.createElement('a');
+                    link.setAttribute(
+                        'href',
+                        'mailto:' + to
+                            + "?subject=" + encodeURI(subject)
+                            + "&body=" + encodeURI(body)
+                    );
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }                
+            }
+        );
     }
 }
 
@@ -1178,9 +1226,19 @@ function pencil(x,y,action){
             Painter.niveau(niveau);
         }
         else if (action == "delete"){
-            if (objNiveau[coor[0]][coor[1]].length > 1) objNiveau[coor[0]][coor[1]].splice(0,1);
-            else objNiveau[coor[0]][coor[1]][0] = "";
-
+            if (editM == 1){
+                ennemis.forEach(
+                    function(e,i){
+                        if (Math.round(e.x) == coor[1] && Math.round(e.y) == coor[0]){
+                            ennemis.splice(i,1);
+                        }
+                    }
+                );
+            }
+            else {
+                if (objNiveau[coor[0]][coor[1]].length > 1) objNiveau[coor[0]][coor[1]].splice(0,1);
+                else objNiveau[coor[0]][coor[1]][0] = "";
+            }
         }
         else if (action == "return"){
             editHand = editObject[out];
@@ -1190,12 +1248,22 @@ function pencil(x,y,action){
         else if (editM == 1){
             ennemis.push(monstreType(action,coor[1],coor[0]));
         }
+        else if (action == "mark"){
+            console.log(goto);
+            var lol = markedLevels.find(
+                function(elem){
+                    return elem[0] == goto;
+                }
+            );
+            if (lol == undefined)markedLevels.push([goto,out]);
+        }
         else{
             if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].splice(0,0,action);
             else objNiveau[coor[0]][coor[1]][0] = action;
             if (action == "house3" && coor[1] + 1 != objNiveau[coor[0]].length){
                 if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house4");
                 else objNiveau[coor[0]][coor[1]+1][0] = "house4";
+                objNiveau[coor[0]][coor[1]].splice(1,0,"void");
             }
             if (action == "planche0" && coor[1] + 1 != objNiveau[coor[0]].length){
                 if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"planche1");
@@ -1212,15 +1280,19 @@ function pencil(x,y,action){
             if (action == "house1" && coor[1] + 1 != objNiveau[coor[0]].length){
                 if (objNiveau[coor[0]][coor[1]+1][0] != "") objNiveau[coor[0]][coor[1]+1].splice(0,0,"house2");
                 else objNiveau[coor[0]][coor[1]+1][0] = "house2";
+                objNiveau[coor[0]][coor[1]].splice(1,0,"void");
             }
             if (action == "lambda0"){
                 objNiveau[coor[0]][coor[1]] = ["PNJ","lambda0","blablabla"];
+            }
+            else if (action == "house0"){
+                objNiveau[coor[0]][coor[1]].splice(1,0,"void");
             }
             else if (action == "coffre2"){
                 objNiveau[coor[0]][coor[1]][0] = "coffre3";
             }
             else if (action == "tele"){
-                objNiveau[coor[0]][coor[1]] = ["teleport",1,"depart",8,13,9,13];
+                objNiveau[coor[0]][coor[1]] = ["teleport",-1,"void",0,0,0,0];
             }
             else if (action == "main0"){
                 objNiveau[coor[0]][coor[1]] = ["main0",50];
@@ -1393,10 +1465,10 @@ function waterLevel(n){
         }
     );
     ennemis.forEach(
-        function (e,n){
-            e.z += n;
+        function (e,c){
+            ennemis[c].z += n;
             if (e.z < 0){
-                ennemis[n].pv = 0;
+                ennemis[c].pv = 0;
             }
         }
     );
