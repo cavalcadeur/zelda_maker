@@ -1,6 +1,5 @@
 function TPisland(){
-    ctx.fillStyle = "rgb(192,196,186)";
-    ctx.fillRect(0,0,W,H);
+    ctx.drawImage(fondfond,0,0,W,H);
     // miniMap
     if (islandData.select == 0){
         ctx.fillStyle = colorSet[islandData.out][3];
@@ -16,30 +15,6 @@ function TPisland(){
         ctx.fillStyle = "rgb(100,100,100)";
         ctx.fillRect(W-W/5,0,W/5,H/3);
     }
-    // fleches out
-    ctx.beginPath();
-    ctx.moveTo(W - W/5 + W/30,H/3 + H/6);
-    ctx.lineTo(W - W/5 + W/15,H/3 + H/12);
-    ctx.lineTo(W - W/5 + W/15,H/3 + H/12 + H/6);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(W - W/30,H/3 + H/6);
-    ctx.lineTo(W - W/15,H/3 + H/12);
-    ctx.lineTo(W - W/15,H/3 + H/12 + H/6);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-    // fleche select Island
-    ctx.fillStyle = "rgb(106,207,25)";
-    ctx.beginPath();
-    ctx.moveTo(W - W/5 - W/15,H/3 + H/3);
-    ctx.lineTo(W - W/5 - W/15 - W/15,H/3 + H/3 - H/12);
-    ctx.lineTo(W - W/5 - W/15 - W/15,H/3 + H/3 + H/12);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
     // selection d'iles
     drawMiniIsland(interieurs.vide.alti,islandData.out,0,H/3,W/5,H/3,0);
     for (var i = 1;i<6;i++){
@@ -65,8 +40,6 @@ function TPisland(){
         ctx.arc(W/10 + (W/5)*(nSelect%3),H/3 + H/6 + (H/3)*superN,W/10,Math.PI,-Math.PI);
         ctx.stroke();
     }
-    // bouton ok
-    ctx.drawImage(imgElement.okBouton,W - W/5,H/3 * 2+H/12,W/5,H/6);
 }
 
 function drawMiniIsland(alti,outout,x,y,w,h,n){
