@@ -90,6 +90,11 @@ var Painter = function() {
             scrollX = x;
             scrollY = y;
         },
+
+        centerScroll: function ( x, y , z , W , H) {
+            scrollX = Math.floor(W/2 - x*cellX + y*cellS);
+            scrollY = Math.floor(H/2 - y*cellY + z*cellZ);
+         },
         
         scrollYPlus: function(a) {
             scrollY += a;
@@ -262,6 +267,21 @@ var Painter = function() {
                         function(f,X){
                             if (toY(X,Y,f) > y && toY(X,Y,f) - cellY < y){
                                 if (toX(X,Y,f) < x && toX(X,Y,f) + cellX + cellS > x) result = [Y,X];
+                            }
+                        }
+                    );
+                }
+            );
+            return result;
+        },
+        caseGround: function(level,x,y){
+            var result = ["ah","ah"];
+            level.forEach(
+                function(e,Y){
+                    e.forEach(
+                        function(f,X){
+                            if (toY(X,Y,-1) > y && toY(X,Y,-1) - cellY < y){
+                                if (toX(X,Y,-1) < x && toX(X,Y,-1) + cellX + cellS > x) result = [Y,X];
                             }
                         }
                     );

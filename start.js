@@ -43,7 +43,8 @@ var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate
 var onSea = 0;
 var waves = [];
 var goto = "";
-var boatPosition = [220,220];
+var boatPosition = [200,100];
+var onSeaIsland = [];
 var casePencil = [0,0];
 var editM = 0;
 var hookShots = [];
@@ -385,8 +386,8 @@ function start(){
             event.stopPropagation();
             keys[event.keyCode] = 1;
             Crossed.keysPress(event.keyCode);
-            if (event.keyCode == 16) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0);}}
-            else if (event.keyCode == 13) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(1);}}
+            if (event.keyCode == 16 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0);}}
+            else if (event.keyCode == 13 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(1);}}
         }
     );
     document.addEventListener(
@@ -395,8 +396,8 @@ function start(){
             event.preventDefault();
             event.stopPropagation();
             keys[event.keyCode] = 0;
-            if (event.keyCode == 17) changeArme(0);
-            else if (event.keyCode == 96) changeArme(1);
+            if (event.keyCode == 17 && onSea == 0) changeArme(0);
+            else if (event.keyCode == 96 && onSea == 0) changeArme(1);
         }
     );
     for(var i = 0;i < 17;i ++){
@@ -418,7 +419,7 @@ function animation(){
         else{
             if (onSea == 0) action(t);
             else if (onSea == 5) TPisland();
-            else seaAction(t);
+            else sail(t);
             window.requestAnimationFrame(f);
         }
     };
@@ -588,10 +589,10 @@ function action(t){
                 h.z -= h.g;
             }
             if (figer == 1) {h.tAura += h.vAura; if (h.tAura == 40 | h.tAura == -40) h.vAura = h.vAura * -1;}
-            else if (h.vx > 0) {h.vx -= 5; if(h.x*50 + scrollX < 0) scrollX += 5;}
-            else if (h.vy > 0) {h.vy -= 5; if(h.y*50 + scrollX < 0) scrollY += 5;}
-            else if (h.vx < 0) {h.vx += 5; if(h.x*50 + scrollX + 50 > W) scrollX -= 5;}
-            else if (h.vy < 0) {h.vy += 5; if(h.y*50 + scrollY + 50 > H) scrollY -= 5;}
+            else if (h.vx > 0) {h.vx -= 5; }
+            else if (h.vy > 0) {h.vy -= 5; }
+            else if (h.vx < 0) {h.vx += 5; }
+            else if (h.vy < 0) {h.vy += 5; }
         });
     if (heros[0].vx != 0 || heros[0].vy != 0 || heros[0].g != 0 || edition == 1)Painter.scrolling();
     draw();
@@ -956,8 +957,8 @@ function attack(n){
     if (heros[n].invent[heros[n].objet] == "boat"){
         if (heros[n].y + vecteurs[heros[n].sens][0] == niveau.length || heros[n].y + vecteurs[heros[n].sens][0] == -1 || heros[n].x + vecteurs[heros[n].sens][1] == niveau[0].length || heros[n].x + vecteurs[heros[n].sens][1] == -1){
             if (out == 1){
-                heros[0].x = boatPosition[1];
-                heros[0].y = boatPosition[0];
+                boatPosition[1] = heros[n].x + vecteurs[heros[n].sens][1] + boatPosition[1];
+                boatPosition[0] = heros[n].y + vecteurs[heros[n].sens][0] + boatPosition[0];
                 goto = "";
                 onSea = 1;
                 return;
@@ -965,8 +966,8 @@ function attack(n){
         }
         else if (niveau[heros[n].y+vecteurs[heros[n].sens][0]][heros[n].x+vecteurs[heros[n].sens][1]] == -1){
             if (out == 1){
-                heros[0].x = boatPosition[1];
-                heros[0].y = boatPosition[0];
+                boatPosition[1] = heros[n].x + vecteurs[heros[n].sens][1] + boatPosition[1];
+                boatPosition[0] = heros[n].y + vecteurs[heros[n].sens][0] + boatPosition[0];
                 goto = "";
                 onSea = 1;
                 return;

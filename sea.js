@@ -91,25 +91,6 @@ function waveMove(e){
     e[2] += 1;
 }
 
-function moveBoat(d){
-    heros[0].x += vecteurs[d][1] * 5;
-    heros[0].y += vecteurs[d][0] * 5;
-    if (heros[0].x < 0) heros[0].x = 0;
-    if (heros[0].y < 0) heros[0].y = 0;
-    if (heros[0].x > seaLimit[0]) heros[0].x = seaLimit[0];
-    if (heros[0].y > seaLimit[1]) heros[0].y = seaLimit[1];
-    if (heros[0].x - seaScroll[0] > W) seaScroll[0] = heros[0].x - W;
-    if (heros[0].x - seaScroll[0] < 0) seaScroll[0] = heros[0].x;
-    if (heros[0].y - seaScroll[1] > H) seaScroll[1] = heros[0].y - H;
-    if (heros[0].y - seaScroll[1] < 0) seaScroll[1] = heros[0].y;
-    sea.forEach(
-        function(e){
-            testIsland(e);
-        }
-    );
-    if (goto == "") boatPosition = [heros[0].y,heros[0].x];
-}
-
 function waveNiveau(e){
     ctx.fillStyle = "rgb(180,180,215)";
     if (e[2] < 100 && e[2] > 0){
@@ -241,6 +222,8 @@ function goToLevel(oo,go,x,y,x2,y2){
     heros[0].z = niveau[heros[0].y][heros[0].x];
     heros[1].z = niveau[heros[1].y][heros[1].x];
     Painter.niveau(niveau);
+	Painter.scroll(0,0);
+	Painter.centerScroll(x,y,0,W,H);
 }
 
 function defineTele(gg,outa){

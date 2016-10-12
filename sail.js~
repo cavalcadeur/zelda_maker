@@ -1,0 +1,82 @@
+function sail(t){
+    var controlKeys = [[38,39,40,37],[101,99,98,97]];
+    if (1 == keys[controlKeys[0][1]]) moveBoat(1);
+    if (1 == keys[controlKeys[0][3]]) moveBoat(3);
+    if (1 == keys[controlKeys[0][0]]) moveBoat(0);
+    if (1 == keys[controlKeys[0][2]]) moveBoat(2);
+    drawSail(t);
+}
+
+function moveBoat(n){
+    var shallPass = 1;
+    onSeaIsland.forEach(
+        function(e){
+            var IIII = iles[e[0]].alti;
+            if (boatPosition[0] + vecteurs[n][0]/4 >= e[2] && boatPosition[0] + vecteurs[n][0]/4 < e[2] + IIII.length && boatPosition[1] + vecteurs[n][1]/4 - vecteurs[n][0]/20 >= e[1] && boatPosition[1] + vecteurs[n][1]/4 - vecteurs[n][0]/20 < e[1] + IIII[0].length){
+                if (IIII[Math.floor(boatPosition[0] + vecteurs[n][0]/4)-e[2]][Math.floor(boatPosition[1] + vecteurs[n][1]/4 - vecteurs[n][0]/20)-e[1]] > -1){
+                    shallPass = 0;
+                }
+            }
+        }
+    );
+    if (shallPass == 0) return;
+    boatPosition[0] += vecteurs[n][0]/4;
+    boatPosition[1] += vecteurs[n][1]/4 - vecteurs[n][0]/20;
+    waves.forEach(
+        function (e){
+            e[0] -= vecteurs[n][1]*12 - vecteurs[n][0]*2.5;
+            e[1] -= vecteurs[n][0]*9;
+            if (e[1] > H+10) e[1] = -10;
+            else if (e[1] < -10) e[1] = H+10;
+            if (e[0] > W+10) e[0] = -10;
+            else if (e[0] < -10) e[0] = W+10;
+        }
+    );
+}
+
+function drawSail(t){
+    ctx.fillStyle = "rgb(72,98,178)";
+    ctx.fillRect(0,0,W,H);
+    waves.forEach(
+        function(f){
+            waveNiveau(f);
+        }
+    );
+    onSeaIsland = [];
+    sea.forEach(
+        function(e){ 
+            if ((W/100+boatPosition[1] > e[2]-5) && (boatPosition[1] - (W/100) < e[2]+iles[e[0]].alti[0].length+5) && (boatPosition[0] > e[1]) && (boatPosition[0] - H/70 < e[1]+iles[e[0]].alti.length)){
+                drawIleSail(e[0],e[2] - boatPosition[1] + (W/100),e[1] - boatPosition[0] + (H/70));
+                onSeaIsland.push([e[0],e[2],e[1]]);
+            }
+        }
+    );
+    
+    ctx.drawImage(imgBoat,W/2 - imgBoat.width,H/2 - imgBoat.height);
+
+    sea.forEach(
+        function(e){ 
+            if ((W/100+boatPosition[1] > e[2]-5) && (boatPosition[1] - (W/100) < e[2]+iles[e[0]].alti[0].length+5) && (H/70+boatPosition[0] > e[1]) && (boatPosition[0] < e[1]+iles[e[0]].alti.length/2)){
+                drawIleSail(e[0],e[2] - boatPosition[1] + (W/100),e[1] - boatPosition[0] + (H/70));
+                onSeaIsland.push([e[0],e[2],e[1]]);
+            }
+        }
+    );
+}
+
+function drawIleSail(name,X,Y){
+    Painter.scroll(X*50,Y*35);
+    var loc = iles[name];
+    Painter.niveau(loc.alti);
+    loc.alti.forEach(
+        function(e,y){
+            e.forEach(
+                function(f,x){
+                    Painter.cell(ctx,x,y,f,0);
+                }
+            );
+        }
+    );
+
+
+}

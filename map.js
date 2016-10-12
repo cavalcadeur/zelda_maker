@@ -61,4 +61,4 @@ var iles = {
     }
 };
 
-var sea = [["test",100,500],["course",150,780],["sage",50,300],["volcan",500,700],["vide",700,100],["cyclope",570,1000],["depart",200,100],["aqua",700,400]];
+var sea = [["test",300,300],["course",10,450],["sage",200,150],["volcan",400,170],["vide",400,96],["cyclope",400,600],["depart",200,100],["aqua",410,270]];
