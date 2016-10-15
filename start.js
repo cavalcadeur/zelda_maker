@@ -1511,8 +1511,9 @@ function isSolid(x,y){
     else return false;
 }
 
-function isFloodable(x,y){
-    var truc = objNiveau[y][x][0];
+function isFloodable(x,y,carteChelouWeshWesh){
+    if( typeof carteChelouWeshWesh === 'undefined' ) carteChelouWeshWesh = objNiveau; 
+    var truc = carteChelouWeshWesh[y][x][0];
     if (truc == "herbe0" || truc == "pot" || truc == "coffre0" || truc == "coffre1" || truc == "switch0" || truc == "switch1" || truc == "switch2" || truc == "switch3" || truc == "checkPoint" || truc == "herbe1" || truc == "PNJ" || truc == "armure" || truc == "table0" || truc == "table1" || truc == "unCheckPoint" || truc == "fleur2" || truc == "coeur" || truc == "rubisVert" || truc == "rubisRouge" || truc == "rubisBleu" || truc == "rubisBlanc" || truc == "statue0") return true;
     else return false;
 }

@@ -172,20 +172,21 @@ var Painter = function() {
             ctx.restore();
         },
 
-        cell: function( ctx, x, y, z ,n) {
+        cell: function( ctx, x, y, z ,n , nivel) {
      
             //-----------------------------------------------------------------
             
+			if( typeof nivel === 'undefined' ) nivel = niveau; 
             if( z > -1 ) {
                 var X = toX( x, y, z );
                 var Y = toY( x, y, z );	
                 	// Partie frontale (verticale)
-                	if  (y == niveau.length - 1 || z > niveau[y+1][x]){
+                	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
                     	ctx.fillStyle = colorSet[out][0];
                     	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
                 	}
                 	// Partie latérale (verticale)
-                	if  (x == niveau[y].length - 1 || z > niveau[y][x+1]){
+                	if  (x == nivel[y].length - 1 || z > nivel[y][x+1]){
                     	ctx.fillStyle = colorSet[out][1];
                     	ctx.beginPath();
                     	ctx.moveTo( X + cellX, Y );

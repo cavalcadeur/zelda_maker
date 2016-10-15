@@ -67,12 +67,27 @@ function drawIleSail(name,X,Y){
     var X2 = ((X - Y/5) - (boatPosition[1] - boatPosition[0]/5 - (W/100)))*50;
     Painter.scroll(X2,Y2);
     var loc = iles[name];
+    var objNi = loc.obj;
     Painter.niveau(loc.alti);
     loc.alti.forEach(
         function(e,y){
             e.forEach(
                 function(f,x){
-                    Painter.cell(ctx,x,y,f,0);
+                    Painter.cell(ctx,x,y,f,0,loc.alti);
+                    if (loc.alti[y][x] < 0){
+                        if (isFloodable(x,y,objNi) == false){
+                            if (objNi[y][x][0] == "bleu0" || objNi[y][x][0] == "bleu1" || objNi[y][x][0] == "rouge0" || objNi[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNi[y][x][0]] );
+                            else if (objNi[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNi[y][x][0]] );
+                            else if (objNi[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNi[y][x][1]]);
+                            else Painter.img( ctx, x, y, f, imgElement[objNi[y][x][0]] );
+                        }
+                    }
+                    else{
+                        if (objNi[y][x][0] == "bleu0" || objNi[y][x][0] == "bleu1" || objNi[y][x][0] == "rouge0" || objNi[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNi[y][x][0]] );
+                        else if (objNi[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNi[y][x][0]] );
+                        else if (objNi[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNi[y][x][1]]);
+                        else Painter.img( ctx, x, y, f, imgElement[objNi[y][x][0]] );
+                    }
                 }
             );
             if (y + Y == Math.floor(boatPosition[0])) ctx.drawImage(imgBoat,W/2 - imgBoat.width/2,H/2 - imgBoat.height);
