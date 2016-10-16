@@ -4,8 +4,8 @@ var X = 0;
 var Y = 0;
 var keys = [];
 var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1}];
+var questObj = {"carteMaritime":0,"boussole":0};
 var seaLimit = [1200,900];
-var seaScroll = [0,0];
 var ennemis = [];
 var boomerang = [];
 var editPlate = 0;
@@ -125,6 +125,7 @@ function save(){
     window.localStorage.setItem("ilesDifHouse",JSON.stringify(ilesDifHouse));
     window.localStorage.setItem("heros",JSON.stringify(heros));
     window.localStorage.setItem("quests",JSON.stringify(quests));
+    window.localStorage.setItem("questObj",JSON.stringify(questObj));
     alert("Cette sauvegarde est maintenant terminée. Dites moi en commentaire si le chargement était long. Moi je vous dit au revoir et n'oubliez pas de vous abonner à la chaîne et de liker cette video avant d'aller en voir une autre. MERCI.");
     figer = 0;
 }
@@ -178,6 +179,7 @@ function precharge(){
             heros[1].objet = 0;
             var where = JSON.parse(window.localStorage.getItem("whereAmI"));
             quests = JSON.parse(window.localStorage.getItem("quests"));
+            questObj = JSON.parse(window.localStorage.getItem("questObj"));
             out = where[0];
             goto = where[1];
             respawnPoint[0] = heros[0].x;
@@ -398,6 +400,10 @@ function start(){
             keys[event.keyCode] = 0;
             if (event.keyCode == 17 && onSea == 0) changeArme(0);
             else if (event.keyCode == 96 && onSea == 0) changeArme(1);
+            else if (event.keyCode == 77) { 
+                if (onSea == 1) onSea = 2;
+                else if (onSea == 2) onSea = 1;
+            }
         }
     );
     for(var i = 0;i < 17;i ++){
@@ -413,13 +419,15 @@ function animation(){
     var f = function(t) {
         if (Crossed.testCrossed() == 1){
             if (onSea == 0) draw(t);
-            else drawSea(t);
+            else if (onSea == 5) TPisland();
+            else sail(t);
             Crossed.drawMenu(ctx,W,H);
         }
         else{
             if (onSea == 0) action(t);
+            else if (onSea == 1)sail(t);
+            else if (onSea == 2) drawSea();
             else if (onSea == 5) TPisland();
-            else sail(t);
             window.requestAnimationFrame(f);
         }
     };
@@ -1548,7 +1556,11 @@ function questPNJ(x,y){
         else if (quests.boussole == 7) objNiveau[y][x][2] = "Mais c'est la vitre de la boussole ! Et le corps de cette dernière si je ne m'abuse !";
         else if (quests.boussole == 9) objNiveau[y][x][2] = "Tu as trouvé les trois parties de la boussole ! Tu vas pouvoir partir plus loin encore sur les océans.";
         else {
-            if (quests.boussoleF == 0) objNiveau[y][x][2] = "Bienvenue Link. Le heros du vent est hors de la portée de ton bateau. Pour naviguer plus loin, il te faut reconstruire la boussole des elements. Malheureuselent, elle a été brisée en 3 morceaux qu'il te faut aller chercher dans les temples du feu, de l'eau et du vent.";
+            if (quests.boussoleF == 0)
+            { 
+                objNiveau[y][x][2] = "Bienvenue Link. Le heros du vent est hors de la portée de ton bateau. Voici cependant la carte des mers que tu peux utiliser avec la touche m quand tu es en mer. Pour naviguer plus loin, il te faudra reconstruire la boussole des elements. Malheureusement, elle a été brisée en 3 morceaux qu'il te faut aller chercher dans les temples du feu, de l'eau et du vent.";
+                questObj.carteMaritime = 1;
+            }
             else if (quests.boussoleF == 2) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du vent et au temple de l'eau.";
             else if (quests.boussoleF == 3) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du feu et au temple de l'eau.";
             else if (quests.boussoleF == 4) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du vent et au temple du feu.";
