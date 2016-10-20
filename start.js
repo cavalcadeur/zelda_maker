@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","hookShot","boomerang","mastersword"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank"},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank"},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -555,7 +555,7 @@ function action(t){
                         goToLevel(truc[1],truc[2],truc[3],truc[4],truc[5],truc[6]);
                     }
                     else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot"){
-                        if (truc[0] == "boomerang") {heros[n].invent.push("boomerang");heros[n].objet = heros[n].invent.length - 1;}
+                        if (truc[0] == "boomerang") {addObj(truc[0],n);}
                         else donnerHeros(truc[0],n);
                         supress = 0;
                     }
@@ -1076,6 +1076,7 @@ function attack(n,x){
         boomerang.push({"x":heros[n].x,"y":heros[n].y,"vx":0,"vy":0,"sx":heros[n].x,"sy":heros[n].y,"r":0,"alti":niveau[heros[n].y][heros[n].x],"sens":heros[n].sens,"endu":10,"content":[]});
         heros[n].invent.splice(heros[n].objet,1);
         if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
+        if (heros[n].invent.length == 0) heros[n].invent[0] = "blank"; 
     }
     else if (heros[n].invent[heros[n].objet] == "pencil"){
         editHand = editObject[out];
@@ -1101,6 +1102,7 @@ function attack(n,x){
         while (niveau[pots[nPot].oy][pots[nPot].ox] > pots[nPot].alti) {pots[nPot].ox -= vecteurs[heros[n].sens][1];pots[nPot].oy -= vecteurs[heros[n].sens][0];}
         heros[n].invent.splice(heros[n].objet,1);
         if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
+        if (heros[n].invent.length == 0) heros[n].invent[0] = "blank"; 
     }
     else if (use == "hookShot"){
         if (heros[n].grap == 0 && heros[n].g == 0){
