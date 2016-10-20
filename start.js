@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank"},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank","hookShot","boomerang","mastersword"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank"},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -130,6 +130,7 @@ function save(){
     window.localStorage.setItem("heros",JSON.stringify(heros));
     window.localStorage.setItem("quests",JSON.stringify(quests));
     window.localStorage.setItem("questObj",JSON.stringify(questObj));
+    window.localStorage.setItem("objInvent",JSON.stringify(objInvent));
     alert("Cette sauvegarde est maintenant terminée. Dites moi en commentaire si le chargement était long. Moi je vous dit au revoir et n'oubliez pas de vous abonner à la chaîne et de liker cette video avant d'aller en voir une autre. MERCI.");
     figer = 0;
 }
@@ -183,7 +184,8 @@ function precharge(){
             heros[1].objet = 0;
             var where = JSON.parse(window.localStorage.getItem("whereAmI"));
             quests = JSON.parse(window.localStorage.getItem("quests"));
-            questObj = JSON.parse(window.localStorage.getItem("questObj"));
+            questObj = JSON.parse(window.localStorage.getItem("questObj"))
+            objInvent = JSON.parse(window.localStorage.getItem("objInvent"));
             out = where[0];
             goto = where[1];
             respawnPoint[0] = heros[0].x;
