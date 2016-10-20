@@ -36,6 +36,7 @@ var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark"];
+var nDalle = 0;
 var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"]];
@@ -184,7 +185,7 @@ function precharge(){
             heros[1].objet = 0;
             var where = JSON.parse(window.localStorage.getItem("whereAmI"));
             quests = JSON.parse(window.localStorage.getItem("quests"));
-            questObj = JSON.parse(window.localStorage.getItem("questObj"))
+            questObj = JSON.parse(window.localStorage.getItem("questObj"));
             objInvent = JSON.parse(window.localStorage.getItem("objInvent"));
             out = where[0];
             goto = where[1];
@@ -208,12 +209,12 @@ function precharge(){
 
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
-    var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB"];
+    var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3"];
     var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
     var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","boat0","boat1","boat2","boat3","pot0","pot1","pot2","pot3","lettre0","lettre1","lettre2","lettre3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length;
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length + nDalle;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -224,6 +225,15 @@ function charge(){
             };
         }
     );
+    for(var i = 0;i<nDalle;i++){
+        imgElement["dalle"+i] = new Image();
+        imgElement["dalle"+i].src = "images/elements/dalles/dalle" + i + ".png";
+        imgElement["dalle"+i].onload = function(){
+            chargement -= 1;
+            if (chargement == 0) animation();
+        };
+
+    }
     coeur.forEach(
         function(e,i){
             imgMenu[e] = new Image();
@@ -850,6 +860,7 @@ function draw() {
                             if (y == kgb.y && x == e.length - 1){
                                 if (kgb.type == "herbe" || kgb.type == "palmier") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
                                 else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                                else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                                 else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
                                 else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
@@ -1034,6 +1045,7 @@ function attack(n,x){
     else if (use == "mastersword"){
         var machin = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]];
         var truc = machin[0];
+        particles.push({n:0,type:"sword",x:heros[n].x + (vecteurs[heros[n].sens][1]/2),y:heros[n].y + vecteurs[heros[n].sens][0],g:0,alti:heros[n].z,lim:10,sens:heros[n].sens});
         if (niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] != niveau[heros[n].y][heros[n].x]) return;
         if (truc == "herbe0" | truc == "herbe1" | truc == "pot" | truc == "palmier"){
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1){
@@ -1078,7 +1090,7 @@ function attack(n,x){
         if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
         if (heros[n].invent.length == 0) heros[n].invent[0] = "blank"; 
     }
-    else if (heros[n].invent[heros[n].objet] == "pencil"){
+    else if (use == "pencil"){
         editHand = editObject[out];
         editnumber = 1;
         editM = 0;

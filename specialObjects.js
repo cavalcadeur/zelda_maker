@@ -83,3 +83,7 @@ function drawFade(n){
     ctx.fillRect(0,0,W,H);
     ctx.globalAlpha = 1;
 }
+
+function drawSword(n,lim,sens,x,y,z){
+    Painter.img(ctx,x,y,z,imgDebris["sword"+sens]);
+}
