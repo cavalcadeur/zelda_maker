@@ -52,13 +52,23 @@ function cIntroTrois(){
     ctx.fillStyle = "rgb(0,0,0)";
     ctx.fillRect(0,0,W,H);
     ctx.drawImage(imgCinema[0],(W-500)/2,(H-500)/2);
-    imgCinema[0].src = "images/cinematiques/intro2.png";
+    imgCinema[0].src = "images/cinematiques/intro3.png";
     alert("Mais le heros ne reparut point et sa legende ne devint plus qu'une rumeur tenue. Les peuples de l'océan le prirent pour mort et son nom tomba dans l'oubli.");
     var timeoutID = window.setTimeout(transition, 9000);
     var timeoutA = window.setTimeout(cIntroQuatre, 9600);
 }
 
 function cIntroQuatre(){
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillRect(0,0,W,H);
+    ctx.drawImage(imgCinema[0],(W-400)/2,(H-400)/2);
+    alert("Cependant, certains ne perdirent pas espoir et unirent leurs forces pour retrouver leur heros perdu.");
+    var timeoutID = window.setTimeout(transition, 9000);
+    var timeoutA = window.setTimeout(cIntroCinq, 9600);
+}
+
+function cIntroCinq(){
     ctx.globalAlpha = 1;
     cinematicos = 0;
     animation();
