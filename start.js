@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0}];
+var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["mastersword"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -579,10 +579,12 @@ function action(t){
                     }
 
                 }
-                if (1 == keys[controlKeys[n][1]]) move(1,n,0);
-                else if (1 == keys[controlKeys[n][3]]) move(3,n,0);
-                else if (1 == keys[controlKeys[n][0]]) move(0,n,0);
-                else if (1 == keys[controlKeys[n][2]]) move(2,n,0);
+                if (h.imgUp == 0){
+                    if (1 == keys[controlKeys[n][1]]) move(1,n,0);
+                    else if (1 == keys[controlKeys[n][3]]) move(3,n,0);
+                    else if (1 == keys[controlKeys[n][0]]) move(0,n,0);
+                    else if (1 == keys[controlKeys[n][2]]) move(2,n,0);
+                }
             }
             ennemis.forEach(
                 function(e){
@@ -990,6 +992,7 @@ function drawInterface(){
 }
 
 function attack(n,x){
+    if (heros[n].imgUp != 0) return;
     if (x == 1) {
         var use = heros[0].prim;
     }
