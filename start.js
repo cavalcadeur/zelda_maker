@@ -59,6 +59,8 @@ var islandData = {};
 var fondfond = new Image();
 var fondInvent = new Image();
 fondInvent.src = "images/menu4.png";
+var imgCinema = [new Image,new Image];
+var cinematicos = 0;
 
 // programme
 
@@ -203,6 +205,7 @@ function precharge(){
                 Painter.niveau( niveau );
             }
         }
+        else cinematicos = 1;
         charge();
     };
 }
@@ -434,26 +437,29 @@ function start(){
 }
 
 function animation(){
-    fondfond.src = "images/menu5.png";
-    fondfond.onload = function(){};
-    alert("Utilisez les flèches pour vous déplacer et maj pour interagir avec la case en face de vous. La maison tout à gauche vous en dira plus long sur le jeu si vous le désirez. Placez vous une case plus bas et dirigez vous vers elle avec la flèche du haut. Petit rappel des autres touches : j1 : flèches maj et ctrl ; j2 : pavé numérique entrée du pavé et 0 ; Crossed : c");
-    var f = function(t) {
-        if (Crossed.testCrossed() == 1){
-            if (onSea == 0) draw(t);
-            else if (onSea == 5) TPisland();
-            else sail(t);
-            Crossed.drawMenu(ctx,W,H);
-        }
-        else{
-            if (onSea == 0) action(t);
-            else if (onSea == 1)sail(t);
-            else if (onSea == 2) drawSea();
-            else if (onSea == 4) drawInvent();
-            else if (onSea == 5) TPisland();
-            window.requestAnimationFrame(f);
-        }
-    };
-    window.requestAnimationFrame(f);
+    if (cinematicos == 1) cIntro();
+    else {
+        fondfond.src = "images/menu5.png";
+        fondfond.onload = function(){};
+        alert("Utilisez les flèches pour vous déplacer et maj pour interagir avec la case en face de vous. La maison tout à gauche vous en dira plus long sur le jeu si vous le désirez. Placez vous une case plus bas et dirigez vous vers elle avec la flèche du haut. Petit rappel des autres touches : j1 : flèches maj et ctrl ; j2 : pavé numérique entrée du pavé et 0 ; Crossed : c");
+        var f = function(t) {
+            if (Crossed.testCrossed() == 1){
+                if (onSea == 0) draw(t);
+                else if (onSea == 5) TPisland();
+                else sail(t);
+                Crossed.drawMenu(ctx,W,H);
+            }
+            else{
+                if (onSea == 0) action(t);
+                else if (onSea == 1)sail(t);
+                else if (onSea == 2) drawSea();
+                else if (onSea == 4) drawInvent();
+                else if (onSea == 5) TPisland();
+                window.requestAnimationFrame(f);
+            }
+        };
+        window.requestAnimationFrame(f);
+    }
 }
 
 function action(t){
