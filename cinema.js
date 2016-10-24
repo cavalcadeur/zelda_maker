@@ -69,7 +69,7 @@ function cIntroQuatre(){
     ctx.drawImage(imgCinema[0],(W-400)/2,(H-400)/2);
     alert("Cependant, certains ne perdirent pas espoir et unirent leurs forces pour retrouver leur heros perdu.");
     var timeoutID = window.setTimeout(transition, 9000);
-    var timeoutA = window.setTimeout(cIntroCinq, 9600);
+    var timeoutA = window.setTimeout(cIntroCinq, 9700);
 }
 
 function cIntroCinq(){
