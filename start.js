@@ -1101,9 +1101,12 @@ function attack(n,x){
     }
     else if (use == "boomerang"){
         boomerang.push({"x":heros[n].x,"y":heros[n].y,"vx":0,"vy":0,"sx":heros[n].x,"sy":heros[n].y,"r":0,"alti":niveau[heros[n].y][heros[n].x],"sens":heros[n].sens,"endu":10,"content":[]});
-        heros[n].invent.splice(heros[n].objet,1);
-        if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
-        if (heros[n].invent.length == 0) heros[n].invent[0] = "blank"; 
+        if (x == 1) heros[n].prim = "blank";
+        else{
+            heros[n].invent.splice(heros[n].objet,1);
+            if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
+            if (heros[n].invent.length == 0) heros[n].invent[0] = "blank"; 
+        }
     }
     else if (use == "pencil"){
         editHand = editObject[out];

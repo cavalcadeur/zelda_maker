@@ -170,6 +170,11 @@ function goToLevel(oo,go,x,y,x2,y2){
     heros[0].y = y;
     heros[1].x = x2;
     heros[1].y = y2;
+	heros[0].grap = 0;
+	heros[0].grapD = -1;
+	heros[1].grap = 0;
+	heros[1].grapD = -1;
+	hookShots = [];
     out = oo;
     goto = go;
     if (oo == 1){
