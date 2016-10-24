@@ -5,7 +5,7 @@ var Y = 0;
 var keys = [];
 var heros = [{"x":8,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0},{"x":9,"y":13,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0}];
 var questObj = {"carteMaritime":0,"boussole":0};
-var objInvent = [];
+var objInvent = ["boomerang"];
 var seaLimit = [1200,900];
 var ennemis = [];
 var boomerang = [];
@@ -867,30 +867,30 @@ function draw() {
                             }
                         }
                     );
-                    particles.forEach(
-                        function(kgb,iii){
-                            if (y == Math.ceil(kgb.y) && x == e.length - 1){
-                                if (kgb.type == "herbe" || kgb.type == "palmier") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
-                                else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                                else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                                else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                                else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
-                                else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
-                                else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                                else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
-                                else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
-                                else if (kgb.type == "fadeOut") drawFade(kgb.n);
-                                kgb.n += 1;
-                                if (kgb.type == "flamme") kgb.alti += kgb.g/150;
-                                else kgb.alti += kgb.g/50;
-                                kgb.g -= 1;
-                                if (kgb.n == kgb.lim) {
-                                    if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
-                                    particles.splice(iii,1);
-                                }
-                            }
+                }
+            );
+            particles.forEach(
+                function(kgb,iii){
+                    if (y == Math.ceil(kgb.y)){
+                        if (kgb.type == "herbe" || kgb.type == "palmier") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
+                        else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
+                        else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
+                        else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
+                        else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
+                        else if (kgb.type == "fadeOut") drawFade(kgb.n);
+                        kgb.n += 1;
+                        if (kgb.type == "flamme") kgb.alti += kgb.g/150;
+                        else kgb.alti += kgb.g/50;
+                        kgb.g -= 1;
+                        if (kgb.n == kgb.lim) {
+                            if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
+                            particles.splice(iii,1);
                         }
-                    );
+                    }
                 }
             );
         }
@@ -1103,9 +1103,11 @@ function attack(n,x){
         boomerang.push({"x":heros[n].x,"y":heros[n].y,"vx":0,"vy":0,"sx":heros[n].x,"sy":heros[n].y,"r":0,"alti":niveau[heros[n].y][heros[n].x],"sens":heros[n].sens,"endu":10,"content":[]});
         if (x == 1) heros[n].prim = "blank";
         else{
-            heros[n].invent.splice(heros[n].objet,1);
-            if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
-            if (heros[n].invent.length == 0) heros[n].invent[0] = "blank"; 
+            if (heros[n].invent.length == 1) heros[n].invent[0] = "blank"; 
+            else {
+                heros[n].invent.splice(heros[n].objet,1);
+            }
+            if (heros[n].objet >= heros[n].invent.length) heros[n].objet -= 1;
         }
     }
     else if (use == "pencil"){
