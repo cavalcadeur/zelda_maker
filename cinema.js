@@ -1,17 +1,21 @@
 function cIntro(){
-    imgCinema[0].src = "images/cinematiques/intro0.png";
-    imgCinema[1].src = "images/cinematiques/tache.png";
-    ctx.fillStyle = "rgb(0,0,0)";
-    ctx.fillRect(0,0,W,H);
-    imgCinema[0].onload = function(){
-        ctx.drawImage(imgCinema[0],(W-500)/2,(H-319)/2);  
-        imgCinema[0].src = "images/cinematiques/intro1.png";
-        imgCinema[0].onload = function(){};
-        alert("Il n'y a pas si longtemps, le seigneur du mal fut vaincu par le heros du vent.");
-        var timeoutID = window.setTimeout(transition, 9000);
-        var timeoutA = window.setTimeout(cIntroDeux, 9600);
-
-    };
+    if (keys[32] == 1){
+        cIntroCinq();
+    }
+    else{
+        imgCinema[0].src = "images/cinematiques/intro0.png";
+        imgCinema[1].src = "images/cinematiques/tache.png";
+        ctx.fillStyle = "rgb(0,0,0)";
+        ctx.fillRect(0,0,W,H);
+        imgCinema[0].onload = function(){
+            ctx.drawImage(imgCinema[0],(W-500)/2,(H-319)/2);  
+            imgCinema[0].src = "images/cinematiques/intro1.png";
+            imgCinema[0].onload = function(){};
+            alert("Il n'y a pas si longtemps, le seigneur du mal fut vaincu par le heros du vent.");
+            var timeoutID = window.setTimeout(transition, 9000);
+            var timeoutA = window.setTimeout(cIntroDeux, 9600);
+        };
+    }
 
 }
 
