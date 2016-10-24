@@ -669,6 +669,8 @@ function action(t){
             else if (h.vy > 0) {h.vy -= 5; }
             else if (h.vx < 0) {h.vx += 5; }
             else if (h.vy < 0) {h.vy += 5; }
+            if (Math.abs(h.vx) < 5) h.vx = 0;
+            if (Math.abs(h.vy) < 5) h.vy = 0;
         });
     if (heros[0].vx != 0 || heros[0].vy != 0 || heros[0].g != 0 || edition == 1)Painter.scrolling();
     draw();
