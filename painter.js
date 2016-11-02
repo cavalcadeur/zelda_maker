@@ -293,10 +293,10 @@ var Painter = function() {
         scrolling: function(){
             var x = toX(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
             var y = toY(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
-            if (x > W-100) scrollX = W-100-(x-scrollX);
-            else if (x < 0) scrollX = -(x-scrollX);
-            if (y > H-70) scrollY = H-70-(y-scrollY);
-            else if (y < 70) scrollY = 70-(y-scrollY);
+            if (x > W-150) scrollX = W-150-(x-scrollX);
+            else if (x < 100) scrollX = 100-(x-scrollX);
+            if (y > H-100) scrollY = H-100-(y-scrollY);
+            else if (y < 150) scrollY = 150-(y-scrollY);
         }
     };
 }();

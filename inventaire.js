@@ -123,10 +123,22 @@ function endInvent(){
 
 function goInvent(){
     onSea = 4;
+    heros[0].invent.forEach(
+        function(e,i){
+            if (e == "batonF") heros[0].invent[i] = "baton";
+        }
+    );
+    heros[1].invent.forEach(
+        function(e,i){
+            if (e == "batonF") heros[1].invent[i] = "baton";
+        }
+    );
     for (var i = heros[0].invent.length;i<5;i++){
         heros[0].invent.push("blank");
     }
     for (i = heros[1].invent.length;i<5;i++){
         heros[1].invent.push("blank");
     }
+    heros[0].timerF = 0;
+    heros[1].timerF = 0;
 }
