@@ -28,7 +28,6 @@ function transition(){
     for (var i = 0;i<30;i++){
         timeOut[i] = window.setTimeout(drawfafa, (i*10) + 300);
     }
-
 }
 
 function drawohoh(){
@@ -38,6 +37,7 @@ function drawohoh(){
 function drawfafa(){
     ctx.globalAlpha = 0.1;
     ctx.fillRect(0,0,W,H);
+    ctx.globalAlpha = 1;
 }
 
 function cIntroDeux(){
@@ -69,7 +69,7 @@ function cIntroQuatre(){
     ctx.drawImage(imgCinema[0],(W-600)/2,(H-600)/2);
     alert("Cependant, certains ne perdirent pas espoir et unirent leurs forces pour retrouver leur heros perdu.");
     var timeoutID = window.setTimeout(transition, 9000);
-    var timeoutA = window.setTimeout(cIntroCinq, 9700);
+    var timeoutA = window.setTimeout(cIntroCinq, 9900);
 }
 
 function cIntroCinq(){

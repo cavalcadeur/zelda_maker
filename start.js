@@ -441,7 +441,8 @@ function animation(){
     else {
         fondfond.src = "images/menu5.png";
         fondfond.onload = function(){};
-        alert("Utilisez les flèches pour vous déplacer et maj pour interagir avec la case en face de vous. La maison tout à gauche vous en dira plus long sur le jeu si vous le désirez. Placez vous une case plus bas et dirigez vous vers elle avec la flèche du haut. Petit rappel des autres touches : j1 : flèches maj et ctrl ; j2 : pavé numérique entrée du pavé et 0 ; Crossed : c");
+        alert("Utilisez les flèches pour vous déplacer et la barre espace pour interagir avec la case en face de vous.");
+        ctx.globalAlpha = 1;
         var f = function(t) {
             if (Crossed.testCrossed() == 1){
                 if (onSea == 0) draw(t);
@@ -1731,8 +1732,8 @@ function questPNJ(x,y){
                 questObj.carteMaritime = 1;
             }
             else if (quests.boussoleF == 2) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du vent et au temple de l'eau.";
-            else if (quests.boussoleF == 3) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du feu et au temple de l'eau.";
-            else if (quests.boussoleF == 4) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du vent et au temple du feu.";
+            else if (quests.boussoleF == 3) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du feu et au temple du vent.";
+            else if (quests.boussoleF == 4) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple de l'eau et au temple du feu.";
             else if (quests.boussoleF == 5) objNiveau[y][x][2] = "Il te faut une derniere pièce pour reconstituer la boussole. Elle se trouve au temple du vent selon mes souvenirs.";
             else if (quests.boussoleF == 6) objNiveau[y][x][2] = "Il te faut une derniere pièce pour reconstituer la boussole. Elle se trouve au temple de l'eau.";
             else if (quests.boussoleF == 7) objNiveau[y][x][2] = "Il te faut une derniere pièce pour reconstituer la boussole. Elle se trouve au temple du feu.";
