@@ -716,7 +716,7 @@ function move(d,n,gg){
         heros[n].delay -= 1;
         return;
     }
-    if (gg == 0 && heros[n].plane == 0){
+    if (gg == 0 && heros[n].plane == 0 && heros[n].g == 0){
         if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
         if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
 
@@ -745,7 +745,7 @@ function move(d,n,gg){
         }
         if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     }
-    else if (heros[n].plane == 1){
+    else if (heros[n].plane == 1 || heros[n].g != 0){
         if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
         if (heros[n].z + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
     }
