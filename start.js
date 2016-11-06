@@ -54,7 +54,7 @@ var hookShots = [];
 var objetMort = 0;
 var savedMap,savedHouseMap;
 var respawnPoint = [0,0];
-var markedLevels = [["tFeu1",2],["tEau1",3],["tEau4",3],["aqua",1],["sage",1],["in4",0]];
+var markedLevels = [];
 var islandData = {};
 var fondfond = new Image();
 var fondInvent = new Image();
@@ -134,7 +134,7 @@ function save(){
     window.localStorage.setItem("quests",JSON.stringify(quests));
     window.localStorage.setItem("questObj",JSON.stringify(questObj));
     window.localStorage.setItem("objInvent",JSON.stringify(objInvent));
-    alert("Cette sauvegarde est maintenant terminée. Dites moi en commentaire si le chargement était long. Moi je vous dit au revoir et n'oubliez pas de vous abonner à la chaîne et de liker cette video avant d'aller en voir une autre. MERCI.");
+    alert("Sauvegarde terminée. J'espère que ce n'était pas trop long.");
     figer = 0;
 }
 
@@ -215,7 +215,7 @@ function charge(){
     var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3"];
     var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre","corps","parachale","baton","batonF"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
-    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte"];
+    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","pot0","pot1","pot2","pot3","baton0","baton1","baton2","baton3","batonF0","batonF1","batonF2","batonF3"];
     var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length + nDalle;
     imgRubis.forEach(
@@ -441,7 +441,7 @@ function animation(){
     else {
         fondfond.src = "images/menu5.png";
         fondfond.onload = function(){};
-        alert("Utilisez les flèches pour vous déplacer et la barre espace pour interagir avec la case en face de vous.");
+        alert("Utilisez les flèches pour vous déplacer et la barre espace pour interagir avec la case en face de vous ou faire disparaître ce message.");
         ctx.globalAlpha = 1;
         var f = function(t) {
             if (Crossed.testCrossed() == 1){
@@ -1138,8 +1138,18 @@ function attack(n,x){
             else unsay();
         }
         else if (truc == "pot"){
-            heros[n].invent.push("pot");
-            heros[n].objet = heros[n].invent.length - 1;
+            if (x == 1){
+                if (heros[0].prim == "blank"){
+                    heros[0].prim = "pot";
+                }
+                else{
+                    return;
+                }
+            }
+            else {
+                heros[n].invent.push("pot");
+                heros[n].objet = heros[n].invent.length - 1;
+            }
             if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1) objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
             else objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = "";
         }
@@ -1227,9 +1237,12 @@ function attack(n,x){
         while (pots[nPot].ox >= niveau[0].length){pots[nPot].ox -= 1;}
         while (pots[nPot].ox < 0){pots[nPot].ox += 1;}
         while (niveau[pots[nPot].oy][pots[nPot].ox] > pots[nPot].alti) {pots[nPot].ox -= vecteurs[heros[n].sens][1];pots[nPot].oy -= vecteurs[heros[n].sens][0];}
-        heros[n].invent.splice(heros[n].objet,1);
-        if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
-        if (heros[n].invent.length == 0) heros[n].invent[0] = "blank";
+        if (x == 1) heros[0].prim = "blank";
+        else{
+            heros[n].invent.splice(heros[n].objet,1);
+            if (heros[n].objet == heros[n].invent.length) heros[n].objet -= 1;
+            if (heros[n].invent.length == 0) heros[n].invent[0] = "blank";
+        }
     }
     else if (use == "hookShot"){
         if (heros[n].grap == 0 && heros[n].g == 0){
