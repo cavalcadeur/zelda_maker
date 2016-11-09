@@ -73,7 +73,40 @@ function cIntroQuatre(){
 }
 
 function cIntroCinq(){
+    imgCinema[0].src = "images/cinematiques/reveil1.png";
     ctx.globalAlpha = 1;
+    cinematicos = 0;
+    animation();
+}
+
+function cReveil(){
+    ctx.fillStyle = "rgb(20,80,10)";
+    ctx.fillRect(0,0,W,H);
+    ctx.drawImage(imgCinema[0],W/2 - 357,H/2 - 250);
+    imgCinema[0].src = "images/cinematiques/reveil2.png";
+    alert("Open your eyes ...");
+    var timeoutID = window.setTimeout(cReveil2, 2500);
+}
+
+function cReveil2(){
+    disalert();
+    var timeoutID = window.setTimeout(cReveil3, 2000);  
+}
+
+function cReveil3(){
+    alert("Je voulais dire : Il est temps de se reveiller Link et toi aussi, mysterieux deuxieme joueur. S'habiller en vert ne fait pas de vous des héros. Il vous faut partir à l'aventure et dès maintenant.");
+    var timeoutID = window.setTimeout(cReveil4, 7000);
+}
+
+function cReveil4(){
+    disalert();
+    ctx.drawImage(imgCinema[0],W/2 - 357,H/2 - 250);
+    var timeoutID = window.setTimeout(cReveil5, 4000);
+}
+
+function cReveil5(){
+    heros[0].sens = 2;
+    heros[1].sens = 2;
     cinematicos = 0;
     animation();
 }

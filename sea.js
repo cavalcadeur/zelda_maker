@@ -145,6 +145,24 @@ function rondNiveau(e){
     e[2] += 1;
 }
 
+function starNiveau(e){
+    ctx.fillStyle = "rgb(255,255,250)";
+    if (e[2]%3 != 1) ctx.fillRect(e[0],e[1],3,3);
+    else{
+        ctx.beginPath();
+        ctx.moveTo(e[0] - 2,e[1] - 2);
+        ctx.lineTo(e[0],e[1] - 10);
+        ctx.lineTo(e[0] + 2,e[1] - 2);
+        ctx.lineTo(e[0] + 10,e[1]);
+        ctx.lineTo(e[0] + 2,e[1] + 2);
+        ctx.lineTo(e[0],e[1] + 10);
+        ctx.lineTo(e[0] - 2,e[1] + 2);
+        ctx.lineTo(e[0] - 10,e[1]);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
+
 function goToLevel(oo,go,x,y,x2,y2){
     boomerang.forEach(
         function(e,n){
@@ -170,11 +188,11 @@ function goToLevel(oo,go,x,y,x2,y2){
     heros[0].y = y;
     heros[1].x = x2;
     heros[1].y = y2;
-	heros[0].grap = 0;
-	heros[0].grapD = -1;
-	heros[1].grap = 0;
-	heros[1].grapD = -1;
-	hookShots = [];
+    heros[0].grap = 0;
+    heros[0].grapD = -1;
+    heros[1].grap = 0;
+    heros[1].grapD = -1;
+    hookShots = [];
     out = oo;
     goto = go;
     if (oo == 1){
@@ -198,8 +216,8 @@ function goToLevel(oo,go,x,y,x2,y2){
     heros[0].z = niveau[heros[0].y][heros[0].x];
     heros[1].z = niveau[heros[1].y][heros[1].x];
     Painter.niveau(niveau);
-	Painter.scroll(0,0);
-	Painter.centerScroll(x,y,0,W,H);
+    Painter.scroll(0,0);
+    Painter.centerScroll(x,y,0,W,H);
 }
 
 function defineTele(gg,outa){
