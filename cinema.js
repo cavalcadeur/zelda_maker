@@ -8,7 +8,7 @@ function cIntro(){
         ctx.fillStyle = "rgb(0,0,0)";
         ctx.fillRect(0,0,W,H);
         imgCinema[0].onload = function(){
-            ctx.drawImage(imgCinema[0],(W-500)/2,(H-319)/2);  
+            ctx.drawImage(imgCinema[0],(W-500)/2,(H-319)/2);
             imgCinema[0].src = "images/cinematiques/intro1.png";
             imgCinema[0].onload = function(){};
             alert("Il n'y a pas si longtemps, le seigneur du mal fut vaincu par le heros du vent.");
@@ -90,21 +90,104 @@ function cReveil(){
 
 function cReveil2(){
     disalert();
-    var timeoutID = window.setTimeout(cReveil3, 2000);  
+    var timeoutID = window.setTimeout(cReveil3, 2000);
 }
 
 function cReveil3(){
-    alert("Je voulais dire : Il est temps de se reveiller Link et toi aussi, mysterieux deuxieme joueur. S'habiller en vert ne fait pas de vous des héros. Il vous faut partir à l'aventure et dès maintenant.");
-    var timeoutID = window.setTimeout(cReveil4, 7000);
+    alert("Je voulais dire : Il est temps de vous reveiller Link et toi aussi, mysterieux deuxieme joueur. S'habiller en vert ne fait pas de vous des héros. Il vous faut partir à l'aventure et dès maintenant.");
+    var timeoutID = window.setTimeout(cReveil4, 9000);
 }
 
 function cReveil4(){
     disalert();
     ctx.drawImage(imgCinema[0],W/2 - 357,H/2 - 250);
-    var timeoutID = window.setTimeout(cReveil5, 4000);
+    imgCinema[0].src = "images/cinematiques/reveil3.png";
+    imgCinema[1].src = "images/cinematiques/reveil4.png";
+    imgCinema[2] = 0;
+    imgCinema[3] = 0;
+    var timeoutID = window.setTimeout(cReveil5, 2000);
 }
 
 function cReveil5(){
+    var ff = function(t) {
+        fondReveil();
+        if (imgCinema[2] < Math.PI/2){
+            ctx.save();
+            ctx.translate(W/3,H);
+            ctx.rotate(-Math.PI/2+imgCinema[2]);
+            ctx.drawImage(imgCinema[0],-200,-400);
+            ctx.restore();
+            ctx.save();
+            ctx.translate(W/3*2,H);
+            ctx.rotate(Math.PI/2-imgCinema[2]);
+            ctx.drawImage(imgCinema[1],-200,-400);
+            ctx.restore();
+            imgCinema[2] += 0.02;
+            window.requestAnimationFrame(ff);
+        }
+        else if (imgCinema[3] < 100){
+            ctx.save();
+            ctx.translate(W/3,H);
+            ctx.rotate(-Math.PI/2+imgCinema[2]);
+            ctx.drawImage(imgCinema[0],-200,-400);
+            ctx.restore();
+            ctx.save();
+            ctx.translate(W/3*2,H);
+            ctx.rotate(Math.PI/2-imgCinema[2]);
+            ctx.drawImage(imgCinema[1],-200,-400);
+            ctx.restore();
+            imgCinema[3] += 1;
+            window.requestAnimationFrame(ff);
+        }
+        else cReveilFin();
+    };
+    window.requestAnimationFrame(ff);
+}
+
+function fondReveil(){
+    ctx.fillStyle = "rgb(28,134,182)";
+    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = "rgb(72,98,178)";
+    ctx.fillRect(0,H/4*3,W,H);
+    waves.forEach(
+        function(e){
+            waveReveil(e);
+        }
+    );
+}
+
+
+function waveReveil(e){
+    ctx.fillStyle = "rgb(180,180,215)";
+    if (e[1] > H/4*3){
+        if (e[2] < 100 && e[2] > 0){
+            ctx.beginPath();
+            ctx.moveTo(e[0] - 50,e[1] - e[2] / 10);
+            ctx.lineTo(e[0],e[1] - 5 - e[2] / 5 - e[2] / 10);
+            ctx.lineTo(e[0] + 50,e[1] - e[2] / 10);
+            ctx.lineTo(e[0],e[1] - 5 - e[2] / 10 - e[2] / 10);
+            ctx.closePath();
+            ctx.fill();
+        }
+        else if (e[2] >= 100){
+            ctx.beginPath();
+            ctx.moveTo(e[0] - 50,e[1] - e[2] / 10);
+            ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 5 - e[2] / 10);
+            ctx.lineTo(e[0] + 50,e[1] - e[2] / 10);
+            ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - e[2] / 10);
+            ctx.closePath();
+            ctx.fill();
+        }
+    }
+    if (e[2] >= 200) {
+        e[2] = -rnd(300)-100;
+        e[0] = rnd(W);
+        e[1] = rnd(H);
+    }
+    e[2] += 1;
+}
+
+function cReveilFin(){
     heros[0].sens = 2;
     heros[1].sens = 2;
     cinematicos = 0;

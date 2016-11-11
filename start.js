@@ -53,7 +53,7 @@ var editM = 0;
 var hookShots = [];
 var objetMort = 0;
 var savedMap,savedHouseMap;
-var respawnPoint = [0,0];
+var respawnPoint = [0,8];
 var markedLevels = [];
 var islandData = {};
 var fondfond = new Image();
@@ -349,7 +349,6 @@ function start(){
     Painter.niveau( niveau );
     resize();
     Crossed.init(W,H);
-    respawnPoint = [8,13];
     //    canvas.addEventListener("click",function(evt) {
     //                           evt.stopPropagation();
     //                        evt.preventDefault();
