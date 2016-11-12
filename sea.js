@@ -90,6 +90,29 @@ function waveNiveau(e){
     e[2] += 1;
 }
 
+function cloudNiveau(e,i){
+    var size = [1.1,1,1.5,2.5,1,1.1,1,1,1];
+    var co = size[i];
+    ctx.fillStyle = "rgb(160,160,220)";
+    ctx.strokeStyle = "rgb(220,220,240)";
+    ctx.fillRect(e[0]-60*co,e[1]-20*co,80*co,40*co);
+    ctx.fillRect(e[0]+10*co,e[1]-8*co,70*co,40*co);
+    ctx.fillRect(e[0]-10*co,e[1]-40*co,75*co,40*co);
+    ctx.fillRect(e[0],e[1]-55*co,30*co,22*co);
+    ctx.strokeRect(e[0]-60*co,e[1]-20*co,80*co,40*co);
+    ctx.strokeRect(e[0]+10*co,e[1]-8*co,70*co,40*co);
+    ctx.strokeRect(e[0]-10*co,e[1]-40*co,75*co,40*co);
+    ctx.strokeRect(e[0],e[1]-55*co,30*co,22*co);
+    e[1] += (Math.sin(e[2]/50) - Math.sin((e[2]-1)/50))*4;
+    e[0] -= 0.1;
+    e[2] = (e[2]+1)%200;
+    if (e[0] < -100){
+        e[0] = W + 100;
+        e[1] = rnd(H);
+
+    }
+}
+
 function lavaNiveau(e){
     ctx.fillStyle = "rgb(225,115,36)";
     if (e[2] < 100 && e[2] > 0){
