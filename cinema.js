@@ -193,3 +193,42 @@ function cReveilFin(){
     cinematicos = 0;
     animation();
 }
+
+function cShootOut(){
+    imgCinema[3] = H;
+    imgCinema[2] = 54;
+    var ff = function(t) {
+        ctx.fillStyle = "rgb(28,134,182)";
+        ctx.fillRect(0,0,W,H);
+        waves.forEach(
+            function(e,n){
+                if (n < 5) cloudNiveau(e,n);
+            }
+        );
+        if (imgCinema[3] > H/2){
+            ctx.drawImage(imgHeros[2],W/2-25,imgCinema[3]);
+            imgCinema[3] -= imgCinema[2];
+            imgCinema[2] -= 0.3;
+            window.requestAnimationFrame(ff);
+        }
+        else if (imgCinema[2] > -6){
+            waves.forEach(
+                function(e,n){
+                    if (n < 5){
+                        e[1] += imgCinema[2];
+                        if (e[1] > H + 70){
+                            e[1] = -60;
+                            e[0] = rnd(W);
+                        }
+
+                    }
+                }
+            );
+            ctx.drawImage(imgHeros[2],W/2-25,imgCinema[3]);
+            imgCinema[2] -= 0.3;
+            window.requestAnimationFrame(ff);
+        }
+        else cReveilFin();
+    };
+    window.requestAnimationFrame(ff);    
+}

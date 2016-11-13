@@ -439,6 +439,7 @@ function start(){
 function animation(){
     if (cinematicos == 1) cIntro();
     else if (cinematicos == 2) cReveil();
+    else if (cinematicos == 3) cShootOut();
     else {
         fondfond.src = "images/menu5.png";
         fondfond.onload = function(){};
@@ -748,6 +749,9 @@ function move(d,n,gg){
                             goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
                         }
                         if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
+                    }
+                    if (truc[0] == "canon1"){
+                        cinematicos = 3;
                     }
                 }
             }
