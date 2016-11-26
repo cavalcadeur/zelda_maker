@@ -87,3 +87,7 @@ function drawFade(n){
 function drawSword(n,lim,sens,x,y,z){
     Painter.img(ctx,x,y,z,imgDebris["sword"+sens]);
 }
+
+function drawEole(truc){
+    Painter.imgPale(ctx,truc.x+0.02,truc.y,truc.alti-0.48,truc.n/200,imgDebris.pale0);
+}

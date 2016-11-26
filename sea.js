@@ -241,6 +241,10 @@ function goToLevel(oo,go,x,y,x2,y2){
     Painter.niveau(niveau);
     Painter.scroll(0,0);
     Painter.centerScroll(x,y,0,W,H);
+    if (go == "sky4" && quests.sky == 0){
+        cinematicos = 5;
+        heros[0].x += 1;
+    }
 }
 
 function defineTele(gg,outa){

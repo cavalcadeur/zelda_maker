@@ -134,6 +134,18 @@ var Painter = function() {
             ctx.drawImage(img,-13,-13);
             ctx.restore();
         },
+        imgPale: function( ctx, x, y, z, r, img ) {
+            if( !img ) return;
+
+            var X = toX( x, y, z ) + cellS / 2 + (cellX - img.width) / 2;
+            var Y = toY( x, y, z ) - img.height - cellY / 2;
+
+            ctx.save();
+            ctx.translate(X+27.5,Y);
+            ctx.rotate(r);
+            ctx.drawImage(img,-27.5,-27.5);
+            ctx.restore();
+        },
         imgScale: function( ctx, x, y, z, s, img ) {
             if( !img ) return;
 
