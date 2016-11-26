@@ -37,7 +37,7 @@ var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3"];
 var nDalle = 0;
-var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue"];
+var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
 var mouse = [0,0];
 var editObject = [["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","sky","lambda0"]];
 var editHand = [];
@@ -157,12 +157,12 @@ function precharge(){
                 function(e){
                     e[1].forEach(
                         function(f){
-                            iles[e[0]].obj[f[0]][f[1]] = f[2];
+                            if (iles[e[0]].obj[f[0]] != undefined) iles[e[0]].obj[f[0]][f[1]] = f[2];
                         }
                     );
                     e[2].forEach(
                         function(f){
-                            iles[e[0]].alti[f[0]][f[1]] = f[2];
+                            if (iles[e[0]].alti[f[0]] != undefined) iles[e[0]].alti[f[0]][f[1]] = f[2];
                         }
                     );
                 }
@@ -172,12 +172,12 @@ function precharge(){
                 function(e){
                     e[1].forEach(
                         function(f){
-                            interieurs[e[0]].obj[f[0]][f[1]] = f[2];
+                            if (interieurs[e[0]].obj[f[0]] != undefined) interieurs[e[0]].obj[f[0]][f[1]] = f[2];
                         }
                     );
                     e[2].forEach(
                         function(f){
-                            interieurs[e[0]].alti[f[0]][f[1]] = f[2];
+                            if (interieurs[e[0]].alti[f[0]] != undefined) interieurs[e[0]].alti[f[0]][f[1]] = f[2];
                         }
                     );
                 }
@@ -602,7 +602,7 @@ function action(t){
                         supress = 0;
                     }
                     else if (truc[0] == "avaleur1"){
-                        if (h.z == niveau[h.y][h.x]){
+                        if (h.z == niveau[h.y][h.x] || (niveau[h.y][h.x] <= -1)){
                             h.stun = 10020;
                             objNiveau[h.y][h.x][0] = "avaleur2";
                         }
@@ -657,7 +657,7 @@ function action(t){
                     h.vy = 0;
                     h.imgUp = 0;
                     h.imgN = 0;
-                    if (h.z < 0){
+                    if (h.z <= -1){
                         if (out == 1 || out == 3){
                             particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
                             particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
@@ -668,7 +668,6 @@ function action(t){
                         }
                         heros[n].x = respawnPoint[0];
                         heros[n].y = respawnPoint[1];
-                        heros[n].vie -= 0.5;
                         heros[n].stun = 20;
                         heros[n].mortal = 60;
                     }
@@ -684,7 +683,7 @@ function action(t){
             else if (h.grap == 0){
                 if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] && h.g < 5)) h.g += 0.05;
                 else {h.g = 0; h.z = niveau[h.y][h.x];
-                      if (h.z < 0){
+                      if (h.z <= -1){
                           if (out == 1 || out == 3){
                               particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
                               particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
@@ -695,7 +694,6 @@ function action(t){
                           }
                           heros[n].x = respawnPoint[0];
                           heros[n].y = respawnPoint[1];
-                          heros[n].vie -= 0.5;
                           heros[n].stun = 20;
                           heros[n].mortal = 60;
                       }
