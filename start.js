@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0}];
+var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["pencil"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -1345,7 +1345,33 @@ function attack(n,x){
                         var eee = llevel.ennemis;
                         var to = "martin@memora.tolokoban.org";
                         var subject = "Niveau Maker's Pencil " + ee[0] + " out=" + ee[1];
-                        var body = JSON.stringify(nnn) + JSON.stringify(ooo) + JSON.stringify(eee);
+                        var body = JSON.stringify(nnn);
+
+                        var link = document.createElement('a');
+                        link.setAttribute(
+                            'href',
+                            'mailto:' + to
+                                + "?subject=" + encodeURI(subject)
+                                + "&body=" + encodeURI(body)
+                        );
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        var body = JSON.stringify(ooo);
+
+                        var link = document.createElement('a');
+                        link.setAttribute(
+                            'href',
+                            'mailto:' + to
+                                + "?subject=" + encodeURI(subject)
+                                + "&body=" + encodeURI(body)
+                        );
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        var body = JSON.stringify(eee);
 
                         var link = document.createElement('a');
                         link.setAttribute(
