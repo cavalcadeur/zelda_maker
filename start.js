@@ -602,7 +602,7 @@ function action(t){
                         supress = 0;
                     }
                     else if (truc[0] == "avaleur1"){
-                        if (h.z == niveau[h.y][h.x] || (niveau[h.y][h.x] <= -1)){
+                        if (h.z == niveau[h.y][h.x]){
                             h.stun = 10020;
                             objNiveau[h.y][h.x][0] = "avaleur2";
                         }
@@ -658,18 +658,20 @@ function action(t){
                     h.imgUp = 0;
                     h.imgN = 0;
                     if (h.z <= -1){
-                        if (out == 1 || out == 3){
-                            particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
-                            particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+                        if (objNiveau[h.y][h.x] != "avaleur1" && objNiveau[h.y][h.x] != "avaleur2"){
+                            if (out == 1 || out == 3){
+                                particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
+                                particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+                            }
+                            else if (out == 2){
+                                particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
+                                particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
+                            }
+                            heros[n].x = respawnPoint[0];
+                            heros[n].y = respawnPoint[1];
+                            heros[n].stun = 20;
+                            heros[n].mortal = 60;
                         }
-                        else if (out == 2){
-                            particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
-                            particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
-                        }
-                        heros[n].x = respawnPoint[0];
-                        heros[n].y = respawnPoint[1];
-                        heros[n].stun = 20;
-                        heros[n].mortal = 60;
                     }
                 }
                 h.z -= h.g;
@@ -684,18 +686,20 @@ function action(t){
                 if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] && h.g < 5)) h.g += 0.05;
                 else {h.g = 0; h.z = niveau[h.y][h.x];
                       if (h.z <= -1){
-                          if (out == 1 || out == 3){
-                              particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
-                              particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+                          if (objNiveau[h.y][h.x] != "avaleur1" && objNiveau[h.y][h.x] != "avaleur2"){
+                              if (out == 1 || out == 3){
+                                  particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
+                                  particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+                              }
+                              else if (out == 2){
+                                  particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
+                                  particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
+                              }
+                              heros[n].x = respawnPoint[0];
+                              heros[n].y = respawnPoint[1];
+                              heros[n].stun = 20;
+                              heros[n].mortal = 60;
                           }
-                          else if (out == 2){
-                              particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
-                              particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
-                          }
-                          heros[n].x = respawnPoint[0];
-                          heros[n].y = respawnPoint[1];
-                          heros[n].stun = 20;
-                          heros[n].mortal = 60;
                       }
                      }
                 h.z -= h.g;
