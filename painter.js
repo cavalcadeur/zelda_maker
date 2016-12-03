@@ -56,10 +56,19 @@ var Painter = function() {
                     var lineB = 0;
                     var lineC = 0;
 
-                    if( x == 0 ) lineA = z + 1;
+                    if( x == 0 ){
+                        if (level.length-1 == y) lineA = z + 1;
+                        else if (level[y+1][x] < z) lineA = z - level[y+1][x];
+                    }
                     else if( level[y][x - 1] < z ) {
-                        if (level[y][x-1] < -1) lineA = z + 1;
-                        else lineA = z - level[y][x - 1];
+                        if (level.length-1 == y){
+                            if (level[y][x-1] < -1) lineA = z + 1;
+                            else lineA = z - level[y][x - 1];
+                        }
+                        else{
+                            if (level[y][x-1] < -1) lineA = Math.min(z + 1,z - level[y+1][x]);
+                            else lineA = Math.min(z - level[y][x - 1],z - level[y+1][x]);
+                        }
                     }
                     lineC = y == 0 ? z + 1 : 0;
                     if( y > 0 && level[y - 1][x] < z ) {
@@ -191,7 +200,7 @@ var Painter = function() {
 			if( typeof nivel === 'undefined' ) nivel = niveau; 
             if( z > -1 ) {
                 var X = toX( x, y, z );
-                var Y = toY( x, y, z );	
+                var Y = toY( x, y, z );
                 	// Partie frontale (verticale)
                 	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
                     	ctx.fillStyle = colorSet[out][0];

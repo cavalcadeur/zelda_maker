@@ -293,6 +293,14 @@ function cEnlevement(){
     imgCinema[3] = 0;
     imgCinema[4] = 0;
     imgCinema[6] = 0;
+    imgCinema[7] = new Image();
+    imgCinema[7].src = "images/cinematiques/question.png";
+    imgCinema[7].onlad = function(){};
+    for (var ilk = 1;ilk<7;ilk++){
+        imgCinema[7+ilk] = new Image();
+        imgCinema[7+ilk].src = "images/cinematiques/grumph" + ilk + ".png";
+        imgCinema[7+ilk].onlad = function(){};
+    }
     alert("IlhatuinletanolunseatétïAlsalllaMolteâSempicàEtrametitadeoIlha.");
     var ff = function(t) {
         ctx.fillStyle = colorSet[out][3];
@@ -369,6 +377,9 @@ function cEnlevement(){
         else if (imgCinema[2] == 700){
             alert("Vous voulez vous rendre au temple du vent ? Je peux vous y emmener si vous le désirez.");
         }
+        else if (imgCinema[2] < 850 && imgCinema[2] >= 800){
+            Painter.img(ctx,3,428 - imgCinema[2]/2,0,imgMonstre.bossVent1);
+        }
         else if (imgCinema[2] >= 850 && imgCinema[2] < 880){
             disalert();
             ctx.globalAlpha = 1-(imgCinema[2]-850)/30;
@@ -386,8 +397,29 @@ function cEnlevement(){
             imgCinema[1] += 0.0125;
             imgCinema[6] += 0.2;
         }
+        else if (imgCinema[2] > 1040){
+            Painter.img(ctx,0,5,0,imgPersoN["windTribe2"]);
+            if (imgCinema[2] == 1100) alert("IlhaTadeKishialehoIlha !!!");
+            if (imgCinema[2] < 1100 && imgCinema[2] > 1060){
+                Painter.img( ctx, 0,5,2,imgCinema[7]);
+            }
+            else if (imgCinema[2] < 1400 && imgCinema[2] > 1100){
+                Painter.img( ctx, 0,5,1,imgCinema[8 + Math.round((imgCinema[2]%18)/3)]);
+            }
+            else if (imgCinema[2] < 1500 && imgCinema[2] >= 1450){
+                disalert();
+                ctx.globalAlpha = 1-(1500-imgCinema[2])/50;
+                ctx.fillStyle = "rgb(0,0,0)";
+                ctx.fillRect(0,0,W,H);
+                ctx.globalAlpha = 1;
+            }
+            else if (imgCinema[2] == 1500){
+                imgCinema[4] = 1;
+            }
+        }
         if (imgCinema[4] == 0) window.requestAnimationFrame(ff);
         else {
+            quests.sky = 1;
             cinematicos = 0;
             animation();
         }
