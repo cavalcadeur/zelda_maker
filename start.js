@@ -35,14 +35,14 @@ var scrollX = 0;
 var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3"];
+var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","special","fastTravel","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3"];
 var nDalle = 0;
 var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
 var mouse = [0,0];
-var editObject = [["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","lambda0"],["rien","loot","gear","outDoor","inDoor","fireTemple","monsters","sky","lambda0"]];
+var editObject = [["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","coffre2","checkPoint","tele","mark","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -1171,7 +1171,7 @@ function GPS(x,y){
 }
 
 function pencil(x,y,action){
-    if (action == "gear" || action == "loot" || action == "outDoor" || action == "inDoor" || action == "monsters" || action == "fireTemple" || action == "sky"){
+    if (action == "gear" || action == "loot" || action == "outDoor" || action == "inDoor" || action == "monsters" || action == "fireTemple" || action == "sky" || action == "special"){
         editHand = editArray[action];
         editnumber = 0;
         if (action == "monsters") editM = 1;
@@ -1271,6 +1271,12 @@ function pencil(x,y,action){
                 }
             );
             if (lol == undefined)markedLevels.push([goto,out]);
+        }
+        else if (action == "fastTravel"){
+            teleport = [-1,-1];
+            onSea = 5;
+            islandData = {out:1,ileSet:0,x:0,y:0,select:0};
+
         }
         else{
             if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].splice(0,0,action);

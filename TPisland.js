@@ -166,24 +166,31 @@ function TPPosition(x,y){
 }
 
 function defineTP(){
-    if (islandData.select == 0){
-        islandData.goto = newLevel(islandData.out);
-        
+    if (teleport[0] == -1){
+        if (islandData.select != 0){
+            goToLevel(markedLevels[islandData.select - 1][1],markedLevels[islandData.select - 1][0],islandData.x,islandData.y,islandData.x,islandData.y);
+        }
     }
     else {
-        islandData.goto = markedLevels[islandData.select - 1][0];
-        islandData.out = markedLevels[islandData.select - 1][1];
-    }
-    if (objNiveau[teleport[0]][teleport[1]][0] == "teleport"){
-        objNiveau[teleport[0]][teleport[1]] = ["teleport",islandData.out+"",islandData.goto+"",islandData.x,islandData.y,islandData.x,islandData.y];
-    }
-    else {
-        objNiveau[teleport[0]][teleport[1]][1] = islandData.goto + "";
-        if (islandData.select == 0) {
-            if (islandData.out == 1){
-                iles[islandData.goto].heros = [[islandData.y,islandData.x],[islandData.y,islandData.x]];
+        if (islandData.select == 0){
+            islandData.goto = newLevel(islandData.out);
+            
+        }
+        else {
+            islandData.goto = markedLevels[islandData.select - 1][0];
+            islandData.out = markedLevels[islandData.select - 1][1];
+        }
+        if (objNiveau[teleport[0]][teleport[1]][0] == "teleport"){
+            objNiveau[teleport[0]][teleport[1]] = ["teleport",islandData.out+"",islandData.goto+"",islandData.x,islandData.y,islandData.x,islandData.y];
+        }
+        else {
+            objNiveau[teleport[0]][teleport[1]][1] = islandData.goto + "";
+            if (islandData.select == 0) {
+                if (islandData.out == 1){
+                    iles[islandData.goto].heros = [[islandData.y,islandData.x],[islandData.y,islandData.x]];
+                }
+                else interieurs[islandData.goto].heros = [[islandData.y,islandData.x],[islandData.y,islandData.x]];
             }
-            else interieurs[islandData.goto].heros = [[islandData.y,islandData.x],[islandData.y,islandData.x]];
         }
     }
     onSea = 0;
