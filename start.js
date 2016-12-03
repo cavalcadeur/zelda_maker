@@ -788,6 +788,23 @@ function drawInterface(){
     if (edition == 1 && editHand[editnumber] != "rien"){
         if (editM == 0 || editHand[editnumber] == "return") ctx.drawImage(imgElement[editHand[editnumber]],mouse[1],mouse[0]- imgElement[editHand[editnumber]].height / 2);
         else ctx.drawImage(imgMonstre[editHand[editnumber]+2],mouse[1],mouse[0]- imgMonstre[editHand[editnumber]+2].height / 2);
+        if (editHand[editnumber] == "tele"){
+            objNiveau.forEach(
+                function (ee,YY){
+                    ee.forEach(
+                        function (fe,XX){
+                            if (fe[0] == "teleport"){;
+                                ctx.globalAlpha = 0.1;
+                                Painter.cell( ctx, XX, YY, niveau[YY][XX] ,1);
+                                ctx.globalAlpha = 1;
+
+                            }
+                        }
+                    );
+                }
+            );
+
+        }
     }
     if (editPlate == 1 || editPlate == 2){
         ctx.beginPath();
@@ -1276,7 +1293,15 @@ function pencil(x,y,action){
             teleport = [-1,-1];
             onSea = 5;
             islandData = {out:1,ileSet:0,x:0,y:0,select:0};
-
+        }
+        else if (action == "tele"){
+            var truck = objNiveau[coor[0]][coor[1]][0];
+            if (truck == "house0" || truck == "house1" || truck == "house3" || truck == "tele"){
+            }
+            else objNiveau[coor[0]][coor[1]] = ["teleport",-1,"void",0,0,0,0];
+            teleport = [coor[0],coor[1]];
+            onSea = 5;
+            islandData = {out:1,ileSet:0,x:0,y:0,select:0};
         }
         else{
             if (objNiveau[coor[0]][coor[1]][0] != "") objNiveau[coor[0]][coor[1]].splice(0,0,action);
@@ -1325,12 +1350,6 @@ function pencil(x,y,action){
             }
             else if (action == "coffre2"){
                 objNiveau[coor[0]][coor[1]][0] = "coffre3";
-            }
-            else if (action == "tele"){
-                objNiveau[coor[0]][coor[1]] = ["teleport",-1,"void",0,0,0,0];
-                teleport = [coor[0],coor[1]];
-                onSea = 5;
-                islandData = {out:1,ileSet:0,x:0,y:0,select:0};
             }
             else if (action == "main0"){
                 objNiveau[coor[0]][coor[1]] = ["main0",50];
