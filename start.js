@@ -62,6 +62,7 @@ fondInvent.src = "images/menu4.png";
 var imgCinema = [new Image,new Image];
 var cinematicos = 0;
 var sideEdit = ["monsters","sky","fireTemple","inDoor","outDoor","special","gear","loot"];
+var sideSelect = -1;
 
 // programme
 
@@ -792,12 +793,21 @@ function drawInterface(){
     ctx.drawImage(imgMenu[heros[0].prim],W-105,0);
     ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-50,55);
     if (edition == 1){
+        sideSelect = -1;
         sideEdit.forEach(
             function(el,i){
                 var yel = i*(H/(3*sideEdit.length)*2) + H/6;
                 var epel = H/(3*sideEdit.length)*2;
-                ctx.fillStyle = "rgb(129,151,55)";
-                ctx.fillRect(W-epel,yel,epel*1.5,epel/8*7);
+                var hautel = epel/8*7;
+                if (mouse[1] > W - epel){
+                    if (mouse[0] > yel && mouse[0] < yel + hautel){
+                        epel = epel * 1.3;
+                        sideSelect = i;
+                    }
+                }
+                ctx.fillStyle = "rgb(20,178,139)";
+                ctx.fillRect(W-epel,yel,epel*1.5,hautel);
+                ctx.drawImage(imgElement[el],W-epel,yel,(imgElement[el].width * hautel) / imgElement[el].height,hautel);
             }
         );
         if (editHand[editnumber] != "rien"){
@@ -808,12 +818,12 @@ function drawInterface(){
                     function (ee,YY){
                         ee.forEach(
                             function (fe,XX){
-                                if (fe[0] == "teleport"){;
-                                                         ctx.globalAlpha = 0.1;
-                                                         Painter.cell( ctx, XX, YY, niveau[YY][XX] ,1);
-                                                         ctx.globalAlpha = 1;
-                                                         
-                                                        }
+                                if (fe[0] == "teleport"){
+                                    ctx.globalAlpha = 0.1;
+                                    Painter.cell( ctx, XX, YY, niveau[YY][XX] ,1);
+                                    ctx.globalAlpha = 1;
+                                    
+                                }
                             }
                         );
                     }
@@ -1203,6 +1213,13 @@ function GPS(x,y){
 }
 
 function pencil(x,y,action){
+    if (sideSelect != -1){
+        editHand = editArray[sideEdit[sideSelect]];
+        editnumber = 0;
+        if (sideEdit[sideSelect] == "monsters") editM = 1;
+        else editM = 0;
+        return;
+    }
     if (action == "gear" || action == "loot" || action == "outDoor" || action == "inDoor" || action == "monsters" || action == "fireTemple" || action == "sky" || action == "special"){
         editHand = editArray[action];
         editnumber = 0;
