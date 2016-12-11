@@ -175,10 +175,10 @@ function action(t){
                 }
             );
             if (h.plane == 1){
-                if (h.z > niveau[h.y][h.x]) h.g = 0.01;
+                if (h.z > niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0])) h.g = 0.01;
                 else {
                     h.g = 0;
-                    h.z = niveau[h.y][h.x];
+                    h.z = niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]);
                     h.plane = 0;
                     h.vx = 0;
                     h.vy = 0;
@@ -197,12 +197,14 @@ function action(t){
 
             }
             else if (h.grap == 0){
-                if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] && h.g < 5)) h.g += 0.05;
-                else {h.g = 0; h.z = niveau[h.y][h.x];
-                      if (h.z <= -1){
-                          fall(h,n);
-                      }
-                     }
+                if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]) && h.g < 5)) h.g += 0.05;
+                else {
+                    h.g = 0;
+                    h.z = niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]);
+                    if (h.z <= -1){
+                        fall(h,n);
+                    }
+                }
                 h.z -= h.g;
             }
             if (figer == 1) {h.tAura += h.vAura; if (h.tAura == 40 | h.tAura == -40) h.vAura = h.vAura * -1;}
@@ -217,7 +219,8 @@ function action(t){
 }
 
 function fall(h,n){
-    if (objNiveau[h.y][h.x] != "avaleur1" && objNiveau[h.y][h.x] != "avaleur2"){
+    var truc = objNiveau[h.y][h.x];
+    if (truc != "avaleur1" && truc != "avaleur2"){
         if (out == 1 || out == 3){
             particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
             particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
@@ -254,51 +257,47 @@ function move(d,n,gg){
     if (heros[n].stun > 0) return;
     if (heros[n].sens != d){
         heros[n].sens = d;
-        heros[n].delay = 2;
+        heros[n].delay = 3;
         return;
     }
     if (heros[n].delay != 0){
         heros[n].delay -= 1;
         return;
     }
-    if (gg == 0 && heros[n].plane == 0 && heros[n].g == 0){
-        if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
-        if (niveau[heros[n].y][heros[n].x] + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
-
-        if (isSolid(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0]) == true && heros[n].plane == 0) {
-            if (heros[n].sens == 0){
-                var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]];
-                if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1"){
-                    teleport = [heros[n].y+vecteurs[d][0],heros[n].x+vecteurs[d][1]];
-                    if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1] == "void"){
-                        goToLevel(out,"void",0,0,0,0);
-                    }
-                    else {
-                        goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
-                        if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][2] == 666){
-                            out = 1;
-                            cinematicos = 2;
-                            goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
-                        }
-                        else if (interieurs[goto] == undefined){
-                            out = 1;
-                            goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
-                        }
-                        else {
-                            out = interieurs[goto].out;
-                            goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
-                        }
-                        if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
-                    }
-                    if (truc[0] == "canon1"){
-                        cinematicos = 3;
-                    }
-                }
+    // if (gg == 0 && heros[n].plane == 0 && heros[n].g == 0){
+    if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
+        var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]];
+    if (heros[n].sens == 0){
+        if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1"){
+            teleport = [heros[n].y+vecteurs[d][0],heros[n].x+vecteurs[d][1]];
+            if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1] == "void"){
+                goToLevel(out,"void",0,0,0,0);
             }
-            return;
+            else {
+                goto = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1];
+                if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][2] == 666){
+                    out = 1;
+                    cinematicos = 2;
+                    goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
+                }
+                else if (interieurs[goto] == undefined){
+                    out = 1;
+                    goToLevel(out,goto,iles[goto].heros[0][1],iles[goto].heros[0][0],iles[goto].heros[1][1],iles[goto].heros[1][0]);
+                }
+                else {
+                    out = interieurs[goto].out;
+                    goToLevel(out,goto,interieurs[goto].heros[0][1],interieurs[goto].heros[0][0],interieurs[goto].heros[1][1],interieurs[goto].heros[1][0]);
+                }
+                if (goto == "help1") alert("Place toi face à un personnage et appuie sur la touche maj pour lui parler.");
+            }
+            if (truc[0] == "canon1"){
+                cinematicos = 3;
+            }
         }
-        if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     }
+    if (heros[n].z + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]] + taille(truc[0])) return;
+    //}
+    if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
     else if (heros[n].plane == 1 || heros[n].g != 0){
         if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
         if (heros[n].z + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
@@ -323,4 +322,10 @@ function changeArme(n){
         if (heros[n].invent[heros[n].objet] == "batonF") heros[n].invent[heros[n].objet] = "baton";
         heros[n].objet = (heros[n].objet+1)%heros[n].invent.length;
     }
+}
+
+function taille(caseT){
+    var tailles = {"bleu0":1.1,"coffre0":1.1,"coffre1":0.6,"rouge1":1.1,"arbre0":2,"arbre1":2,"arbreEole1":1.5,"armure":1.6,"autel":1.1,"bougie":1.3,"canon0":0.5,"canon1":1.3,"canon2":0.5,"checkPoint":1.2,"unCheckPoint":1.2,"eole0":1.3,"etagere":1.7,"fleur2":1.1,"fleur3":0.6,"house0":2,"house1":1.8,"house2":1.8,"house3":1.8,"house4":3,"houseSky0":0.5,"houseSky1":2,"houseSky2":0.5,"houseSky3":2,"PNJ":1.5,"lit0":0.8,"lit1":0.8,"main0":1.3,"main1":1.3,"miniTempleEau":2,"moulin0":3,"moulin1":3,"palmier":1.2,"plate":0.2,"plate1":0.1,"portail0":3,"portail2":3,"porte0":1.5,"pot":0.4,"statue0":1.3,"switch0":1,"switch1":1,"switch2":1,"switch3":1,"table0":0.8,"table1":0.8,"tabouret":0.6,"tombe0":1.4,"torche":1.3,"torche2":1.3,"torche1":0.3,"templeEau0":3,"templeEau1":3,"templeEau2":3,"templeFeu0":3,"templeFeu1":3,"templeFeu2":3};
+    if (tailles[caseT] == undefined) return 0;
+    else return tailles[caseT];
 }

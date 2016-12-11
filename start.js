@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0}];
+var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -16,7 +16,7 @@ var pots = [];
 var out = 4;
 var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(107,93,66)","rgb(90,70,50)",[20,80,10,10,40,5],"rgb(72,98,178)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"],["rgb(170,170,170)","rgb(150,150,150)",[210,210,210,-20,-20,-20],"rgb(0,0,15)"],["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(28,134,182)"]];
 var niveau = [];
-var quests = {"chef":0,"jehan":0,"garcon":0,"boussole":0,"boussoleF":0,"dev":0,"sky":0};
+var quests = {"chef":0,"jehan":0,"garcon":0,"boussole":0,"boussoleF":0,"dev":0,"sky":0,"pencil":0};
 var alerting = 0;
 var objNiveau = [[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]],[[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""],[""]]];
 var imgHeros = [new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image(),new Image()];
@@ -39,10 +39,10 @@ var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","
 var nDalle = 0;
 var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
 var mouse = [0,0];
-var editObject = [["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["rien","loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"]];
+var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -198,6 +198,7 @@ function precharge(){
             goto = where[1];
             respawnPoint[0] = heros[0].x;
             respawnPoint[1] = heros[0].y;
+            if (quests.pencil == undefined) quests.pencil = 0;
             if (goto != ""){
                 if (out == 1){
                     niveau = iles[goto].alti;
@@ -404,7 +405,11 @@ function start(){
         function (event){
             mouse[1] = event.clientX;
             mouse[0] = event.clientY;
-            if (edition == 1) casePencil = Painter.case(niveau,mouse[1],mouse[0]);
+            if (cinematicos == 6) {
+                imgCinema[0][imgCinema[5]] = [mouse[1],mouse[0],1];
+                imgCinema[5] = (imgCinema[5] + 1)%imgCinema[0].length;
+            }
+            else if (edition == 1) casePencil = Painter.case(niveau,mouse[1],mouse[0]);
         }
     );
     document.addEventListener(
@@ -440,6 +445,9 @@ function start(){
                     helpPencil(editHand[editnumber]);
                 }
             }
+            if (cinematicos == 6){
+                imgCinema[8] += 1;
+            }
         }
     );
     for(var i = 0;i < 17;i ++){
@@ -454,6 +462,7 @@ function animation(){
     else if (cinematicos == 3) cShootOut();
     else if (cinematicos == 4) cMask();
     else if (cinematicos == 5) cEnlevement();
+    else if (cinematicos == 6) cPencil();
     else {
         fondfond.src = "images/menu5.png";
         fondfond.onload = function(){};
@@ -789,9 +798,6 @@ function drawEnnemi(n){
 }
 
 function drawInterface(){
-    ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],W-50,0);
-    ctx.drawImage(imgMenu[heros[0].prim],W-105,0);
-    ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-50,55);
     if (edition == 1){
         sideSelect = -1;
         sideEdit.forEach(
@@ -822,7 +828,7 @@ function drawInterface(){
                                     ctx.globalAlpha = 0.1;
                                     Painter.cell( ctx, XX, YY, niveau[YY][XX] ,1);
                                     ctx.globalAlpha = 1;
-                                    
+
                                 }
                             }
                         );
@@ -831,29 +837,35 @@ function drawInterface(){
             }
         }
     }
+    else {
+        ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],W-50,0);
+        ctx.drawImage(imgMenu[heros[0].prim],W-105,0);
+        ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-50,55);
+        heros.forEach(
+            function(h,index){
+                for (var i = 0;i < h.vieTotale;i++){
+                    if (i < 10) ctx.drawImage(imgMenu.coeurVide,5 + i*15,5 + index*35);
+                    else ctx.drawImage(imgMenu.coeurVide,5 + (i-14)*15,15 + index*35);
+                    if (h.vie > i){
+                        if (h.vie - 0.5 > i){
+                            if (i < 10) ctx.drawImage(imgMenu.coeur1,5 + i*15,5 + index*35);
+                            else ctx.drawImage(imgMenu.coeur1,5 + (i-14)*15,15 + index*35);
+                        }
+                        else {
+                            if (i < 10) ctx.drawImage(imgMenu.coeur05,5 + i*15,5 + index*35);
+                            else ctx.drawImage(imgMenu.coeur05,5 + (i-14)*15,15 + index*35);
+                        }
+                    }
+                }
+            }
+        );
+    }
     if (editPlate == 1 || editPlate == 2){
         ctx.beginPath();
         ctx.arc(mouse[1],mouse[0],15,-Math.PI,Math.PI);
         ctx.stroke();
     }
-    heros.forEach(
-        function(h,index){
-            for (var i = 0;i < h.vieTotale;i++){
-                if (i < 10) ctx.drawImage(imgMenu.coeurVide,5 + i*15,5 + index*35);
-                else ctx.drawImage(imgMenu.coeurVide,5 + (i-14)*15,15 + index*35);
-                if (h.vie > i){
-                    if (h.vie - 0.5 > i){
-                        if (i < 10) ctx.drawImage(imgMenu.coeur1,5 + i*15,5 + index*35);
-                        else ctx.drawImage(imgMenu.coeur1,5 + (i-14)*15,15 + index*35);
-                    }
-                    else {
-                        if (i < 10) ctx.drawImage(imgMenu.coeur05,5 + i*15,5 + index*35);
-                        else ctx.drawImage(imgMenu.coeur05,5 + (i-14)*15,15 + index*35);
-                    }
-                }
-            }
-        }
-    );
+
 }
 
 function attack(n,x){
@@ -1002,6 +1014,10 @@ function attack(n,x){
                 console.log(JSON.stringify(niveau));
                 console.log(JSON.stringify(objNiveau));
                 console.log(JSON.stringify(ennemis));
+            }
+            if (quests.pencil == 0){
+                quests.pencil = 1;
+                cinematicos = 6;
             }
         }
         else if (use == "pot"){
@@ -1614,7 +1630,7 @@ function questPNJ(x,y){
         else {
             if (quests.boussoleF == 0)
             {
-                objNiveau[y][x][2] = "Bienvenue Link. Le heros du vent est hors de la portée de ton bateau. Voici cependant la carte des mers que tu peux utiliser avec la touche m quand tu es en mer. Pour naviguer plus loin, il te faudra reconstruire la boussole des elements. Malheureusement, elle a été brisée en 3 morceaux qu'il te faut aller chercher dans les temples du feu, de l'eau et du vent.";
+                objNiveau[y][x][2] = "Bienvenue Link. Le voleur que tu cherches a disparu. Voici cependant la carte des mers que tu peux utiliser avec la touche m quand tu navigues. Pour retrouver le malfrat, il te faudra reconstruire la boussole des elements. Malheureusement, elle a été brisée en 3 morceaux qu'il te faut aller chercher dans les temples du feu, de l'eau et du vent.";
                 questObj.carteMaritime = 1;
             }
             else if (quests.boussoleF == 2) objNiveau[y][x][2] = "Il te manque encore les deux morceaux de la boussole qui se trouvent au temple du vent et au temple de l'eau.";
@@ -1623,7 +1639,7 @@ function questPNJ(x,y){
             else if (quests.boussoleF == 5) objNiveau[y][x][2] = "Il te faut une derniere pièce pour reconstituer la boussole. Elle se trouve au temple du vent selon mes souvenirs.";
             else if (quests.boussoleF == 6) objNiveau[y][x][2] = "Il te faut une derniere pièce pour reconstituer la boussole. Elle se trouve au temple de l'eau.";
             else if (quests.boussoleF == 7) objNiveau[y][x][2] = "Il te faut une derniere pièce pour reconstituer la boussole. Elle se trouve au temple du feu.";
-            else if (quests.boussoleF == 9) objNiveau[y][x][2] = "Tu as finalement reconstitué la boussole. Il n'y a plus de temps à perdre si tu veux retrouver le héros du vent.";
+            else if (quests.boussoleF == 9) objNiveau[y][x][2] = "Tu as finalement reconstitué la boussole. Il n'y a plus de temps à perdre si tu veux retrouver ce satané voleur !";
         }
         quests.boussoleF += quests.boussole;
         quests.boussole = 0;
