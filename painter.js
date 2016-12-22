@@ -333,15 +333,16 @@ var Painter = function() {
             ctx.fillStyle = "rgb("+(215+n*4)+","+(100+n*10)+",45)";
             var X = toX(x+0.5,y+0.5,z+1.8);
             var Y = toY(x+0.5,y+0.5,z+1.8);
-            for (var i = 0;i<8;i++){
-                var cX = X + n*15*Math.cos(Math.PI/4*(i+2));
-                var cY = Y + n*15*Math.sin(Math.PI/4*(i+2));
-                var s = 4;
+            var j = 16;
+            for (var i = 0;i<j;i++){
+                var cX = X + n*15*Math.cos(Math.PI*2/j*(i+2));
+                var cY = Y + n*15*Math.sin(Math.PI*2/j*(i+2));
+                var s = 4 - i%2*(n/10*4);
                 ctx.beginPath();
-                ctx.moveTo(cX + s*Math.cos(Math.PI/4*i),cY + s*Math.sin(Math.PI/4*i));
-                ctx.lineTo(cX + s*15*Math.cos(Math.PI/4*(i+2)),cY + s*15*Math.sin(Math.PI/4*(i+2)));
-                ctx.lineTo(cX - s*Math.cos(Math.PI/4*i),cY - s*Math.sin(Math.PI/4*i));
-                ctx.lineTo(cX - s*15*Math.cos(Math.PI/4*(i+2)),cY - s*15*Math.sin(Math.PI/4*(i+2)));
+                ctx.moveTo(cX + s*Math.cos(Math.PI*2/j*i),cY + s*Math.sin(Math.PI*2/j*i));
+                ctx.lineTo(cX + s*15*Math.cos(Math.PI*2/j*(i+2)),cY + s*15*Math.sin(Math.PI*2/j*(i+2)));
+                ctx.lineTo(cX - s*Math.cos(Math.PI*2/j*i),cY - s*Math.sin(Math.PI*2/j*i));
+                ctx.lineTo(cX - s*15*Math.cos(Math.PI*2/j*(i+2)),cY - s*15*Math.sin(Math.PI*2/j*(i+2)));
                 ctx.closePath();
                 ctx.fill();
             }
