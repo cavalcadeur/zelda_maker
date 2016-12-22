@@ -35,14 +35,14 @@ var scrollX = 0;
 var scrollY = 0;
 var teleport = [0,0];
 var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
-var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","special","fastTravel","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3"];
+var imgArbre = ["arbre0","arbre1","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","planche0","planche1","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","special","fastTravel","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3","rocher"];
 var nDalle = 0;
 var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
 var mouse = [0,0];
 var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","rocher","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -218,7 +218,7 @@ function precharge(){
 
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
-    var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0"];
+    var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla"];
     var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre","corps","parachale","baton","batonF","maskWind"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
     var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2"];
@@ -693,17 +693,27 @@ function draw() {
                         else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
                         else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
-                        else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti,kgb.n);kgb.g = 0;}
                         else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
                         else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
                         else if (kgb.type == "fadeOut") drawFade(kgb.n);
                         else if (kgb.type == "eole") {drawEole(kgb);kgb.g = 0;}
+                        else if (kgb.type == "rocher") {drawRocher(kgb);}
+                        else if (kgb.type == "exploM") {drawExploM(kgb);kgb.g = 0;}
+                        else if (kgb.type == "bla") {drawBla(kgb);kgb.g = 0;}
+                        else if (kgb.type == "pow") {drawPow(kgb);kgb.g = 0;}
                         kgb.n += 1;
                         if (kgb.type == "flamme") kgb.alti += kgb.g/150;
                         else kgb.alti += kgb.g/50;
                         kgb.g -= 1;
                         if (kgb.n == kgb.lim) {
                             if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
+                            else if (kgb.type == "rocher"){
+                                if (objNiveau[Math.round(kgb.y)][Math.round(kgb.x)] == [""]) objNiveau[Math.round(kgb.y)][Math.round(kgb.x)][0] =  "rocher";
+                                else {
+                                    objNiveau[Math.round(kgb.y)][Math.round(kgb.x)].splice(0,0,"rocher");
+                                }
+                            }
                             particles.splice(iii,1);
                         }
                     }
@@ -792,6 +802,10 @@ function drawEnnemi(n){
             if (ennemis[n].stun == 0){
                 ennemis[n].x += vecteurs[ennemis[n].sens][1] * ennemis[n].v;
                 ennemis[n].y += vecteurs[ennemis[n].sens][0] * ennemis[n].v;
+                if (ennemis[n].g == 0){
+                    ennemis[n].g = -0.3;
+                    ennemis[n].z += 0.01;
+                }
             }
         }
     }
@@ -919,7 +933,7 @@ function attack(n,x){
         else if (truc == "PNJ"){
             if (alerting == 0){
                 questPNJ(heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0]);
-                say(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][2]);
+                say(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][2],heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0]);
             }
             else unsay();
         }
@@ -1468,24 +1482,10 @@ function hitEnnemis(n,degat,sens){
         }
     }
     ennemis[n].pv -= degat;
-    if (sens != 4) ennemis[n].sens = (sens + 2)%4;
-    ennemis[n].stun = 1;
-    if (degat == 0) {ennemis[n].stun = 2;particles.push({n:0,type:"hitB",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});}
-    else particles.push({n:0,type:"hitA",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});
-    ennemis[n].x = Math.round(ennemis[n].x);
-    ennemis[n].y = Math.round(ennemis[n].y);
-    if (sens < 4 && ennemis[n].img != "mCorps"){
-        if (Math.round(ennemis[n].y) + vecteurs[sens][0] < niveau.length){
-            if (Math.round(ennemis[n].x) + vecteurs[sens][1] < niveau[Math.round(ennemis[n].y) + vecteurs[sens][0]].length){
-                if (niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)] == niveau[Math.round(vecteurs[sens][0] + ennemis[n].y)][Math.round(vecteurs[sens][1] + ennemis[n].x)]){
-                    ennemis[n].x = Math.round(vecteurs[sens][1] + ennemis[n].x);
-                    ennemis[n].y = Math.round(vecteurs[sens][0] + ennemis[n].y);
-                }
-            }
-        }
-    }
+    
     if (ennemis[n].pv <= 0) {
         particles.push({n:0,type:"fumeeM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:40});
+        particles.push({n:0,type:"exploM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:80});
         ennemis[n].pv = 0;
         if (objetMort > 0){
             var xxx = 0;
@@ -1527,6 +1527,22 @@ function hitEnnemis(n,degat,sens){
                     hitEnnemis(n,10000,4);
                 }
             );
+        }
+    }
+    if (sens != 4) ennemis[n].sens = (sens + 2)%4;
+    ennemis[n].stun = 1;
+    if (degat == 0) {ennemis[n].stun = 2;particles.push({n:0,type:"hitB",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});}
+    else particles.push({n:0,type:"hitA",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});
+    ennemis[n].x = Math.round(ennemis[n].x);
+    ennemis[n].y = Math.round(ennemis[n].y);
+    if (sens < 4 && ennemis[n].img != "mCorps"){
+        if (Math.round(ennemis[n].y) + vecteurs[sens][0] < niveau.length){
+            if (Math.round(ennemis[n].x) + vecteurs[sens][1] < niveau[Math.round(ennemis[n].y) + vecteurs[sens][0]].length){
+                if (niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)] == niveau[Math.round(vecteurs[sens][0] + ennemis[n].y)][Math.round(vecteurs[sens][1] + ennemis[n].x)]){
+                    ennemis[n].x = Math.round(vecteurs[sens][1] + ennemis[n].x);
+                    ennemis[n].y = Math.round(vecteurs[sens][0] + ennemis[n].y);
+                }
+            }
         }
     }
 }
@@ -1598,9 +1614,22 @@ function isFloodable(x,y,carteChelouWeshWesh){
     else return false;
 }
 
-function say(msg){
+function say(msg,x,y){
+    var alti;
+    if (x == undefined || y == undefined){
+        x = -8000;
+        y = 0;
+        alti = 0;
+    }
+    else {
+        if (y < niveau.length && y >= 0 && x < niveau[0].length && x >= 0){
+            alti = niveau[y][x];
+        }
+        else alti = 0;
+    }
     alerting = 1;
-    alert(msg);
+    particles.push({n:0,type:"bla",x:x,y:y,g:0,alti:alti,lim:-1,content:msg,actu:"",xx:0,yy:0,y2:0,x2:0});
+    console.log(particles);
 }
 
 function unsay(){

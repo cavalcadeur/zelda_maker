@@ -7,7 +7,7 @@ function choseDirection(n){
             var y = Math.round(ennemis[n].y) + vecteurs[e][0];
             if (x >= 0 && y >= 0  && y < niveau.length){
                 if (x < niveau[y].length){
-                    if (niveau[y][x] > -1 && niveau[y][x] == Math.round(ennemis[n].z)){
+                    if (niveau[y][x] > -1){
                         if (isSolid(x,y) == false){ final.push(e);}
                     }
                     else if (ennemis[n].img == "main"){

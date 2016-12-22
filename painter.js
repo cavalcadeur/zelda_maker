@@ -16,6 +16,16 @@ var Painter = function() {
         return Math.floor( scrollY + y * cellY - z * cellZ);
     }
 
+    function exploMY( n ) {
+        n = n/40;
+        return (-6*n*n + 6*n)*-100;
+    }
+
+    function exploMX( n ) {
+        n = n/40;
+        return (-8*(n*n*n) + 12.67*(n*n) - 4.67*n)*50;
+    }
+
     return {
         realCoor: function(x,y){
             return [toX(x,y,1),toY(x,y,1)];
@@ -318,6 +328,63 @@ var Painter = function() {
             else if (x < 100) scrollX = 100-(x-scrollX);
             if (y > H-100) scrollY = H-100-(y-scrollY);
             else if (y < 150) scrollY = 150-(y-scrollY);
+        },
+        drawHit: function(ctx,x,y,z,n){
+            ctx.fillStyle = "rgb("+(215+n*4)+","+(100+n*10)+",45)";
+            var X = toX(x+0.5,y+0.5,z+1.8);
+            var Y = toY(x+0.5,y+0.5,z+1.8);
+            for (var i = 0;i<8;i++){
+                var cX = X + n*15*Math.cos(Math.PI/4*(i+2));
+                var cY = Y + n*15*Math.sin(Math.PI/4*(i+2));
+                var s = 4;
+                ctx.beginPath();
+                ctx.moveTo(cX + s*Math.cos(Math.PI/4*i),cY + s*Math.sin(Math.PI/4*i));
+                ctx.lineTo(cX + s*15*Math.cos(Math.PI/4*(i+2)),cY + s*15*Math.sin(Math.PI/4*(i+2)));
+                ctx.lineTo(cX - s*Math.cos(Math.PI/4*i),cY - s*Math.sin(Math.PI/4*i));
+                ctx.lineTo(cX - s*15*Math.cos(Math.PI/4*(i+2)),cY - s*15*Math.sin(Math.PI/4*(i+2)));
+                ctx.closePath();
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1 - n/10;
+            ctx.beginPath();
+            ctx.arc(X,Y,n*5,Math.PI,-Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(X,Y,n*3,Math.PI,-Math.PI);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        },
+        drawExploM: function(ctx,x,y,z,n){
+            ctx.fillStyle = "rgb(80,0,50)";
+            var N = n/2;
+            var X = toX(x+0.5,y+0.5,z+1);
+            var Y = toY(x+0.5,y+0.5,z+1);
+            ctx.beginPath();
+            ctx.moveTo(X + exploMX(N) + 3,Y + exploMY(N));
+            ctx.lineTo(X + exploMX(N-2),Y + exploMY(N-2));
+            ctx.lineTo(X + exploMX(N) - 3,Y + exploMY(N));
+            ctx.closePath();
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(X - exploMX(N) + 3,Y + exploMY(N));
+            ctx.lineTo(X - exploMX(N-2),Y + exploMY(N-2));
+            ctx.lineTo(X - exploMX(N) - 3,Y + exploMY(N));
+            ctx.closePath();
+            ctx.fill();
+        }
+        ,
+        drawPow: function(ctx,x,y,z,n){
+            ctx.fillStyle = "rgb(100,0,63)";
+            var X = toX(x+0.5,y+0.5,z+0.5);
+            var Y = toY(x+0.5,y+0.5,z+0.5);
+            ctx.globalAlpha = 1 - n/10;
+            ctx.beginPath();
+            ctx.arc(X,Y,n*4,Math.PI,-Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(X,Y,n*2,Math.PI,-Math.PI);
+            ctx.fill();
+            ctx.globalAlpha = 1;
         }
     };
 }();
