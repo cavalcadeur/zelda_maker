@@ -372,8 +372,7 @@ var Painter = function() {
             ctx.lineTo(X - exploMX(N) - 3,Y + exploMY(N));
             ctx.closePath();
             ctx.fill();
-        }
-        ,
+        },
         drawPow: function(ctx,x,y,z,n){
             ctx.fillStyle = "rgb(100,0,63)";
             var X = toX(x+0.5,y+0.5,z+0.5);
@@ -386,6 +385,13 @@ var Painter = function() {
             ctx.arc(X,Y,n*2,Math.PI,-Math.PI);
             ctx.fill();
             ctx.globalAlpha = 1;
+        },
+        drawTexte: function(ctx,x,y,z,texte){
+            ctx.fillStyle = "rgb(230,230,255)";
+            ctx.font = "20px serif";
+            var X = toX(x+0.5,y+0.5,z+0.5);
+            var Y = toY(x+0.5,y+0.5,z+0.5);
+            ctx.fillText(texte,X,Y);
         }
     };
 }();

@@ -219,6 +219,12 @@ function goToLevel(oo,go,x,y,x2,y2){
     out = oo;
     goto = go;
     if (oo == 1){
+        if (iles[go].particles == undefined){
+            particles = [];
+        }
+        else {
+            particles = iles[go].particles;
+        }
         niveau = iles[go].alti;
         ennemis = iles[go].ennemis;
         objNiveau = iles[go].obj;

@@ -190,6 +190,7 @@ function waveReveil(e){
 function cReveilFin(){
     if (goto == "depart") cMechant();
     else {
+        boatPosition = [260,96];
         heros[0].sens = 2;
         heros[1].sens = 2;
         cinematicos = 0;

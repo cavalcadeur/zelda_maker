@@ -42,7 +42,7 @@ var mouse = [0,0];
 var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
-var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","main","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","rocher","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
+var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","planche0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","rocher","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"]};
 var onSea = 0;
 var waves = [];
 var goto = "";
@@ -136,6 +136,7 @@ function save(){
     window.localStorage.setItem("quests",JSON.stringify(quests));
     window.localStorage.setItem("questObj",JSON.stringify(questObj));
     window.localStorage.setItem("objInvent",JSON.stringify(objInvent));
+    window.localStorage.setItem("boatPosition",JSON.stringify(boatPosition));
     alert("Sauvegarde terminée. J'espère que ce n'était pas trop long.");
     figer = 0;
 }
@@ -194,6 +195,7 @@ function precharge(){
             quests = JSON.parse(window.localStorage.getItem("quests"));
             questObj = JSON.parse(window.localStorage.getItem("questObj"));
             objInvent = JSON.parse(window.localStorage.getItem("objInvent"));
+            boatPosition = JSON.parse(window.localStorage.getItem("boatPosition"));
             out = where[0];
             goto = where[1];
             respawnPoint[0] = heros[0].x;
@@ -218,7 +220,7 @@ function precharge(){
 
 function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
-    var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","hitA","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla"];
+    var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","excla","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla"];
     var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre","corps","parachale","baton","batonF","maskWind"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
     var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2"];
@@ -351,6 +353,7 @@ function start(){
     out = 4;
     niveau = interieurs["tuto"].alti;
     objNiveau = interieurs["tuto"].obj;
+    particles = interieurs["tuto"].particles;
     Painter.niveau( niveau );
     resize();
     Crossed.init(W,H);
@@ -444,6 +447,12 @@ function start(){
                 if (edition == 1){
                     helpPencil(editHand[editnumber]);
                 }
+                else if (onSea == 0){
+                    onSea = 6;
+                }
+                else if (onSea == 6){
+                    onSea = 0;
+                }
             }
             if (cinematicos == 6){
                 imgCinema[8] += 1;
@@ -481,6 +490,7 @@ function animation(){
                 else if (onSea == 2) drawSea();
                 else if (onSea == 4) drawInvent();
                 else if (onSea == 5) TPisland();
+                else if (onSea == 6) Help();
                 if (cinematicos == 0) window.requestAnimationFrame(f);
                 else {
                     animation();
@@ -692,6 +702,7 @@ function draw() {
                         else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
                         else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
+                        else if (kgb.type == "excla") {drawExcla(kgb);kgb.g = 0;}
                         else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
                         else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti,kgb.n);kgb.g = 0;}
                         else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
@@ -702,6 +713,7 @@ function draw() {
                         else if (kgb.type == "exploM") {drawExploM(kgb);kgb.g = 0;}
                         else if (kgb.type == "bla") {drawBla(kgb);kgb.g = 0;}
                         else if (kgb.type == "pow") {drawPow(kgb);kgb.g = 0;}
+                        else if (kgb.type == "texte") {drawTexte(kgb);kgb.g = 0;}
                         kgb.n += 1;
                         if (kgb.type == "flamme") kgb.alti += kgb.g/150;
                         else kgb.alti += kgb.g/50;
@@ -856,12 +868,12 @@ function drawEnnemi(n){
                     }
                 }
                 if (ennemis[n].stun > 0) ennemis[n].stun -= 1;
-                ennemis[n].sens = choseDirection(n);
+                var sens = choseDirection(n);
                 ennemis[n].n = 0;
-                if (ennemis[n].sens == 4){
-                    ennemis[n].sens = 2;
+                if (sens == 4){
                     ennemis[n].stun = 1;
                 }
+                else ennemis[n].sens = sens;
             }
             if (ennemis[n].stop == 0){
                 ennemis[n].n += 1;
@@ -946,6 +958,10 @@ function drawInterface(){
 }
 
 function attack(n,x){
+    if (edition == 1){
+        edition = 0;
+        return;
+    }
     if (heros[n].imgUp != 0){
         if (heros[n].plane == 1) {
             heros[n].plane = 0;
@@ -1496,7 +1512,7 @@ function pencil(x,y,action){
 }
 
 function hitEnnemis(n,degat,sens){
-    if (ennemis[n].pv <= 0) return;
+    if (ennemis[n].pv <= 0 || ennemis[n].etat == 1) return;
     if (ennemis[n].img == "feu" || ennemis[n].img == "scie") return;
     if (ennemis[n].img == "moblin"){
         if (ennemis[n].sens == (sens+2)%4 && sens != 4){
@@ -1578,11 +1594,13 @@ function hitHeros(n,degat,sens){
     heros[n].nGrap = -1;
     heros[n].vx = 0;
     heros[n].vy = 0;
-    if ((heros[n].y + vecteurs[sens][0]) < niveau.length){
-        if (niveau[heros[n].y][heros[n].x] >= niveau[heros[n].y + vecteurs[sens][0]][heros[n].x + vecteurs[sens][1]] && (heros[n].x + vecteurs[sens][1]) < niveau[heros[n].y + vecteurs[sens][0]].length){
-            if (isSolid(heros[n].x + vecteurs[sens][1],heros[n].y + vecteurs[sens][0]) == false){
-                heros[n].x += vecteurs[sens][1];
-                heros[n].y += vecteurs[sens][0];
+    if ((heros[n].y + vecteurs[sens][0]) < niveau.length && heros[n].y + vecteurs[sens][0] >= 0){
+        if ((heros[n].x + vecteurs[sens][1]) < niveau[0].length && heros[n].x + vecteurs[sens][1] >= 0){
+            if (niveau[heros[n].y][heros[n].x] >= niveau[heros[n].y + vecteurs[sens][0]][heros[n].x + vecteurs[sens][1]] && (heros[n].x + vecteurs[sens][1]) < niveau[heros[n].y + vecteurs[sens][0]].length){
+                if (isSolid(heros[n].x + vecteurs[sens][1],heros[n].y + vecteurs[sens][0]) == false){
+                    heros[n].x += vecteurs[sens][1];
+                    heros[n].y += vecteurs[sens][0];
+                }
             }
         }
     }
@@ -1710,12 +1728,12 @@ function questPNJ(x,y){
             quests.dev = 1;
         }
         else if (quests.dev == 1){
-            objNiveau[8][8] = ["","","Avant de commencer dans le vif du sujet, j'aimerais préciser qu'il s'agit d'un jeu amateur. C'est pourquoi il se peut que vous soyez confronté des bugs, des graphismes médiocres ou des contrôles crispant. Alors soyez indulgent et n'attendez pas un triple A photoréaliste sans saveur mais irréprochable techniquement. J'espere cependant que vous prendrez plaisir à jouer et qu'au moins vous ne perdrez pas trop votre temps à le faire."];
+            objNiveau[8][8] = ["","","Avant de commencer dans le vif du sujet, j'aimerais préciser qu'il s'agit d'un jeu amateur. C'est pourquoi il se peut que vous soyez confronté à des bugs, des graphismes médiocres ou des contrôles crispants. Alors soyez indulgent et n'attendez pas un triple A photoréaliste sans saveur mais irréprochable techniquement. J'espere cependant que vous prendrez plaisir à jouer et qu'au moins vous ne perdrez pas trop votre temps à le faire."];
             try {
                 ctx.ellipse(-500,-500,5,1,0,-Math.PI,Math.PI);
             }
             catch (e) {
-                objNiveau[8][8] = ["","","Avant de commencer dans le vif du sujet, j'aimerais préciser qu'il s'agit d'un jeu amateur. C'est pourquoi il se peut que vous soyez confronté à des bugs, des graphismes médiocres ou des contrôles crispant. Je constate d'ailleurs que vous risquez d'avoir quelques difficultés, sans doute parce que vous utilisez un firefox antérieur à la version 48.0 ou que vous utilisez Internet Explorer. Il y a peut-être une partie du jeu qui sera fonctionnel mais malheureusement pas l'intégralité ... Désolé."];
+                objNiveau[8][8] = ["","","Avant de commencer dans le vif du sujet, j'aimerais préciser qu'il s'agit d'un jeu amateur. C'est pourquoi il se peut que vous soyez confronté à des bugs, des graphismes médiocres ou des contrôles crispants. Je constate d'ailleurs que vous risquez d'avoir quelques difficultés, sans doute parce que vous utilisez un firefox antérieur à la version 48.0 ou que vous utilisez Internet Explorer. Il y a peut-être une partie du jeu qui sera fonctionnel mais malheureusement pas l'intégralité ... Désolé."];
             }
             console.log(objNiveau[8][8]);
             objNiveau[6][8] = ["PNJ","dev","Coucou !"];
@@ -1723,21 +1741,15 @@ function questPNJ(x,y){
             quests.dev = 2;
         }
         else if (quests.dev == 2){
-            objNiveau[6][8] = ["","","Maintenant je vais vous expliquer l'interface du jeu. En haut à gauche ce sont les coeurs, quand tu n'en a plus tu es mort. En haut à droite, il y a 3 carrés noirs. Ce sont les emplacement d'objet. Le plus à gauche est l'objet primaire assigné à la touche espace. Celui juste à droite contient les objets secondaires assignés à la touche maj. Il est possible d'en avoir jusqu'à 5 et de les faire défiler avec la touche ctrl. Pour organiser les objets, il faut utiliser l'inventaire avec la touche i."];
+            objNiveau[6][8] = ["","","Pour voir un récapitulatif des touches, il suffit d'appuyer sur a. Si vous avez un ami, il peut jouer le mystérieux 2eme joueur. C'est le goron en cosplay en bas à gauche."];
             objNiveau[7][1] = ["PNJ","dev","Coucou ! Petit FDP !"];
             particles.push({n:0,type:"fumeeF",x:8,y:6,g:0,alti:0,lim:40});
             quests.dev = 3;
         }
         else if (quests.dev == 3){
-            objNiveau[7][1] = ["","","Vous avez peut-être remarqué ce goron en cosplay, il s'agit du mysterieux deuxieme joueur. Il est controlable via le pavé numerique avec 1,2,3 et 5. Ainsi que 0 pour faire défiler ses objets et entrée du pavé pour utiliser l'objet selectionné. Il ne possède pas d'arme primaire. Si l'un de vous passe par une porte, l'autre suivra automatiquement."];
-            objNiveau[1][10] = ["PNJ","dev","Coucou ! Petit FDP !"];
+            objNiveau[7][1] = ["","","Un dernier petit détail : ce jeu est aussi un Zelda Maker. Il vous suffit de trouver le pinceau pour créer vos propres niveaux. (le pinceau est disponible quel que soit le mode de jeu choisi)"];
             particles.push({n:0,type:"fumeeF",x:1,y:7,g:0,alti:0,lim:40});
             quests.dev = 4;
-        }
-        else if (quests.dev == 4){
-            objNiveau[1][10] = ["","","Un dernier petit détail : ce jeu est aussi un Zelda Maker. Si vous voulez jouer, entrez dans la maison la plus à gauche mais si vous voulez directement creer vos propres niveaux, entrez dans l'autre maison. Vous serez transporté dans une île vierge où vous trouverez tous ce qu'il vous faut pour cela."];
-            particles.push({n:0,type:"fumeeF",x:10,y:1,g:0,alti:0,lim:40});
-            quests.dev = 5;
         }
     }
 }

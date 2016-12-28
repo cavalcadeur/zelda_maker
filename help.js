@@ -5,3 +5,26 @@ function helpPencil(name){
         alert("Je pense que l'aide n'est pas nécessaire pour cette objet.");
     }
 }
+
+function Help(){
+    ctx.fillStyle = "rgb(72,98,178)";
+    ctx.fillRect(0,0,W,H);
+    waves.forEach(
+        function(e){
+            waveNiveau(e);
+        }
+    );
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.font = "30px serif";
+    ctx.fillText("Joueur 1",20,50);
+    ctx.fillText("Joueur 2",W-150,50);
+    ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],60,120);
+    ctx.drawImage(imgMenu[heros[0].prim],270,120);
+    ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-110,120);
+    ctx.font = "20px serif";
+    ctx.fillText("espace",50,210);
+    ctx.fillText("maj",275,210);
+    ctx.fillText("ctrl",275,250);
+    ctx.fillText("entrée",W-115,210);
+    ctx.fillText("touche 0",W-115,250);
+}

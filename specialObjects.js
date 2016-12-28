@@ -166,3 +166,16 @@ function drawExploM(truc){
 function drawPow(type){
     Painter.drawPow(ctx,type.x,type.y,type.alti,type.n);
 }
+
+function drawTexte(truc){
+    console.log("Hey !");
+    Painter.drawTexte(ctx,truc.x,truc.y,truc.alti,truc.cont);
+}
+
+function drawExcla(truc){
+    var viteModo = 2;
+
+    ctx.globalAlpha = 1 - truc.n/40;
+    Painter.img(ctx,truc.x,truc.y,truc.alti+1.8 + truc.n/8,imgDebris.excla);
+    ctx.globalAlpha = 1;
+}
