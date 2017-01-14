@@ -24,7 +24,7 @@ function drawIsland(ile,Y,X){
         function(f,y){
             f.forEach(
                 function(g,x){
-                    if (g == -1) return;
+                    if (g <= -1) return;
                     ctx.fillStyle = "rgb("+(20+g*5)+","+(80+g*20)+","+(10+g*2)+")";
                     ctx.fillRect(x*3 + X,y*3 + Y,4,4);
                 }

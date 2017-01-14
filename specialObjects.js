@@ -168,7 +168,6 @@ function drawPow(type){
 }
 
 function drawTexte(truc){
-    console.log("Hey !");
     Painter.drawTexte(ctx,truc.x,truc.y,truc.alti,truc.cont);
 }
 
