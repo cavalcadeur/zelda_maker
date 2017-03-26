@@ -178,3 +178,64 @@ function drawExcla(truc){
     Painter.img(ctx,truc.x,truc.y,truc.alti+1.8 + truc.n/8,imgDebris.excla);
     ctx.globalAlpha = 1;
 }
+
+function drawTitre(kgb){
+    if (kgb.alti == -5){
+        kgb.imgN = new Image();
+        kgb.imgN.src = "images/nomLieu/" + kgb.img + ".png";
+        kgb.imgN.onload = function(){
+            kgb.lim = 400;
+            kgb.n = 0;
+        };
+        kgb.alti = 666;
+    }
+    else if (kgb.n < kgb.lim){
+        if (kgb.n > 350){
+            ctx.globalAlpha = (400-kgb.n)/50;
+        }
+        if (kgb.n < 100){
+            ctx.drawImage(kgb.imgN,(W-kgb.imgN.width)/2,-200 + kgb.n*2);
+        }
+        else {
+            ctx.drawImage(kgb.imgN,(W-kgb.imgN.width)/2,0);
+        }
+        ctx.globalAlpha = 1;
+    }
+}
+
+
+function drawObjectFly(kgb){
+    // application des collisions
+
+    var floor = getFloor(Math.round(kgb.x),Math.round(kgb.y),kgb.alti);
+    if (kgb.alti + kgb.vector[2] < floor){
+        //kgb = {n:0,type:"fumeeF",x:kgb.x,y:kgb.y,g:0,alti:floor,lim:40};
+        kgb.alti = floor;
+        kgb.type = "fumeeF";
+        kgb.n = 0;
+        kgb.lim = 40;
+        console.log(kgb.carry);
+        kgb.carry.forEach(
+            function (e,i){
+                objNiveau[Math.round(kgb.y)][Math.round(kgb.x)].splice(i,0,e);
+            }
+        );
+        console.log(objNiveau[Math.round(kgb.y)][Math.round(kgb.x)]);
+        return;
+    }
+    
+    // application de la vitesse
+    
+    kgb.x += kgb.vector[0];
+    kgb.y += kgb.vector[1];
+    kgb.alti += kgb.vector[2];
+
+    // application de l'acceleration
+
+    kgb.vector[2] -= 0.1;
+
+    //dessin
+
+    Painter.img(ctx,kgb.x,kgb.y,kgb.alti,imgElement[kgb.name]);
+
+}

@@ -133,7 +133,7 @@ var Painter = function() {
         },
 
         img: function( ctx, x, y, z, img ) {
-            if( !img ) return;
+            if( !img )return;
 
             var X = toX( x, y, z ) + cellS / 2 + (cellX - img.width) / 2;
             var Y = toY( x, y, z ) - img.height - cellY / 2;
@@ -197,7 +197,7 @@ var Painter = function() {
 
             ctx.save();
             ctx.translate(X+12,Y);
-	    ctx.rotate(r);
+	    	ctx.rotate(r);
             ctx.scale(s,1);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
@@ -229,7 +229,7 @@ var Painter = function() {
                 	}			
 
                 // Partie horizontale.
-                ctx.fillStyle = "rgb("+(colorSet[out][2][0]+z*colorSet[out][2][3])+","+(colorSet[out][2][1]+z*colorSet[out][2][4])+","+(colorSet[out][2][2]+z*colorSet[out][2][5])+")";
+                ctx.fillStyle = "rgb("+Math.round(colorSet[out][2][0]+z*colorSet[out][2][3])+","+Math.round(colorSet[out][2][1]+z*colorSet[out][2][4])+","+Math.round(colorSet[out][2][2]+z*colorSet[out][2][5])+")";
 				if (n == 1) ctx.fillStyle = "rgb(255,255,255)";
                 ctx.beginPath();
                 ctx.moveTo( X, Y );

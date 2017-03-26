@@ -1,8 +1,183 @@
+function cTitre(){
+    imgCinema[2] = [190,300,1,1];
+    var ff = function(t) {
+        cTitreFond();
+        imgCinema[2][0] += imgCinema[2][2];
+        imgCinema[2][1] += imgCinema[2][3];
+        waves.forEach(
+            function(e){
+                e[1] = (e[1] + imgCinema[2][2] + H)%H;
+                e[0] = (e[0] + imgCinema[2][3] + W)%W;
+            }
+        );
+        imgCinema[2][2] = Math.sin(t/1000)/2;
+        imgCinema[2][3] = Math.cos(t/3000)/2;
+        /*
+        if (imgCinema[2][0] > 500 || imgCinema[2][0] < 0){
+            imgCinema[2][2] = imgCinema[2][2]*-1;
+        }
+        if (imgCinema[2][1] > 700 || imgCinema[2][1] < 0){
+            imgCinema[2][3] = imgCinema[2][3]*-1;
+        }
+         */
+        ctx.drawImage(fondfond,W/2-187,0);
+        imgCinema[0] = [3.5,3.5];
+        if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
+            if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
+                imgCinema[0][0] = 4.5;
+            }
+            else if (mouse[0] < H/5*4 + 75 && mouse[0] > H/5*4 - 75){
+                imgCinema[0][1] = 4.5;
+            }
+        }
+        cBouton(W/2,H/2,400,150,"Nouvelle Partie",40,imgCinema[0][0]);
+        cBouton(W/2,H/5*4,400,150,"Charger",40,imgCinema[0][1]);
+        if (imgCinema[1] == "go"){
+            cinematicos = 0;
+            animation();
+        }
+        else if (imgCinema[1] == "bitch"){
+            goto = "tuto";
+            out = 4;
+            niveau = interieurs["tuto"].alti;
+            objNiveau = interieurs["tuto"].obj;
+            particles = interieurs["tuto"].particles;
+            Painter.niveau( niveau );
+            cinematicos = 1;
+            animation();
+        }
+        else {
+            Painter.scroll(imgCinema[2][1],imgCinema[2][0]);
+            window.requestAnimationFrame(ff);
+        }
+    };
+    window.requestAnimationFrame(ff);
+}
+
+function cTitreFond(){
+    drawDuPauvre(1);
+}
+
+function cClickTitle(){
+    if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
+        if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
+            imgCinema[1] = "bitch";
+        }
+        else if (mouse[0] < H/5*4 + 75 && mouse[0] > H/5*4 - 75){
+            cChargementMule();
+        }
+    }
+}
+
+function cChargementMule(){
+    var ilesDif = JSON.parse(window.localStorage.getItem("ilesDif"));
+    if (ilesDif != null && ilesDif != -1){
+        ilesDif.forEach(
+            function(e){
+                e[1].forEach(
+                    function(f){
+                        if (iles[e[0]].obj[f[0]] != undefined) iles[e[0]].obj[f[0]][f[1]] = f[2];
+                    }
+                );
+                e[2].forEach(
+                    function(f){
+                        if (iles[e[0]].alti[f[0]] != undefined) iles[e[0]].alti[f[0]][f[1]] = f[2];
+                    }
+                );
+            }
+        );
+        var ilesDifHouse = JSON.parse(window.localStorage.getItem("ilesDifHouse"));
+        ilesDifHouse.forEach(
+            function(e){
+                e[1].forEach(
+                    function(f){
+                        if (interieurs[e[0]].obj[f[0]] != undefined) interieurs[e[0]].obj[f[0]][f[1]] = f[2];
+                    }
+                );
+                e[2].forEach(
+                    function(f){
+                        if (interieurs[e[0]].alti[f[0]] != undefined) interieurs[e[0]].alti[f[0]][f[1]] = f[2];
+                    }
+                );
+            }
+        );
+        heros = JSON.parse(window.localStorage.getItem("heros"));
+        heros[0].objet = 0;
+        heros[1].objet = 0;
+        if (heros[0].prim == undefined) heros[0].prim = "blank";
+        if (heros[0].etat == undefined) heros[0].etat = 0;
+        if (heros[1].etat == undefined) heros[1].etat = 0;
+        var where = JSON.parse(window.localStorage.getItem("whereAmI"));
+        quests = JSON.parse(window.localStorage.getItem("quests"));
+        questObj = JSON.parse(window.localStorage.getItem("questObj"));
+        objInvent = JSON.parse(window.localStorage.getItem("objInvent"));
+        boatPosition = JSON.parse(window.localStorage.getItem("boatPosition"));
+        out = where[0];
+        goto = where[1];
+        respawnPoint[0] = heros[0].x;
+        respawnPoint[1] = heros[0].y;
+        if (quests.pencil == undefined) quests.pencil = 0;
+        if (goto != ""){
+            if (out == 1){
+                niveau = iles[goto].alti;
+                objNiveau = iles[goto].obj;
+                if (iles[goto].particles == undefined){
+                    particles = [];
+                }
+                else {
+                    particles = iles[goto].particles;
+                }
+            }
+            else{
+                niveau = interieurs[goto].alti;
+                objNiveau = interieurs[goto].obj;
+                if (interieurs[goto].particles == undefined){
+                    particles = [];
+                }
+                else {
+                    particles = interieurs[goto].particles;
+                }
+            }
+            Painter.niveau( niveau );
+        }
+        imgCinema[1] = "go";
+    }
+    else {
+        alert("Il n'y a pas de sauvegardes valides sur cette ordinateur. Essayez de creer une nouvelle partie.");
+        
+    }
+}
+
+function cBouton(x,y,sx,sy,txt,size,light){
+    ctx.fillStyle = "rgb(0,0,0)";
+    if (size == undefined) size = 40;
+    if (light == undefined) light = 0;
+    ctx.strokeStyle = "rgb(0,0,0)";
+    ctx.strokeRect(x-sx/2,y-sy/2,sx,sy);
+    if (Math.abs(mouse[0] - x) < sx/2 && Math.abs(mouse[1] - y) < sy/2) {
+        ctx.globalAlpha = 0.2 + mouse[2]*0.2 + light*0.2;
+        ctx.fillRect(x-sx/2,y-sy/2,sx,sy);
+        ctx.globalAlpha = 1;
+    }
+    else if (light > 0){
+        ctx.globalAlpha = light*0.2;
+        ctx.fillRect(x-sx/2,y-sy/2,sx,sy);
+        ctx.globalAlpha = 1;
+    }
+
+    ctx.fillStyle = "rgb(250,250,250)";
+    ctx.font = size + "px purisa";
+    ctx.textAlign = "center";
+    ctx.fillText(txt, x, y + sy/4);
+}
+
 function cIntro(){
     if (keys[32] == 1){
         cIntroCinq();
     }
     else{
+        imgCinema[0] = new Image();
+        imgCinema[1] = new Image();
         imgCinema[0].src = "images/cinematiques/intro0.png";
         imgCinema[1].src = "images/cinematiques/tache.png";
         ctx.fillStyle = "rgb(0,0,0)";
@@ -80,11 +255,19 @@ function cIntroCinq(){
 }
 
 function cReveil(){
-    ctx.fillStyle = "rgb(20,80,10)";
-    ctx.fillRect(0,0,W,H);
-    ctx.drawImage(imgCinema[0],W/2 - 357,H/2 - 250);
-    imgCinema[0].src = "images/cinematiques/reveil2.png";
+    imgCinema[0] = new Image();
+    imgCinema[0].src = "images/cinematiques/statue.png";
+    if (heros[0].vy > 0){
+        heros[0].y +=1;
+    }
+    heros[0].vy = 0;
+    heros[0].sens = 1;
+    heros[1].sens = 3;
+    drawDuPauvre(1);
+    Painter.imgScaleRot(ctx,heros[0].x,heros[0].y,-2,1,-Math.PI/2,imgHeros[1]);
+    Painter.imgScaleRot(ctx,heros[1].x+0.5,heros[1].y,-2,1,Math.PI/2,imgHeros[7]);
     alert("Open your eyes ...");
+    Painter.img( ctx, 17, 1, 2, imgCinema[0] );
     var timeoutID = window.setTimeout(cReveil2, 2500);
 }
 
@@ -95,96 +278,33 @@ function cReveil2(){
 
 function cReveil3(){
     alert("Je voulais dire : Il est temps de vous reveiller Link et toi aussi, mysterieux deuxieme joueur. S'habiller en vert ne fait pas de vous des héros. Il vous faut partir à l'aventure et dès maintenant.");
-    var timeoutID = window.setTimeout(cReveil4, 9000);
+    var timeoutID = window.setTimeout(cReveil5, 8000);
 }
 
-function cReveil4(){
-    disalert();
-    ctx.drawImage(imgCinema[0],W/2 - 357,H/2 - 250);
-    imgCinema[0].src = "images/cinematiques/reveil3.png";
-    imgCinema[1].src = "images/cinematiques/reveil4.png";
-    imgCinema[2] = 0;
-    imgCinema[3] = 0;
-    var timeoutID = window.setTimeout(cReveil5, 2000);
-}
 
 function cReveil5(){
+    imgCinema[2] = 0;
+    imgCinema[3] = 0;
+    disalert();
     var ff = function(t) {
-        fondReveil();
+
         if (imgCinema[2] < Math.PI/2){
-            ctx.save();
-            ctx.translate(W/3,H);
-            ctx.rotate(-Math.PI/2+imgCinema[2]);
-            ctx.drawImage(imgCinema[0],-200,-350);
-            ctx.restore();
-            ctx.save();
-            ctx.translate(W/3*2,H);
-            ctx.rotate(Math.PI/2-imgCinema[2]);
-            ctx.drawImage(imgCinema[1],-200,-350);
-            ctx.restore();
+            drawDuPauvre(1);
+            Painter.img( ctx, 17, 1, 2, imgCinema[0] );
+            Painter.imgScaleRot(ctx,heros[0].x+Math.cos(Math.PI/2 - imgCinema[2])*0.2,heros[0].y,-2+Math.sin(imgCinema[2])*0.7,1,-Math.PI/2+imgCinema[2],imgHeros[1]);
+            Painter.imgScaleRot(ctx,heros[1].x+0.5-Math.cos(Math.PI/2 - imgCinema[2])*0.2,heros[1].y,-2+Math.sin(imgCinema[2])*0.7,1,Math.PI/2-imgCinema[2],imgHeros[7]);
             imgCinema[2] += 0.02;
             window.requestAnimationFrame(ff);
         }
         else if (imgCinema[3] < 100){
-            ctx.save();
-            ctx.translate(W/3,H);
-            ctx.rotate(-Math.PI/2+imgCinema[2]);
-            ctx.drawImage(imgCinema[0],-200,-350);
-            ctx.restore();
-            ctx.save();
-            ctx.translate(W/3*2,H);
-            ctx.rotate(Math.PI/2-imgCinema[2]);
-            ctx.drawImage(imgCinema[1],-200,-350);
-            ctx.restore();
+            drawDuPauvre();
+            Painter.img( ctx, 17, 1, 2, imgCinema[0] );
             imgCinema[3] += 1;
             window.requestAnimationFrame(ff);
         }
         else cReveilFin();
     };
     window.requestAnimationFrame(ff);
-}
-
-function fondReveil(){
-    ctx.fillStyle = "rgb(28,134,182)";
-    ctx.fillRect(0,0,W,H);
-    ctx.fillStyle = "rgb(72,98,178)";
-    ctx.fillRect(0,H/4*3,W,H);
-    waves.forEach(
-        function(e){
-            waveReveil(e);
-        }
-    );
-}
-
-
-function waveReveil(e){
-    ctx.fillStyle = "rgb(180,180,215)";
-    if (e[1] > H/4*3){
-        if (e[2] < 100 && e[2] > 0){
-            ctx.beginPath();
-            ctx.moveTo(e[0] - 50,e[1] - e[2] / 10);
-            ctx.lineTo(e[0],e[1] - 5 - e[2] / 5 - e[2] / 10);
-            ctx.lineTo(e[0] + 50,e[1] - e[2] / 10);
-            ctx.lineTo(e[0],e[1] - 5 - e[2] / 10 - e[2] / 10);
-            ctx.closePath();
-            ctx.fill();
-        }
-        else if (e[2] >= 100){
-            ctx.beginPath();
-            ctx.moveTo(e[0] - 50,e[1] - e[2] / 10);
-            ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 5 - e[2] / 10);
-            ctx.lineTo(e[0] + 50,e[1] - e[2] / 10);
-            ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - e[2] / 10);
-            ctx.closePath();
-            ctx.fill();
-        }
-    }
-    if (e[2] >= 200) {
-        e[2] = -rnd(300)-100;
-        e[0] = rnd(W);
-        e[1] = rnd(H);
-    }
-    e[2] += 1;
 }
 
 function cReveilFin(){
@@ -199,10 +319,6 @@ function cReveilFin(){
 }
 
 function cMechant(){
-    imgCinema[0] = new Image();
-    imgCinema[0].src = "images/cinematiques/statue.png";
-    heros[0].sens = 2;
-    heros[0].sens = 2;
     imgCinema[1] = new Image();
     imgCinema[1].src = "images/cinematiques/boat.png";
     imgCinema[1].onload = function(){};
@@ -213,68 +329,7 @@ function cMechant(){
     imgCinema[4] = 0;
     var ff = function(t) {
         imgCinema[4] += 1;
-        ctx.fillStyle = colorSet[out][3];
-        ctx.fillRect(0,0,W,H);
-        waves.forEach(
-            function(e,n){
-                waveNiveau(e,n);
-            }
-        );
-        niveau.forEach(
-            function(e,y){
-                e.forEach(
-                    function(f,x){
-                        Painter.cell( ctx, x, y, f ,0);
-                        if (objNiveau[y][x][0] == "coffre3") objetMort = 1;
-                        if (niveau[y][x] < 0){
-                            if (isFloodable(x,y) == false){
-                                if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
-                                else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
-                                else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
-                                else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
-                            }
-                        }
-                        else{
-                            if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
-                            else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
-                            else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
-                            else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
-                        }
-                    }
-                );
-                heros.forEach(
-                    function(h,n){
-                        if (y == h.y) drawHeros(n);
-                        if (h.vy > 0 && y == h.y + 1) drawHeros(n);
-                    }
-                );
-                particles.forEach(
-                    function(kgb,iii){
-                        if (y == Math.ceil(kgb.y)){
-                            if (kgb.type == "herbe" || kgb.type == "palmier") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
-                            else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                            else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                            else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                            else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
-                            else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
-                            else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
-                            else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
-                            else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
-                            else if (kgb.type == "fadeOut") drawFade(kgb.n);
-                            else if (kgb.type == "eole") {drawEole(kgb);kgb.g = 0;}
-                            kgb.n += 1;
-                            if (kgb.type == "flamme") kgb.alti += kgb.g/150;
-                            else kgb.alti += kgb.g/50;
-                            kgb.g -= 1;
-                            if (kgb.n == kgb.lim) {
-                                if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
-                                particles.splice(iii,1);
-                            }
-                        }
-                    }
-                );
-            }
-        );
+        drawDuPauvre();
         if (imgCinema[4] < 410)Painter.img( ctx, 17, 1, 2, imgCinema[0] );
 
         if (imgCinema[3] > 20){
@@ -313,11 +368,12 @@ function cMechant(){
         }
         if (imgCinema[4] == 650){
             cinematicos = 0;
+            particles.push({n:-5,type:"titre",img:"depart",x:0,y:10,g:0,alti:-5,lim:-6});
             animation();
         }
         else window.requestAnimationFrame(ff);
     };
-    imgCinema[0].onload = function(){
+    imgCinema[1].onload = function(){
         window.requestAnimationFrame(ff);
     };
 
@@ -623,9 +679,211 @@ function cPencil(){
             disalert();
             animation();
         }
-        else window.requestAnimationFrame(ff);    
+        else window.requestAnimationFrame(ff);
     };
     window.requestAnimationFrame(ff);
 
-    
+
+}
+
+function cWaterRaise(){
+    imgCinema[1] = 0;
+    imgCinema[0] = imgCinema[0]/10;
+    var ff = function(t) {
+        niveau.forEach(
+            function(e,y){
+                e.forEach(
+                    function(fff,x){
+                        niveau[y][x] += imgCinema[0];
+                    }
+                );
+            }
+        );
+        Painter.niveau(niveau);
+        Painter.scrollYPlus(30*imgCinema[0]);
+        heros.forEach(
+            function (e){
+                e.z += imgCinema[0];
+            }
+        );
+        ennemis.forEach(
+            function (e,c){
+                ennemis[c].z += imgCinema[0];
+                if (e.z < 0){
+                    ennemis[c].pv = 0;
+                }
+            }
+        );
+        boomerang.forEach(
+            function(e){
+                e.alti += imgCinema[0];
+            }
+        );
+        particles.forEach(
+            function(kgb,iii){
+                kgb.alti += imgCinema[0];
+            }
+        );
+        imgCinema[1] += 1;
+        drawDuPauvre();
+        if (imgCinema[1] < 10) window.requestAnimationFrame(ff);
+        else {
+            cinematicos = 0;
+            animation();
+        }
+    };
+
+
+    window.requestAnimationFrame(ff);
+}
+
+function drawDuPauvre(hee){
+    ctx.fillStyle = colorSet[out][3];
+    ctx.fillRect(0,0,W,H);
+    if (out == 1){
+        waves.forEach(
+            function(e){
+                waveNiveau(e);
+            }
+        );
+    }
+    else if (out == 2){
+        waves.forEach(
+            function(e){
+                lavaNiveau(e);
+            }
+        );
+        waves.forEach(
+            function(e){
+                lavaNiveauUp(e);
+            }
+        );
+    }
+    else if (out == 3){
+        waves.forEach(
+            function(e,n){
+                if (n < 7) rondNiveau(e);
+            }
+        );
+    }
+    else if (out == 5){
+        waves.forEach(
+            function(e,n){
+                if (n < 5) cloudNiveau(e,n);
+            }
+        );
+    }
+    else if (out == 4){
+        waves.forEach(
+            function(e,n){
+                starNiveau(e);
+            }
+        );
+    }
+    niveau.forEach(
+        function(e,y){
+            e.forEach(
+                function(f,x){
+                    Painter.cell( ctx, x, y, f ,0);
+                    if (objNiveau[y][x][0] == "coffre3") objetMort = 1;
+                    if (niveau[y][x] < 0){
+                        if (isFloodable(x,y) == false){
+                            if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
+                            else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
+                            else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
+                            else if (objNiveau[y][x][0] == "pont") Painter.img( ctx, x+0.1,y + 0.5,f + objNiveau[y][x][1],imgElement[objNiveau[y][x][0]]);
+                            else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                        }
+                    }
+                    else{
+                        if (objNiveau[y][x][0] == "bleu0" || objNiveau[y][x][0] == "bleu1" || objNiveau[y][x][0] == "rouge0" || objNiveau[y][x][0] == "rouge1") Painter.img( ctx, x + 0.05, y + 0.45, f, imgElement[objNiveau[y][x][0]] );
+                        else if (objNiveau[y][x][0] == "house0") Painter.img( ctx, x - 0.07, y + 0.35, f, imgElement[objNiveau[y][x][0]] );
+                        else if (objNiveau[y][x][0] == "PNJ") Painter.img( ctx, x,y,f,imgPersoN[objNiveau[y][x][1]]);
+                        else if (objNiveau[y][x][0] == "pont") Painter.img( ctx, x+0.1,y + 0.5,f + objNiveau[y][x][1],imgElement[objNiveau[y][x][0]]);
+                        else Painter.img( ctx, x, y, f, imgElement[objNiveau[y][x][0]] );
+                    }
+                    //testTerrain(x,y,f);
+                    //if (objNiveau[y][x][0] != "") ctx.drawImage(imgElement[objNiveau[y][x][0]],x*50 - (tElement[objNiveau[y][x][0]][0] - 50)/2 + scrollX,y*50 - 20*niveau[y][x] - (tElement[objNiveau[y][x][0]][1]-40) + scrollY);
+                    hookShots.forEach(
+                        function(omg){
+                            if (y == Math.round(omg.y) && x == Math.round(omg.x)){
+                                var rr = (omg.s * Math.PI)/2;
+                                Painter.imgBoomerang(ctx,omg.x,omg.y,omg.z,rr,imgDebris["hook"]);
+                            }
+                            omg.chaine.forEach(
+                                function(m){
+                                    if (y == Math.round(m[1]) && x == Math.ceil(m[0])){
+                                        Painter.img(ctx,m[0],m[1],omg.z,imgDebris["chaineA"]);
+                                    }
+                                }
+                            );
+                        }
+                    );
+                }
+            );
+            if (hee != 1){
+                heros.forEach(
+                    function(h,n){
+                        if (y == h.y) drawHeros(n);
+                        if (h.vy > 0 && y == h.y + 1) drawHeros(n);
+                    }
+                );
+            }
+            ennemis.forEach(
+                function(a,m){
+                    if (y-Math.round(a.y) == 0) drawEnnemi(m);
+                }
+            );
+            pots.forEach(
+                function(g,i){
+                    if (y == Math.round(g.y + g.n*((g.oy - g.y)/32))) drawPot(g,i);
+                }
+            );
+            boomerang.forEach(
+                function(f,i){
+                    if ((y == f.y) | (f.vy > 0 && y == f.y + 1)){
+                        Painter.imgBoomerang( ctx, f.x + f.vx/50, f.y + f.vy/50, f.alti, f.r, imgElement["boomerang"] );
+                    }
+                }
+            );
+            particles.forEach(
+                function(kgb,iii){
+                    if (y == Math.ceil(kgb.y)){
+                        if (kgb.type == "herbe" || kgb.type == "palmier") drawDebris(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);
+                        else if (kgb.type == "fumeeM" || kgb.type == "fumeeF") {drawFumee(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "sword") {drawSword(kgb.n,kgb.lim,kgb.sens,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "feu") {drawFire(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti);kgb.g = 0;}
+                        else if (kgb.type == "flamme") drawFlamme(kgb.type,kgb.n/2,kgb.x,kgb.y,kgb.alti,kgb);
+                        else if (kgb.type == "excla") {drawExcla(kgb);kgb.g = 0;}
+                        else if (kgb.type == "quake") Painter.drawQuake(kgb.n);
+                        else if (kgb.type == "hitA" || kgb.type == "hitB") {drawHit(kgb.type,kgb.x,kgb.y,kgb.alti,kgb.n);kgb.g = 0;}
+                        else if (kgb.type == "rond" || kgb.type == "rondB") {drawRond(kgb.n,kgb.x,kgb.y,kgb.s,kgb.alti,kgb.type);kgb.g = 0;}
+                        else if (kgb.type == "eclabousse" || kgb.type == "eclabousseB") drawEclabousse(kgb.n,kgb.x,kgb.y,kgb.alti,kgb.type);
+                        else if (kgb.type == "fadeOut") drawFade(kgb.n);
+                        else if (kgb.type == "eole") {drawEole(kgb);kgb.g = 0;}
+                        else if (kgb.type == "rocher") {drawRocher(kgb);}
+                        else if (kgb.type == "exploM") {drawExploM(kgb);kgb.g = 0;}
+                        else if (kgb.type == "bla") {drawBla(kgb);kgb.g = 0;}
+                        else if (kgb.type == "pow") {drawPow(kgb);kgb.g = 0;}
+                        else if (kgb.type == "texte") {drawTexte(kgb);kgb.g = 0;}
+                        kgb.n += 1;
+                        if (kgb.type == "flamme") kgb.alti += kgb.g/150;
+                        else kgb.alti += kgb.g/50;
+                        kgb.g -= 1;
+                        if (kgb.n == kgb.lim) {
+                            if (kgb.type == "feu") objNiveau[kgb.y][kgb.x] = [""];
+                            else if (kgb.type == "rocher"){
+                                if (objNiveau[Math.round(kgb.y)][Math.round(kgb.x)] == [""]) objNiveau[Math.round(kgb.y)][Math.round(kgb.x)][0] =  "rocher";
+                                else {
+                                    objNiveau[Math.round(kgb.y)][Math.round(kgb.x)].splice(0,0,"rocher");
+                                }
+                            }
+                            particles.splice(iii,1);
+                        }
+                    }
+                }
+            );
+        }
+    );
+
 }

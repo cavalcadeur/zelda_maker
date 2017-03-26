@@ -175,10 +175,10 @@ function action(t){
                 }
             );
             if (h.plane == 1){
-                if (h.z > niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0])) h.g = 0.01;
+                if (h.z > getFloor(h.x,h.y,h.z)) h.g = 0.01;
                 else {
                     h.g = 0;
-                    h.z = niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]);
+                    h.z = getFloor(h.x,h.y,h.z);
                     h.plane = 0;
                     h.vx = 0;
                     h.vy = 0;
@@ -197,10 +197,10 @@ function action(t){
 
             }
             else if (h.grap == 0){
-                if ((h.vx != 0 && h.vy != 0) || (h.z > niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]) && h.g < 5)) h.g += 0.05;
+                if ((h.vx != 0 && h.vy != 0) || (h.z > getFloor(h.x,h.y,h.z) )) h.g += 0.05;
                 else {
                     h.g = 0;
-                    h.z = niveau[h.y][h.x] + taille(objNiveau[h.y][h.x][0]);
+                    h.z = getFloor(h.x,h.y,h.z);
                     if (h.z <= -1){
                         fall(h,n);
                     }
@@ -258,6 +258,15 @@ function move(d,n,gg){
     if (heros[n].sens != d){
         heros[n].sens = d;
         heros[n].delay = 3;
+        if (n == 0){
+            if (heros[0].prim == "mastersword" && keys[32] == 1){
+                attack(0,1);
+            }
+        }
+        if (heros[n].invent[heros[n].objet] == "mastersword"){
+            if ((n == 0 && keys[16] == 1) || (n == 1 && keys[13] == 1))
+            attack(n);
+        }
         return;
     }
     if (heros[n].delay != 0){
@@ -268,7 +277,7 @@ function move(d,n,gg){
     if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
         var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]];
     if (heros[n].sens == 0){
-        if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1"){
+        if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1" || truc[0] == "sanctuaire"){
             teleport = [heros[n].y+vecteurs[d][0],heros[n].x+vecteurs[d][1]];
             if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1] == "void"){
                 goToLevel(out,"void",0,0,0,0);
@@ -307,8 +316,7 @@ function move(d,n,gg){
         return;
     }
     //}
-    if (niveau[heros[n].y][heros[n].x] < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) heros[n].g = -0.2;
-    else if (heros[n].plane == 1 || heros[n].g != 0){
+    if (heros[n].plane == 1 || heros[n].g != 0){
         if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
         if (heros[n].z + 1 < niveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]]) return;
     }
@@ -335,7 +343,19 @@ function changeArme(n){
 }
 
 function taille(caseT){
-    var tailles = {"bleu0":1.1,"coffre0":1.1,"coffre1":0.6,"rouge1":1.1,"arbre0":2,"arbre1":2,"arbreEole1":1.5,"armure":1.6,"autel":1.1,"bougie":1.3,"canon0":0.5,"canon1":1.3,"canon2":0.5,"checkPoint":1.2,"unCheckPoint":1.2,"eole0":1.3,"etagere":1.7,"fleur2":1.1,"fleur3":0.6,"house0":2,"house1":1.8,"house2":1.8,"house3":1.8,"house4":3,"houseSky0":0.5,"houseSky1":2,"houseSky2":0.5,"houseSky3":2,"PNJ":1.5,"lit0":0.8,"lit1":0.8,"main0":1.3,"main1":1.3,"miniTempleEau":2,"moulin0":3,"moulin1":3,"palmier":1.2,"plate":0.2,"plate1":0.1,"portail0":3,"portail2":3,"porte0":1.5,"pot":0.4,"statue0":1.3,"switch0":1,"switch1":1,"switch2":1,"switch3":1,"table0":0.8,"table1":0.8,"tabouret":0.6,"tombe0":1.4,"torche":1.3,"torche2":1.3,"torche1":0.3,"templeEau0":3,"templeEau1":3,"templeEau2":3,"templeFeu0":3,"templeFeu1":3,"templeFeu2":3,"rocher":1.1};
+    var tailles = {"bleu0":1.1,"coffre0":1.1,"coffre1":0.6,"rouge1":1.1,"arbre0":2,"arbre1":2,"arbreEole1":1.5,"armure":1.6,"autel":1.1,"bougie":1.3,"canon0":0.5,"canon1":1.3,"canon2":0.5,"checkPoint":1.2,"unCheckPoint":1.2,"eole0":1.3,"etagere":1.7,"fleur2":1.1,"fleur3":0.6,"house0":2,"house1":1.8,"house2":1.8,"house3":1.8,"house4":3,"houseSky0":0.5,"houseSky1":2,"houseSky2":0.5,"houseSky3":2,"PNJ":1.5,"lit0":0.8,"lit1":0.8,"main0":1.3,"main1":1.3,"miniTempleEau":2,"moulin0":3,"moulin1":3,"palmier":1.2,"plate":0.2,"plate1":0.1,"portail0":3,"portail2":3,"porte0":1.5,"pot":0.4,"statue0":1.3,"switch0":1,"switch1":1,"switch2":1,"switch3":1,"table0":0.8,"table1":0.8,"tabouret":0.6,"tombe0":1.4,"torche":1.3,"torche2":1.3,"torche1":0.3,"templeEau0":3,"templeEau1":3,"templeEau2":3,"templeFeu0":3,"templeFeu1":3,"templeFeu2":3,"rocher":1.1,"arbre3":6,"sanctuaire":6,"serre0":3,"serre1":3.5,"serre2":3,"foret0":4.2,"foret1":4.2,"foret2":4.2,"foret3":4.2,"foret4":4.2,"foret5":4.2,wSwitch0:1.1,wSwitch1:1.1,"sleepingGoddess":2};
     if (tailles[caseT] == undefined) return 0;
     else return tailles[caseT];
+}
+
+function getFloor(x,y,z){
+    workFloor = objNiveau[y][x][0];
+    if (workFloor == "pont"){
+        if (z+0.3 >= niveau[y][x] + objNiveau[y][x][1]) return niveau[y][x] + objNiveau[y][x][1];
+        else return niveau[y][x];
+    }
+    else{
+
+        return niveau[y][x] + taille(workFloor);
+    }
 }
