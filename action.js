@@ -30,10 +30,10 @@ function action(t){
                         if (gy == niveau.length || gy < 0 || gx < 0 || gx == niveau[0].length){
                             h.grap = 2;
                         }
-                        else if (niveau[gy][gx] > h.z) h.grap = 2;
+                        else if (niveau[gy][gx] > h.z + 0.5) h.grap = 2;
                         else if (h.grapD > 50) h.grap = 2;
-                        else if (niveau[gy][gx] == Math.floor(h.z)){
-                            if (isSolid(gx,gy) == true) h.grap = 3;
+                        else if (getFloor(gx,gy,h.z+0.5) >= h.z+0.5){
+                            h.grap = 3;
                         }
                     }
                 }
@@ -54,7 +54,7 @@ function action(t){
                     if (h.vx == 0 && h.vy == 0){
                         var gx = h.x + (vecteurs[h.sens][1] * (h.grapD/10));
                         var gy = h.y + (vecteurs[h.sens][0] * (h.grapD/10));
-                        if (isSolid(h.x + vecteurs[h.sens][1],h.y + vecteurs[h.sens][0]) == true){
+                        if (getFloor(h.x + vecteurs[h.sens][1],h.y + vecteurs[h.sens][0],h.z) >= h.z+0.5){
                             h.grap = 0;
                             hookShots.splice(h.nGrap,1);
                             if (heros[(n+1)%2].nGrap > heros[n].nGrap) heros[(n+1)%2].nGrap -= 1;
@@ -277,7 +277,7 @@ function move(d,n,gg){
     if (heros[n].x + vecteurs[d][1] == niveau[heros[n].y].length | heros[n].x + vecteurs[d][1] == -1 | heros[n].y + vecteurs[d][0] == niveau.length | heros[n].y + vecteurs[d][0] == -1) return;
         var truc = objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]];
     if (heros[n].sens == 0){
-        if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1" || truc[0] == "sanctuaire"){
+        if (truc[0] == "house0" || truc[0] == "house1" || truc[0] == "house3" || truc[0] == "houseHelp" || truc[0] == "templeFeu1" || truc[0] == "templeEau1" || truc[0] == "miniTempleEau" || truc[0] == "canon1" || truc[0] == "sanctuaire" || truc[0] == "foret1"){
             teleport = [heros[n].y+vecteurs[d][0],heros[n].x+vecteurs[d][1]];
             if (objNiveau[heros[n].y+vecteurs[d][0]][heros[n].x+vecteurs[d][1]][1] == "void"){
                 goToLevel(out,"void",0,0,0,0);
@@ -343,7 +343,7 @@ function changeArme(n){
 }
 
 function taille(caseT){
-    var tailles = {"bleu0":1.1,"coffre0":1.1,"coffre1":0.6,"rouge1":1.1,"arbre0":2,"arbre1":2,"arbreEole1":1.5,"armure":1.6,"autel":1.1,"bougie":1.3,"canon0":0.5,"canon1":1.3,"canon2":0.5,"checkPoint":1.2,"unCheckPoint":1.2,"eole0":1.3,"etagere":1.7,"fleur2":1.1,"fleur3":0.6,"house0":2,"house1":1.8,"house2":1.8,"house3":1.8,"house4":3,"houseSky0":0.5,"houseSky1":2,"houseSky2":0.5,"houseSky3":2,"PNJ":1.5,"lit0":0.8,"lit1":0.8,"main0":1.3,"main1":1.3,"miniTempleEau":2,"moulin0":3,"moulin1":3,"palmier":1.2,"plate":0.2,"plate1":0.1,"portail0":3,"portail2":3,"porte0":1.5,"pot":0.4,"statue0":1.3,"switch0":1,"switch1":1,"switch2":1,"switch3":1,"table0":0.8,"table1":0.8,"tabouret":0.6,"tombe0":1.4,"torche":1.3,"torche2":1.3,"torche1":0.3,"templeEau0":3,"templeEau1":3,"templeEau2":3,"templeFeu0":3,"templeFeu1":3,"templeFeu2":3,"rocher":1.1,"arbre3":6,"sanctuaire":6,"serre0":3,"serre1":3.5,"serre2":3,"foret0":4.2,"foret1":4.2,"foret2":4.2,"foret3":4.2,"foret4":4.2,"foret5":4.2,wSwitch0:1.1,wSwitch1:1.1,"sleepingGoddess":2};
+    var tailles = {"bleu0":1.1,"coffre0":1.1,"coffre1":0.6,"rouge1":1.1,"arbre0":2,"arbre1":2,"arbreEole1":1.5,"armure":1.6,"autel":1.1,"bougie":1.3,"canon0":0.5,"canon1":1.3,"canon2":0.5,"checkPoint":1.2,"unCheckPoint":1.2,"eole0":1.3,"etagere":1.7,"fleur2":1.1,"fleur3":0.6,"house0":2,"house1":1.8,"house2":1.8,"house3":1.8,"house4":3,"houseSky0":0.5,"houseSky1":2,"houseSky2":0.5,"houseSky3":2,"PNJ":1.5,"lit0":0.8,"lit1":0.8,"main0":1.3,"main1":1.3,"miniTempleEau":2,"moulin0":3,"moulin1":3,"palmier":1.2,"plate":0.2,"plate1":0.1,"portail0":3,"portail2":3,"porte0":1.5,"pot":0.4,"statue0":1.3,"switch0":1,"switch1":1,"switch2":1,"switch3":1,"table0":0.8,"table1":0.8,"tabouret":0.6,"tombe0":1.4,"torche":1.3,"torche2":1.3,"torche1":0.3,"templeEau0":3,"templeEau1":3,"templeEau2":3,"templeFeu0":3,"templeFeu1":3,"templeFeu2":3,"rocher":1.1,"arbre3":6,"sanctuaire":6,"serre0":3,"serre1":3.5,"serre2":3,"foret0":4.2,"foret1":4.2,"foret2":4.2,"foret3":4.2,"foret4":4.2,"foret5":4.2,wSwitch0:1.1,wSwitch1:1.1,"sleepingGoddess":2,"spe0":[0,0,0,0,0,0,3][out],"spe1":[0,0,0,0,0,0,0.5][out],"spe2":[0,0,0,0,0,0,1.01][out],"spe3":[0,0,0,0,0,0,1.01][out],"spe4":[0,0,0,0,0,0,1.01][out],"spe5":[0,0,0,0,0,0,0][out],"spe6":[0,0,0,0,0,0,0][out],"spe7":[0,0,0,0,0,0,0][out],"spe8":[0,0,0,0,0,0,0][out],"spe9":[0,0,0,0,0,0,0][out]};
     if (tailles[caseT] == undefined) return 0;
     else return tailles[caseT];
 }

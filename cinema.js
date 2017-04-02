@@ -1,24 +1,20 @@
 function cTitre(){
+    disalert();
     imgCinema[2] = [190,300,1,1];
     var ff = function(t) {
         cTitreFond();
         imgCinema[2][0] += imgCinema[2][2];
         imgCinema[2][1] += imgCinema[2][3];
-        waves.forEach(
-            function(e){
-                e[1] = (e[1] + imgCinema[2][2] + H)%H;
-                e[0] = (e[0] + imgCinema[2][3] + W)%W;
-            }
-        );
+        backg.pushWave(imgCinema[2][2],imgCinema[2][3],W,H);
         imgCinema[2][2] = Math.sin(t/1000)/2;
         imgCinema[2][3] = Math.cos(t/3000)/2;
         /*
-        if (imgCinema[2][0] > 500 || imgCinema[2][0] < 0){
-            imgCinema[2][2] = imgCinema[2][2]*-1;
-        }
-        if (imgCinema[2][1] > 700 || imgCinema[2][1] < 0){
-            imgCinema[2][3] = imgCinema[2][3]*-1;
-        }
+         if (imgCinema[2][0] > 500 || imgCinema[2][0] < 0){
+         imgCinema[2][2] = imgCinema[2][2]*-1;
+         }
+         if (imgCinema[2][1] > 700 || imgCinema[2][1] < 0){
+         imgCinema[2][3] = imgCinema[2][3]*-1;
+         }
          */
         ctx.drawImage(fondfond,W/2-187,0);
         imgCinema[0] = [3.5,3.5];
@@ -43,6 +39,10 @@ function cTitre(){
             objNiveau = interieurs["tuto"].obj;
             particles = interieurs["tuto"].particles;
             Painter.niveau( niveau );
+            chooseBack(out);
+            for(var i = 0;i<nSpeImg;i++){
+                imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
+            }
             cinematicos = 1;
             animation();
         }
@@ -140,11 +140,15 @@ function cChargementMule(){
             }
             Painter.niveau( niveau );
         }
+        chooseBack(out);
+        for(var i = 0;i<nSpeImg;i++){
+            imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
+        }
         imgCinema[1] = "go";
     }
     else {
         alert("Il n'y a pas de sauvegardes valides sur cette ordinateur. Essayez de creer une nouvelle partie.");
-        
+
     }
 }
 
@@ -701,6 +705,7 @@ function cWaterRaise(){
         );
         Painter.niveau(niveau);
         Painter.scrollYPlus(30*imgCinema[0]);
+        backg.pushWave(30*imgCinema[0],0,W,H);
         heros.forEach(
             function (e){
                 e.z += imgCinema[0];
@@ -726,8 +731,17 @@ function cWaterRaise(){
         );
         imgCinema[1] += 1;
         drawDuPauvre();
-        if (imgCinema[1] < 10) window.requestAnimationFrame(ff);
+        if (imgCinema[1] < 9) window.requestAnimationFrame(ff);
         else {
+            niveau.forEach(
+                function(e,y){
+                    e.forEach(
+                        function(fff,x){
+                            niveau[y][x] = Math.round(niveau[y][x]*10)/10;
+                        }
+                    );
+                }
+            );
             cinematicos = 0;
             animation();
         }
@@ -740,46 +754,7 @@ function cWaterRaise(){
 function drawDuPauvre(hee){
     ctx.fillStyle = colorSet[out][3];
     ctx.fillRect(0,0,W,H);
-    if (out == 1){
-        waves.forEach(
-            function(e){
-                waveNiveau(e);
-            }
-        );
-    }
-    else if (out == 2){
-        waves.forEach(
-            function(e){
-                lavaNiveau(e);
-            }
-        );
-        waves.forEach(
-            function(e){
-                lavaNiveauUp(e);
-            }
-        );
-    }
-    else if (out == 3){
-        waves.forEach(
-            function(e,n){
-                if (n < 7) rondNiveau(e);
-            }
-        );
-    }
-    else if (out == 5){
-        waves.forEach(
-            function(e,n){
-                if (n < 5) cloudNiveau(e,n);
-            }
-        );
-    }
-    else if (out == 4){
-        waves.forEach(
-            function(e,n){
-                starNiveau(e);
-            }
-        );
-    }
+    backDraw();
     niveau.forEach(
         function(e,y){
             e.forEach(

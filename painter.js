@@ -68,7 +68,7 @@ var Painter = function() {
 
                     if( x == 0 ){
                         if (level.length-1 == y) lineA = z + 1;
-                        else if (level[y+1][x] < z) lineA = z - level[y+1][x];
+                        else if (level[y+1][x] < z) lineA = Math.min(z - level[y+1][x],z + 1);
                     }
                     else if( level[y][x - 1] < z ) {
                         if (level.length-1 == y){
@@ -211,12 +211,12 @@ var Painter = function() {
             if( z > -1 ) {
                 var X = toX( x, y, z );
                 var Y = toY( x, y, z );
-                	// Partie frontale (verticale)
+                // Partie frontale (verticale)
                 	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
                     	ctx.fillStyle = colorSet[out][0];
                     	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
                 	}
-                	// Partie latérale (verticale)
+                // Partie latérale (verticale)
                 	if  (x == nivel[y].length - 1 || z > nivel[y][x+1]){
                     	ctx.fillStyle = colorSet[out][1];
                     	ctx.beginPath();

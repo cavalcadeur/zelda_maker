@@ -30,26 +30,13 @@ function moveBoat(n){
     if (shallPass == 0) return;
     boatPosition[0] += vecteurs[n][0]/4;
     boatPosition[1] += vecteurs[n][1]/4;
-    waves.forEach(
-        function (e){
-            e[0] -= vecteurs[n][1]*12 - vecteurs[n][0]*2.5;
-            e[1] -= vecteurs[n][0]*9;
-            if (e[1] > H+10) e[1] = -10;
-            else if (e[1] < -10) e[1] = H+10;
-            if (e[0] > W+10) e[0] = -10;
-            else if (e[0] < -10) e[0] = W+10;
-        }
-    );
+    backg.pushWave(-vecteurs[n][0]*9,-vecteurs[n][1]*12 + vecteurs[n][0]*2.5,W,H);
 }
 
 function drawSail(t){
     ctx.fillStyle = "rgb(72,98,178)";
     ctx.fillRect(0,0,W,H);
-    waves.forEach(
-        function(f){
-            waveNiveau(f);
-        }
-    );
+    backDraw();
     onSeaIsland = [];
     ctx.drawImage(imgBoat,W/2 - imgBoat.width/2,H/2 - imgBoat.height);
     sea.forEach(
