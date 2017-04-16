@@ -27,8 +27,9 @@ var Painter = function() {
     }
 
     return {
-        realCoor: function(x,y){
-            return [toX(x,y,1),toY(x,y,1)];
+        realCoor: function(x,y,z){
+            if (z == undefined) z = 1;
+            return [toX(x,y,z),toY(x,y,z)];
         },
         niveau: function( level ) {
 			editNumber = 1;
@@ -199,6 +200,19 @@ var Painter = function() {
             ctx.translate(X+12,Y);
 	    	ctx.rotate(r);
             ctx.scale(s,1);
+            ctx.drawImage(img,-img.width/2,-img.height/2);
+            ctx.restore();
+        },
+        imgFullControl: function( ctx, x, y, z, s, r, img ) {
+            if( !img ) return;
+
+            var X = toX( x, y, z ) + cellS / 2 + (cellX) / 2;
+            var Y = toY( x, y, z ) - img.height/2 - cellY / 2;
+
+            ctx.save();
+            ctx.translate(X,Y);
+	    	ctx.rotate(r);
+            ctx.scale(s,s);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },

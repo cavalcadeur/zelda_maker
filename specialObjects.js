@@ -39,12 +39,25 @@ function drawDebris(type,n,x,y,alti){
 
 function drawFumee(type,n,x,y,alti){
     if (n < 0) return;
-    if (n > 9)ctx.globalAlpha = 1 - (n-10)/10;
-    for (var i = 0;i < 8;i ++){
-        Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*n*0.01,y + Math.sin((Math.PI/4)*i)*n*0.01,alti,imgDebris[type]);
-        Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*n*0.02,y + Math.sin((Math.PI/4)*i)*n*0.02,alti,imgDebris[type]);
+    else if (n < 8){
+        Painter.imgFullControl( ctx, x,y,alti,n/8,1-n/8,imgDebris[type]);
     }
-    ctx.globalAlpha = 1;
+    else if (n < 16){
+        //if (n > 15)ctx.globalAlpha = 1 - (n-15)/5;
+        for (var i = 0;i < 8;i ++){
+            Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*(n-7)*0.01,y + Math.sin((Math.PI/4)*i)*(n-7)*0.01,alti,imgDebris[type]);
+            Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*(n-7)*0.03,y + Math.sin((Math.PI/4)*i)*(n-7)*0.03,alti,imgDebris[type]);
+        }
+        //ctx.globalAlpha = 1;
+    }
+    else if (n < 21){
+        ctx.globalAlpha = 1 - (n-15)/6;
+        for (var i = 0;i < 8;i ++){
+            Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*(n-7)*0.01,y + Math.sin((Math.PI/4)*i)*(n-7)*0.01,alti,imgDebris[type]);
+            Painter.img( ctx, x + Math.cos((Math.PI/4)*i)*(n-7)*0.03,y + Math.sin((Math.PI/4)*i)*(n-7)*0.03,alti,imgDebris[type]);
+        }
+        ctx.globalAlpha = 1;
+    }
 }
 
 function drawFire(type,n,x,y,alti){
@@ -132,7 +145,7 @@ function drawRocher(truc){
 
 function drawBla(truc){
     var viteModo = 2;
-    
+
     if (truc.n%viteModo == 0){
         truc.actu += truc.content.charAt(truc.n*3 / viteModo);
         truc.actu += truc.content.charAt((truc.n*3 / viteModo) + 1);
@@ -149,7 +162,7 @@ function drawBla(truc){
     ctx.globalAlpha = 1 - truc.n%(viteModo*15)/(viteModo*15);
     Painter.img(ctx,truc.x + truc.x2,truc.y + truc.y2,truc.alti+1.8 + truc.n%(viteModo*15)/(viteModo*15),imgDebris.bla);
     ctx.globalAlpha = 1;
-    
+
     alert(truc.actu);
 }
 
@@ -211,24 +224,24 @@ function drawObjectFly(kgb){
     if (kgb.alti + kgb.vector[2] < floor){
         //kgb = {n:0,type:"fumeeF",x:kgb.x,y:kgb.y,g:0,alti:floor,lim:40};
         kgb.alti = floor;
-        kgb.type = "fumeeF";
+        kgb.type = "fumeeP";
         kgb.n = 0;
-        kgb.lim = 40;
+        kgb.lim = 80;
         console.log(kgb.carry);
         kgb.carry.forEach(
             function (e,i){
                 objNiveau[Math.round(kgb.y)][Math.round(kgb.x)].splice(i,0,e);
             }
         );
-        console.log(objNiveau[Math.round(kgb.y)][Math.round(kgb.x)]);
+
         return;
     }
-    
+
     // application de la vitesse
-    
+
     kgb.x += kgb.vector[0];
     kgb.y += kgb.vector[1];
-    kgb.alti += kgb.vector[2];
+    kgb.alti += kgb.vector[2]/2;
 
     // application de l'acceleration
 
@@ -238,4 +251,25 @@ function drawObjectFly(kgb){
 
     Painter.img(ctx,kgb.x,kgb.y,kgb.alti,imgElement[kgb.name]);
 
+}
+
+function drawFlower(kgb){
+    var color = ["rgb(191,0,0)","rgb(29,164,28)","rgb(93,86,206)","rgb(38,147,142)","rgb(253,244,0)","rgb(27,101,82)","rgb(0,209,239)","rgb(12,113,44)"];
+    var coor = Painter.realCoor(kgb.x+0.5,kgb.y,kgb.alti+3);
+    if (kgb.n < 10){
+        for (var i = 0;i < 8;i++){
+            ctx.fillStyle = color[i];
+            ctx.fillRect(coor[0] + Math.cos(Math.PI/4*i)*kgb.n*2,coor[1]+ Math.sin(Math.PI/4*i)*kgb.n*2,6,6);
+            //ctx.fillRect(coor[0] + Math.cos(Math.PI/4*i)*kgb.n,coor[1]+ Math.sin(Math.PI/4*i)*kgb.n,4,4);
+        }
+    }
+    else {
+        if (kgb.n > 30) ctx.globalAlpha = 1 - (kgb.n-30)/10;
+        for (var i = 0;i < 8;i++){
+            ctx.fillStyle = color[i];
+            ctx.fillRect(coor[0] + Math.cos(Math.PI/4*i)*20 + Math.cos(kgb.n/6+i)*30,coor[1]+ Math.sin(Math.PI/4*i)*20 + (kgb.n-10),6,6);
+            ctx.fillRect(coor[0] + Math.cos(Math.PI/4*i)*10 + Math.sin(kgb.n/6+i)*30,coor[1]+ Math.sin(Math.PI/4*i)*10 - (kgb.n-10),4,4);
+        }
+        ctx.globalAlpha = 1;
+    }
 }

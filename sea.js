@@ -15,7 +15,10 @@ function drawSea(){
         );
         ctx.drawImage(imgBoat,boatPosition[1]*3 - 10 - seaScroll[0],boatPosition[0]*3 - 30 - seaScroll[1],30,30);
     }
-    else alert("Vous ne possédez pas encore de carte maritime !");
+    else {
+		alert("Vous ne possédez pas encore de carte maritime !");
+		onSea = 1;
+	}	
 }
 
 function drawIsland(ile,Y,X){
@@ -157,7 +160,7 @@ function chooseBack(oo){
     else if (oo == 5){
         backDraw = backg.fe;
     }
-    else if (oo == 6){
+    else if (oo == 6 || oo == 7){
         backDraw = backg.ff;
     }
     else if (oo == 4){

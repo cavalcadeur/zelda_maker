@@ -1,6 +1,10 @@
 function cTitre(){
     disalert();
-    imgCinema[2] = [190,300,1,1];
+    imgCinema[2] = [190,300,1,1,[]];
+    var trucMuche = [imgDebris.flamme0,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeM,imgDebris.fumeeF,imgDebris.sword2,imgElement.rocher,imgHeros[2],imgHeros[6],imgElement.sleepingGoddess,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.pale0];
+    for (var i = 0; i < 4; i++){
+        imgCinema[2][4].push([rnd(W),-rnd(500),0,4,trucMuche[rnd(trucMuche.length)]]);
+    }
     var ff = function(t) {
         cTitreFond();
         imgCinema[2][0] += imgCinema[2][2];
@@ -8,6 +12,7 @@ function cTitre(){
         backg.pushWave(imgCinema[2][2],imgCinema[2][3],W,H);
         imgCinema[2][2] = Math.sin(t/1000)/2;
         imgCinema[2][3] = Math.cos(t/3000)/2;
+        
         /*
          if (imgCinema[2][0] > 500 || imgCinema[2][0] < 0){
          imgCinema[2][2] = imgCinema[2][2]*-1;
@@ -28,6 +33,37 @@ function cTitre(){
         }
         cBouton(W/2,H/2,400,150,"Nouvelle Partie",40,imgCinema[0][0]);
         cBouton(W/2,H/5*4,400,150,"Charger",40,imgCinema[0][1]);
+        imgCinema[2][4].forEach(
+            function(e,j){
+                if (e[2] == 0){
+                    for(var i = -9;i<1;i++){
+                        ctx.globalAlpha = 1+i/10;
+                        ctx.save();
+                        ctx.translate(e[0],H-e[1]-i*15);
+                        ctx.rotate(i/2+e[1]/30);
+                        ctx.drawImage(e[4],-35,-35);
+                        ctx.restore();
+                    }
+                    e[1] += 6;
+                    if (e[1] > H/2){
+                        if (rnd(50) == 0) e[2] = 1;
+                    }
+                }
+                else if (e[2] == 1){
+                    for(var i = 0;i<10;i++){
+                        ctx.globalAlpha = 1-e[3]/200;
+                        ctx.save();
+                        ctx.translate(e[0] + Math.cos(Math.PI/5*i)*e[3],H-e[1] + Math.sin(Math.PI/5*i)*e[3]);
+                        ctx.rotate(i/2+e[3]/30);
+                        ctx.drawImage(e[4],-35,-35);
+                        ctx.restore();
+                    }
+                    ctx.globalAlpha = 1;
+                    e[3] += 4;
+                    if (e[3] >= 200) imgCinema[2][4][j] = [rnd(W),-rnd(500),0,4,trucMuche[rnd(trucMuche.length)]];
+                }
+            }
+        );
         if (imgCinema[1] == "go"){
             cinematicos = 0;
             animation();
