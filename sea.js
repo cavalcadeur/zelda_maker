@@ -144,7 +144,7 @@ function goToLevel(oo,go,x,y,x2,y2){
                             objNiveau[yz][xz][1] += nPas - objNiveau[yz][xz][2];
                             objNiveau[yz][xz][2] = nPas;
                             var listo = ["rubisBleu","bourgeon","rubisRouge"];
-                            if (objNiveau[yz][xz][1] > 6000) objNiveau[yz][xz] = ["spe3",listo[rnd(listo.length)]];
+                            if (objNiveau[yz][xz][1] > 6000) objNiveau[yz][xz] = ["spe3",listo[rnd(listo.length)],"spe0"];
                         }
                     }
                 );                

@@ -1072,6 +1072,22 @@ function attack(n,x){
                 }
                 machin[0] = "switch3";
             }
+            if (out == 7){
+                if (truc == "spe3"){
+                    particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
+                    if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1){
+                        objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
+                    }
+                    else {
+                        objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = [""];
+                    }
+                }
+                else if (truc == "spe1" || truc == "spe2"){
+                    particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
+                    objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] = [""];
+                    alert("Ah malheureux ! A vouloir couper trop vite voilà ce qui arrive ! Ce plant est perdu pour toujours ! Malheur à toutes tes futures plantations. Tu seras maudit pour ton impatience.");
+                }
+            }
             ennemis.forEach(
                 function(e,gg){
                     if (Math.round(e.x) == heros[n].x + vecteurs[heros[n].sens][1] && Math.round(e.y) == heros[n].y + vecteurs[heros[n].sens][0]){
@@ -1102,7 +1118,7 @@ function attack(n,x){
             else if (machin[0] == "palmier1") machin[0] = "palmier";
             else if (machin[0] == "arbre0") machin[0] = "arbre1";
             else if (machin[0] == "arbre1") machin[0] = "arbre0";
-            if (out == 7 && (machin[0] == "spe1" || machin[0] == spe2)){
+            if (out == 7 && (machin[0] == "spe1" || machin[0] == "spe2")){
                 machin[1] += 10;
             }
             particles.push({n:0,type:"flower",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:0,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:40});
