@@ -2,7 +2,7 @@ function cTitre(){
     disalert();
     imgCinema[2] = [190,300,1,1,[]];
     var trucMuche = [imgDebris.flamme0,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeM,imgDebris.fumeeF,imgDebris.sword2,imgElement.rocher,imgHeros[2],imgHeros[6],imgElement.sleepingGoddess,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.pale0];
-    for (var i = 0; i < 4; i++){
+    for (var i = 0; i < 0; i++){
         imgCinema[2][4].push([rnd(W),-rnd(500),0,4,trucMuche[rnd(trucMuche.length)]]);
     }
     var ff = function(t) {
@@ -46,7 +46,7 @@ function cTitre(){
                     }
                     e[1] += 6;
                     if (e[1] > H/2){
-                        if (rnd(50) == 0) e[2] = 1;
+                        if (rnd(30) == 0) e[2] = 1;
                     }
                 }
                 else if (e[2] == 1){
@@ -148,6 +148,9 @@ function cChargementMule(){
         questObj = JSON.parse(window.localStorage.getItem("questObj"));
         objInvent = JSON.parse(window.localStorage.getItem("objInvent"));
         boatPosition = JSON.parse(window.localStorage.getItem("boatPosition"));
+        nPas = JSON.parse(window.localStorage.getItem("nPas"));
+        if (nPas == undefined) nPas = 0;
+        if (heros[0].seedCount == undefined) heros[0].seedCount = 10;
         out = where[0];
         goto = where[1];
         respawnPoint[0] = heros[0].x;
@@ -194,12 +197,7 @@ function cBouton(x,y,sx,sy,txt,size,light){
     if (light == undefined) light = 0;
     ctx.strokeStyle = "rgb(0,0,0)";
     ctx.strokeRect(x-sx/2,y-sy/2,sx,sy);
-    if (Math.abs(mouse[0] - x) < sx/2 && Math.abs(mouse[1] - y) < sy/2) {
-        ctx.globalAlpha = 0.2 + mouse[2]*0.2 + light*0.2;
-        ctx.fillRect(x-sx/2,y-sy/2,sx,sy);
-        ctx.globalAlpha = 1;
-    }
-    else if (light > 0){
+    if (light > 0){
         ctx.globalAlpha = light*0.2;
         ctx.fillRect(x-sx/2,y-sy/2,sx,sy);
         ctx.globalAlpha = 1;
@@ -897,4 +895,64 @@ function drawDuPauvre(hee){
         }
     );
 
+}
+
+
+function cMerchant(){
+    var ff = function(t) {
+        drawDuPauvre();
+        
+        imgCinema[1] = [0,0];
+        if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
+            if (Math.abs(mouse[1]-W/4) < 200){
+                imgCinema[1][0] = 4.5;
+            }
+            else if (Math.abs(mouse[1]-W/4*3) < 200){
+                imgCinema[1][1] = 4.5;
+            }
+        }
+        
+        ctx.fillStyle = "rgb(0,0,0)";
+        ctx.fillRect(W/2-100,10,200,50);
+        ctx.drawImage(imgElement.rubisVert,W/2+50,-15);
+        ctx.fillStyle = "rgb(250,250,250)";
+        ctx.font = "30px purisa";
+        ctx.textAlign = "right";
+        ctx.fillText(heros[imgCinema[0][3]].rubis + "",W/2 + 40,45);
+        cBouton(W/4,H/2,400,150,"Annuler",40,imgCinema[1][0]);
+        cBouton(W/4*3,H/2,400,150,"Acheter",40,imgCinema[1][1]);
+        
+        //alert(heros[imgCinema[0][3]].rubis);
+        if (cinematicos > 9){
+            alert(imgCinema[0][2]);
+            window.requestAnimationFrame(ff);
+        }
+        else{
+            animation();
+        }
+    };
+
+    window.requestAnimationFrame(ff);
+}
+
+function cClickMerchant(){
+    if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
+        if (Math.abs(mouse[1]-W/4) < 200){
+            cinematicos = 0;
+            disalert();
+        }
+        else if (Math.abs(mouse[1]-W/4*3) < 200){
+            if (heros[imgCinema[0][3]].rubis >= imgCinema[0][4]){
+                particles.push({n:0,type:"fumeeF",x:imgCinema[0][0],y:imgCinema[0][1],g:0,alti:niveau[imgCinema[0][1]][imgCinema[0][0]],lim:40});
+                disalert();
+                objNiveau[imgCinema[0][1]][imgCinema[0][0]] = [""];
+                cinematicos = 0;
+                heros[imgCinema[0][3]].rubis -= imgCinema[0][4];
+            }
+            else{
+                particles.push({n:0,type:"bla",x:imgCinema[0][0],y:imgCinema[0][1],g:0,alti:niveau[imgCinema[0][1]][imgCinema[0][0]],lim:-1,content:"Malheureusement tu ne possèdes pas suffisament de rubis.",actu:"",xx:0,yy:0,y2:0,x2:0});
+                cinematicos = 0;
+            }
+        }
+    }
 }

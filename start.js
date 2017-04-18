@@ -67,6 +67,7 @@ var sideSelect = -1;
 var workFloor;
 var backg;
 var backDraw;
+var nPas = 0;
 
 // programme
 
@@ -141,6 +142,7 @@ function save(){
     window.localStorage.setItem("questObj",JSON.stringify(questObj));
     window.localStorage.setItem("objInvent",JSON.stringify(objInvent));
     window.localStorage.setItem("boatPosition",JSON.stringify(boatPosition));
+    window.localStorage.setItem("nPas",JSON.stringify(nPas));
     alert("Sauvegarde terminée. J'espère que ce n'était pas trop long.");
     figer = 0;
 }
@@ -170,8 +172,8 @@ function charge(){
     var coeur = ["coeurVide","coeur1","coeur05"];
     var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","excla","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla","fumeeP"];
     var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre","corps","parachale","baton","batonF","maskWind","flowerRod","seeds"];
-    var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur"];
-    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2"];
+    var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur","bourgeon"];
+    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2","merchant"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","pot0","pot1","pot2","pot3","baton0","baton1","baton2","baton3","batonF0","batonF1","batonF2","batonF3"];
     var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length + nDalle + nSpeImg;
     imgRubis.forEach(
@@ -338,6 +340,10 @@ function start(){
                 cClickTitle();
                 return;
             }
+            else if (cinematicos == 9){
+                cClickMerchant();
+                return;
+            }
             if (onSea == 4) inventclick(x,y);
             else if (onSea == 5) TPclick(x,y);
             else if (edition == 0) {
@@ -458,6 +464,7 @@ function animation(){
     else if (cinematicos == 6) cPencil();
     else if (cinematicos == 7) cWaterRaise();
     else if (cinematicos == 8) cTitre();
+    else if (cinematicos == 9) cMerchant();
     else {
         fondfond.src = "images/menu5.png";
         fondfond.onload = function(){};
@@ -895,7 +902,7 @@ function drawInterface(){
             ctx.fillStyle = "rgb(250,250,250)";
             ctx.font = "20px purisa";
             ctx.textAlign = "right";
-            ctx.fillText(heros[0].seedCount,W-2,40);
+            ctx.fillText(heros[0].seedCount,W-57,40);
             //ctx.strokeText(heros[0].seedCount,W-5,40);
         }
         ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-50,55);
@@ -903,7 +910,7 @@ function drawInterface(){
             ctx.fillStyle = "rgb(250,250,250)";
             ctx.font = "20px purisa";
             ctx.textAlign = "right";
-            ctx.fillText(heros[0].seedCount,W-2,40);
+            ctx.fillText(heros[0].seedCount,W-2,95);
             //ctx.strokeText(heros[0].seedCount,W-5,40);
         }
         heros.forEach(
@@ -993,7 +1000,7 @@ function attack(n,x){
         }
         else if (truc == "PNJ"){
             if (alerting == 0){
-                questPNJ(heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0]);
+                questPNJ(heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0],n);
                 say(objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][2],heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0]);
             }
             else unsay();
@@ -1095,6 +1102,9 @@ function attack(n,x){
             else if (machin[0] == "palmier1") machin[0] = "palmier";
             else if (machin[0] == "arbre0") machin[0] = "arbre1";
             else if (machin[0] == "arbre1") machin[0] = "arbre0";
+            if (out == 7 && (machin[0] == "spe1" || machin[0] == spe2)){
+                machin[1] += 10;
+            }
             particles.push({n:0,type:"flower",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:0,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:40});
         }
         else if (use == "pencil"){
@@ -1134,6 +1144,17 @@ function attack(n,x){
                 heros[n].imgUp = 2;
                 heros[n].imgN = 0;
                 heros[n].z = Math.ceil(heros[n].z);
+            }
+        }
+        else if (use == "seeds"){
+            if (heros[0].seedCount == 0) return;
+            else if (out == 7){
+                var machin = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]];
+                if (machin[0] == "spe0"){
+                    particles.push({n:0,type:"flower",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:0,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:40});
+                    heros[0].seedCount -= 1;
+                    objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] = ["spe1",0,nPas];
+                }
             }
         }
         else if (use == "maskWind"){
@@ -1255,13 +1276,13 @@ function attack(n,x){
 function donnerHeros(obj,n){
     heros[n].sens = 2;
     heros[n].aura = obj;
-    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl ou i et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl ou i et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl ou i puis appuyez sur maj pour déchainer votre créativité. Appuyer sur a si vous avec besoin d'aide durant son utilisation.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures. Pour cela, mettez vous face à une case de mer et appuyez sur maj.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment.","lettre":"C'est une lettre metaphysique !! Elle vous permet de briser le 4eme mur en envoyant l'île dans laquelle vous vous trouvez au créateur du jeu. Si elle est jugée interessante, elle sera intégrée dans le jeu. A vos pinceaux, créateurs de tous poils !!!","tabouret":"Un vieux tabouret moche. En plus il ne ressemble pas à un tabouret mais plutôt à une table basse.","fleur2":"Un vase rempli de fleur !!! Voilà qui ferait plaisir à votre amant.","table0":"Une moitié de table ... Surtout ne croquez pas dedans !","table1":"C'est une demi-table. C'est aussi inutile que déplaisant à voir.","etagere":"Une etagere. Mais qu'est ce qu'il y a dedans ?","coffre1":"Vous obtenez un coffre déjà ouvert. Gné ????????","house0":"Woaw ! Mais c'est une maison ! Posez la avant d'avoir une crampe aux bras.","house1":"Une moitié de maison. Il est difficile d'avoir un meilleur rapport inutilité/encombrement.","house2":"Vous obtenez une moitié de maison. Vous restez sans voix.","house3":"Mais qu'est ce que c'est que cette horreur ???","house4":"Vous obtenez une moitié de maison. Le doute s'insinue en vous : et si tout était lié ?","armure":"Un bouclier et des épées !!! Pas de bol, c'est en plastique...","torche":"Pourquoi avoir mis une torche dans un coffre ? Pourquoi ?","rubisBlanc":"C'est le légendaire rubis blanc. Il vaut 10 000 rubis verts !!! Votre fortune est faite.","stele":"Ils arrivent ...","aiguille":"Vous avez découvert une aiguille magnetisée. C'est un des trois élements de la boussole.","palmier":"Vous obtenez un palmier. Tout est dit.","plate":"Un interrupteur au sol. Je suis presque certain que ça n'a rien à faire dans vos mains.","hookShot":"C'est un grappin, il permet d'aggriper un objet solide afin d'être tracté jusqu'à lui. Assignez le avec ctrl ou i et utilisez le avec maj. Il peut parcourir jusqu'à 5 cases !","statue0":"C'est une statue, elle vous dit quelqu'un mais impossible de savoir qui.","vitre":"Vous avez découvert une vitre de boussole. C'est un des trois éléments nécéssaires à la fabrication de la boussole des éléments. C'est sans doute peu utile une vitre, vu comme ça mais c'est très pratique pour éviter que le cadran soit plein de poussière !","corps":"Vous obtenez le corps de la boussole. Vous voilà rempli d'une joie indiscible ! On dit que le grand Linebeck s'en serait un jour servi !","parachale":"C'est un parachale ! Il permet de planer sur de courtes distances. Assignez le avec ctrl ou i et utilisez le avec maj quand vous êtes en l'air.","baton":"C'est un bâton mojo. Il peut s'enflammer et c'est plutôt badass mais faites vite avant qu'il ne se consumme entierement.","maskWind":"Vous obtenez un masque.","bush0":"Un buisson !!! Voilà voilà. C'est un peu decevant n'est ce pas.","pont":"Un pont ! Error 404 ! Joke not Found ! (#plagiatDiscord lol !)","arbre3":"Un arbre !!! Wow !","flowerRod":"Il s'agit de la baguette de floraison aux effets bizarres autant qu'étranges. Utilisez la avec maj ou espace. Ouvrez votre inventaire avec i."};
+    var description = {"":"Vous n'obtenez rien. Tant pis !","arbre0":"Vous obtenez un arbre ! Qu'allez vous bien pouvoir en faire ?","rubisVert":"C'est un rubis vert ! Il vaut 1. C'est le début de la richesse.","rubisBleu":"C'est un rubis bleu ! Il vaut 5 rubis verts. Prenez-en soin.","rubisRouge":"C'est un rubis rouge ! Il vaut 20 rubis verts.Cherissez le de tout votre coeur.","coffre0":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","herbe0":"C'est de l'herbe. Vous trouverez mieux la prochaine fois ...","herbe1":"C'est de l'herbe. Dommage...","coffre1":"Vous obtenez un coffre. Ce n'est pas forcément très utile. Reposez le.","mastersword":"Wow, c'est une fausse mastersword ! La fameuse épée légendaire du héros du vent. Elle ressemble beaucoup à l'originale. Peut-être vous sera-t-elle utile.Assignez la avec ctrl ou i et attaquez avec la touche maj.","boomerang":"Un boomerang ! Assignez le avec ctrl ou i et utilisez le avec maj. Il va en ligne droite puis reviens sauf s'il touche un obstacle.","porte0":"Vous obtenez une porte verouillée! Ne la gardez pas ...","cle0":"Vous obtenez une clé ! Elle sert à ouvrir les portes mais elle ne sert qu'une seule fois. Utilisez la à bon escient !","cle1":"C'est un trousseau de clé. On trouve 5 clés dessus. Quel chance !","pencil":"Vous obtenez le pinceau du créateur. Il vous permet de modifier les alentours à volonté. Assignez le avec ctrl ou i puis appuyez sur maj pour déchainer votre créativité. Appuyer sur a si vous avec besoin d'aide durant son utilisation.","boat":"Vous trouvez un bateau. Utilisez le pour naviquer vers de nouvelles aventures. Pour cela, mettez vous face à une case de mer et appuyez sur maj.","pot":"C'est un pot de fleur !!! Attention c'est fragile.","fragment":"Un receptacle de coeur ! Vous gagnez un coeur supplémentaire et tous vos coeurs sont regénérés.","coeur":"C'est un coeur ! Cela devrait vous permettre de vous soigner. Ne me demandez pas comment.","lettre":"C'est une lettre metaphysique !! Elle vous permet de briser le 4eme mur en envoyant l'île dans laquelle vous vous trouvez au créateur du jeu. Si elle est jugée interessante, elle sera intégrée dans le jeu. A vos pinceaux, créateurs de tous poils !!!","tabouret":"Un vieux tabouret moche. En plus il ne ressemble pas à un tabouret mais plutôt à une table basse.","fleur2":"Un vase rempli de fleur !!! Voilà qui ferait plaisir à votre amant.","table0":"Une moitié de table ... Surtout ne croquez pas dedans !","table1":"C'est une demi-table. C'est aussi inutile que déplaisant à voir.","etagere":"Une etagere. Mais qu'est ce qu'il y a dedans ?","coffre1":"Vous obtenez un coffre déjà ouvert. Gné ????????","house0":"Woaw ! Mais c'est une maison ! Posez la avant d'avoir une crampe aux bras.","house1":"Une moitié de maison. Il est difficile d'avoir un meilleur rapport inutilité/encombrement.","house2":"Vous obtenez une moitié de maison. Vous restez sans voix.","house3":"Mais qu'est ce que c'est que cette horreur ???","house4":"Vous obtenez une moitié de maison. Le doute s'insinue en vous : et si tout était lié ?","armure":"Un bouclier et des épées !!! Pas de bol, c'est en plastique...","torche":"Pourquoi avoir mis une torche dans un coffre ? Pourquoi ?","rubisBlanc":"C'est le légendaire rubis blanc. Il vaut 10 000 rubis verts !!! Votre fortune est faite.","stele":"Ils arrivent ...","aiguille":"Vous avez découvert une aiguille magnetisée. C'est un des trois élements de la boussole.","palmier":"Vous obtenez un palmier. Tout est dit.","plate":"Un interrupteur au sol. Je suis presque certain que ça n'a rien à faire dans vos mains.","hookShot":"C'est un grappin, il permet d'aggriper un objet solide afin d'être tracté jusqu'à lui. Assignez le avec ctrl ou i et utilisez le avec maj. Il peut parcourir jusqu'à 5 cases !","statue0":"C'est une statue, elle vous dit quelqu'un mais impossible de savoir qui.","vitre":"Vous avez découvert une vitre de boussole. C'est un des trois éléments nécéssaires à la fabrication de la boussole des éléments. C'est sans doute peu utile une vitre, vu comme ça mais c'est très pratique pour éviter que le cadran soit plein de poussière !","corps":"Vous obtenez le corps de la boussole. Vous voilà rempli d'une joie indiscible ! On dit que le grand Linebeck s'en serait un jour servi !","parachale":"C'est un parachale ! Il permet de planer sur de courtes distances. Assignez le avec ctrl ou i et utilisez le avec maj quand vous êtes en l'air.","baton":"C'est un bâton mojo. Il peut s'enflammer et c'est plutôt badass mais faites vite avant qu'il ne se consumme entierement.","maskWind":"Vous obtenez un masque.","bush0":"Un buisson !!! Voilà voilà. C'est un peu decevant n'est ce pas.","pont":"Un pont ! Error 404 ! Joke not Found ! (#plagiatDiscord lol !)","arbre3":"Un arbre !!! Wow !","flowerRod":"Il s'agit de la baguette de floraison aux effets bizarres autant qu'étranges. Utilisez la avec maj ou espace. Ouvrez votre inventaire avec i.","seeds":"Vous obtenez un sac de bourgeons magiques ! Ces bourgeons se greffent avec succès sur les plantules de la serre. Peut-être ont elles un intérêt ailleurs qui sait ? Utilisez les avec maj ou espace. Ouvrez votre inventaire avec i."};
     alert(description[obj]);
     figer = 1;
     if (obj == "rubisVert") heros[n].rubis += 1;
     else if (obj == "rubisBleu") heros[n].rubis += 5;
     else if (obj == "rubisRouge") heros[n].rubis += 20;
-    else if (obj == "mastersword" || obj == "hookShot" || obj == "boomerang" || obj == "pencil" || obj == "lettre" || obj == "boat" || obj == "pot" || obj == "parachale" || obj == "baton" || obj == "maskWind" || obj == "flowerRod"){
+    else if (obj == "mastersword" || obj == "hookShot" || obj == "boomerang" || obj == "pencil" || obj == "lettre" || obj == "boat" || obj == "pot" || obj == "parachale" || obj == "baton" || obj == "maskWind" || obj == "flowerRod" || obj == "seeds"){
         addObj(obj,n);
     }
     else if (obj == "cle0") {heros[n].cles += 1;}
@@ -1655,7 +1676,7 @@ function unsay(){
     disalert();
 }
 
-function questPNJ(x,y){
+function questPNJ(x,y,n){
     var perso = objNiveau[y][x][1];
     if (perso == "chef"){
         if (quests[perso] == 1){
@@ -1727,6 +1748,12 @@ function questPNJ(x,y){
             objNiveau[7][1] = ["","","Un dernier petit détail : ce jeu est aussi un Zelda Maker. Il vous suffit de trouver le pinceau pour créer vos propres niveaux. (le pinceau est disponible quel que soit le mode de jeu choisi)"];
             particles.push({n:0,type:"fumeeF",x:1,y:7,g:0,alti:0,lim:40});
             quests.dev = 4;
+        }
+    }
+    else if (perso == "merchant"){
+        if (objNiveau[y][x][3] != undefined){
+            cinematicos = 9;
+            imgCinema[0] = [x,y,objNiveau[y][x][2],n,objNiveau[y][x][3]];
         }
     }
 }

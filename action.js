@@ -119,11 +119,15 @@ function action(t){
                         h.cles += 1;
                         supress = 0;
                     }
+                    else if (truc[0] == "bourgeon"){
+                        heros[0].seedCount += 3;
+                        supress = 0;
+                    }
                     else if (truc[0] == "teleport"){
                         teleport = [h.y,h.x];
                         goToLevel(truc[1],truc[2],truc[3],truc[4],truc[5],truc[6]);
                     }
-                    else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot" || truc[0] == "parachale" || truc[0] == "baton"){
+                    else if (truc[0] == "boomerang" || truc[0] == "mastersword" || truc[0] == "pencil" || truc[0] == "boat" || truc[0] == "hookShot" || truc[0] == "parachale" || truc[0] == "baton" || truc[0] == "seeds" || truc[0] == "flowerRod" || truc[0] == "maskWind"){
                         if (truc[0] == "boomerang") {addObj(truc[0],n);}
                         else donnerHeros(truc[0],n);
                         supress = 0;
@@ -331,6 +335,7 @@ function move(d,n,gg){
     heros[n].y +=  vecteurs[d][0];
     heros[n].vx += -50 * vecteurs[d][1];
     heros[n].vy += -50 * vecteurs[d][0];
+    nPas += 1;
     if (heros[n].etat == 1 && heros[n].g == 0) {heros[n].g = -0.20; heros[n].z += 0.01;}
 }
 

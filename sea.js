@@ -130,6 +130,27 @@ function goToLevel(oo,go,x,y,x2,y2){
     Painter.niveau(niveau);
     Painter.scroll(0,0);
     Painter.centerScroll(x,y,0,W,H);
+    if (out == 7){
+        objNiveau.forEach(
+            function (e,yz){
+                e.forEach(
+                    function (g,xz){
+                        if (g[0] == "spe1"){
+                            objNiveau[yz][xz][1] += nPas - objNiveau[yz][xz][2];
+                            objNiveau[yz][xz][2] = nPas;
+                            if (objNiveau[yz][xz][1] > 1000) objNiveau[yz][xz][0] = "spe2";
+                        }
+                        if (g[0] == "spe2"){
+                            objNiveau[yz][xz][1] += nPas - objNiveau[yz][xz][2];
+                            objNiveau[yz][xz][2] = nPas;
+                            var listo = ["rubisBleu","bourgeon","rubisRouge"];
+                            if (objNiveau[yz][xz][1] > 6000) objNiveau[yz][xz] = ["spe3",listo[rnd(listo.length)]];
+                        }
+                    }
+                );                
+            }
+        );
+    }
     if (go == "sky4" && quests.sky == 0){
         cinematicos = 5;
         heros[0].x += 1;
