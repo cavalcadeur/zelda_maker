@@ -143,6 +143,8 @@ function cChargementMule(){
         if (heros[0].prim == undefined) heros[0].prim = "blank";
         if (heros[0].etat == undefined) heros[0].etat = 0;
         if (heros[1].etat == undefined) heros[1].etat = 0;
+        if (heros[0].touche == undefined) heros[0].touche = [38,39,40,37,16,17,32];
+        if (heros[1].touche == undefined) heros[1].touche = [101,99,98,97,13,96];
         var where = JSON.parse(window.localStorage.getItem("whereAmI"));
         quests = JSON.parse(window.localStorage.getItem("quests"));
         questObj = JSON.parse(window.localStorage.getItem("questObj"));

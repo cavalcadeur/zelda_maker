@@ -59,6 +59,14 @@ var background = function(ctx) {
         );
     }
 
+    function bfg(){
+        waves.forEach(
+            function(e,n){
+                crystalNiveau(e,n);
+            }
+        );
+    }
+
     function waveNiveau(e){
         ctx.fillStyle = "rgb(180,180,215)";
         if (e[2] < 100 && e[2] > 0){
@@ -85,6 +93,10 @@ var background = function(ctx) {
             e[1] = rnd(H);
         }
         e[2] += 1;
+    }
+
+    function crystalNiveau(e,i){
+        
     }
 
     function cloudNiveau(e,i){
@@ -256,6 +268,7 @@ var background = function(ctx) {
         fc: bfc,
         fd: bfd,
         fe: bfe,
-        ff: bff
+        ff: bff,
+        fg: bfg
     };
 };

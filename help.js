@@ -32,3 +32,49 @@ function Help(){
     ctx.fillText("a : ouvrir/fermer l'aide",W/2,300);
     if (questObj.carteMaritime == 1) ctx.fillText("m : carte maritime",W/2,400);
 }
+
+function clickHelp(){
+    console.log(rigolote);
+    if (rigolote[0] != -1) return;
+    console.log("Prout ?");
+    if (mouse[1] > 275 && mouse[1] < 325){
+        if (mouse[0] > 190 && mouse[0] < 230){
+            rigolote = [0,4];
+        }
+        else if (mouse[0] > 230 && mouse[0] < 270){
+            rigolote = [0,5];
+        }
+    }
+    else if (mouse[1] < 120){
+        if (mouse[0] > 190 && mouse[0] < 230){
+            rigolote = [0,6];
+        }
+    }
+    else if (mouse[1] > W - 130){
+        if (mouse[0] > 190 && mouse[0] < 230){
+            rigolote = [1,4];
+        }
+        else if (mouse[0] > 230 && mouse[0] < 270){
+            rigolote = [1,5];
+        }
+    }
+    else {
+        return;
+    }
+    console.log("I'm in !");
+    alert("Maintenant que tu as cliqué, cher joueur, te voilà obligé d'appuyer sur une touche qui servira à effectuer cette action.");
+}
+
+function toucheHelp(key){
+    if (rigolote[0] == -1){
+        if (key == 65) onSea =  0;
+        return;
+    }
+    else if (key == 77 || key == 73 || key == 65){
+        alert("Cette touche est l'une des trois touches maudites qui ne doivent pas être modifiées par le joueur sous peine de voir la terre disparaître.");
+    }
+    else{
+        heros[rigolote[0]].touche[rigolote[1]] = key;
+        rigolote = [-1,-1];
+    }
+}

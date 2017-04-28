@@ -187,6 +187,9 @@ function chooseBack(oo){
     else if (oo == 4){
         backDraw = backg.fd;
     }
+	else if (oo == 8){
+        backDraw = backg.fg;
+    }
     else {
         backDraw = backg.nothing;
     }

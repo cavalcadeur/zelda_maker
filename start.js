@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":10},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":0}];
+var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":10,"touche":[38,39,40,37,16,17,32]},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":0,"touche":[101,99,98,97,13,96]}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -14,7 +14,7 @@ var pressurePlate = [];
 var useless = ["blank",""];
 var pots = [];
 var out = 4;
-var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(90,88,96)","rgb(72,71,77)",[20,70,10,7,22,5],"rgb(72,98,178)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"],["rgb(170,170,170)","rgb(150,150,150)",[210,210,210,-20,-20,-20],"rgb(0,0,15)"],["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(28,134,182)"],["rgb(34,70,2)","rgb(19,55,0)",[30,120,20,-5,-20,-2],"rgb(20,40,0)"],["rgb(0,70,2)","rgb(19,55,0)",[30,120,20,-5,-20,-2],"rgb(0,30,30)"]];
+var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(90,88,96)","rgb(72,71,77)",[20,70,10,7,22,5],"rgb(72,98,178)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"],["rgb(170,170,170)","rgb(150,150,150)",[210,210,210,-20,-20,-20],"rgb(0,0,15)"],["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(28,134,182)"],["rgb(34,70,2)","rgb(19,55,0)",[30,120,20,-5,-20,-2],"rgb(20,40,0)"],["rgb(0,70,2)","rgb(19,55,0)",[30,120,20,-5,-20,-2],"rgb(0,30,30)"],["rgb(0,25,30)","rgb(0,20,25)",[4,35,45,0,7,7],"rgb(0,5,10)"]];
 var niveau = [];
 var quests = {"chef":0,"jehan":0,"garcon":0,"boussole":0,"boussoleF":0,"dev":0,"sky":0,"pencil":0};
 var alerting = 0;
@@ -40,7 +40,7 @@ var nDalle = 0;
 var nSpeImg = 10;
 var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
 var mouse = [0,0];
-var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"]];
+var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"]];
 var editHand = [];
 var editnumber = 1;
 var editArray = {"gear":["bleu0","rouge0","switch0","wSwitch0","wSwitch1","plate","switch2","checkPoint","return"],"loot":["rubisVert","rubisBleu","rubisRouge","coeur","fragment","coffre0","coffre1","porte0","cle0","cle1","mastersword","boomerang","hookShot","parachale","baton","boat","return"],"outDoor":["rien","arbre0","arbre1","arbre3","palmier","bush0","herbe0","herbe1","house0","house1","house3","moulin0","avaleur1","pont","sleepingGoddess","return"],"inDoor":["pot","fleur2","etagere","armure","tableau","tabouret","table0","lit0","return"],"monsters":["bokoblin","chuchu","moblin","feu","scie","ballon","return"],"fireTemple":["torche","torche1","autel","bougie","main0","main1","statue0","stele","rocher","return"],"sky":["eole0","houseSky3","arbreEole0","arbreEole1","arbreEole2","fleur3","portail0","tombe0","return"],"special":["tele","mark","coffre2","fastTravel","return"],"spe":["spe0","spe1","spe2","spe3","spe4","spe5","spe6","spe7","spe8","spe9","return"]};
@@ -68,6 +68,7 @@ var workFloor;
 var backg;
 var backDraw;
 var nPas = 0;
+var rigolote = [-1,-1];
 
 // programme
 
@@ -336,6 +337,9 @@ function start(){
             var rect = canvas.getBoundingClientRect();
             var x = event.clientX;
             var y = event.clientY;
+            if (onSea == 6){
+                clickHelp();
+            }
             if (cinematicos == 8){
                 cClickTitle();
                 return;
@@ -406,11 +410,11 @@ function start(){
                 }
                 return;
             }
-            Crossed.keysPress(event.keyCode);
+            //Crossed.keysPress(event.keyCode);
             if (keys[event.keyCode] != 1){
-                if (event.keyCode == 16 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0);}}
-                else if (event.keyCode == 13 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(1);}}
-                else if (event.keyCode == 32 && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0,1);}}
+                if (event.keyCode == heros[0].touche[4] && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0);}}
+                else if (event.keyCode == heros[1].touche[4] && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(1);}}
+                else if (event.keyCode == heros[0].touche[6] && onSea == 0) {disalert(); if (figer == 1){figer = 0; heros[0].aura = ""; heros[1].aura = "";} else{attack(0,1);}}
             }
             keys[event.keyCode] = 1;
         }
@@ -421,12 +425,16 @@ function start(){
             event.preventDefault();
             event.stopPropagation();
             keys[event.keyCode] = 0;
+            if (onSea == 6){
+                toucheHelp(event.keyCode);
+                return;
+            }
             if (alerting == 1) {
                 //disalert();
                 return;
             }
-            if (event.keyCode == 17 && onSea == 0) changeArme(0);
-            else if (event.keyCode == 96 && onSea == 0) changeArme(1);
+            if (event.keyCode == heros[0].touche[5] && onSea == 0) changeArme(0);
+            else if (event.keyCode == heros[1].touche[5] && onSea == 0) changeArme(1);
             else if (event.keyCode == 77) {
                 if (onSea == 1) onSea = 2;
                 else if (onSea == 2) onSea = 1;
@@ -1755,7 +1763,7 @@ function questPNJ(x,y,n){
             quests.dev = 2;
         }
         else if (quests.dev == 2){
-            objNiveau[6][8] = ["","","Pour voir un récapitulatif des touches, il suffit d'appuyer sur a. Si vous avez un ami, il peut jouer le mystérieux 2eme joueur. C'est le goron en cosplay en bas à gauche."];
+            objNiveau[6][8] = ["","","Pour voir un récapitulatif des touches (ou si vous désirez les modifier), il suffit d'appuyer sur a. Si vous avez un ami, il peut jouer le mystérieux 2eme joueur. C'est le goron en cosplay en bas à gauche."];
             objNiveau[7][1] = ["PNJ","dev","Coucou ! Petit FDP !"];
             particles.push({n:0,type:"fumeeF",x:8,y:6,g:0,alti:0,lim:40});
             quests.dev = 3;
