@@ -3,7 +3,7 @@ var ctx,canvas;
 var X = 0;
 var Y = 0;
 var keys = [];
-var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":10,"touche":[38,39,40,37,16,17,32]},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":0,"touche":[101,99,98,97,13,96]}];
+var heros = [{"x":0,"y":8,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"prim":"blank","imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":10,"touche":[38,39,40,37,16,17,32],"scrollSpeed":1},{"x":0,"y":9,z:0,g:0,"vx":0,"vy":0,"sens":2,"delay":0,"rubis":0,"objet":0,"invent":["blank"],"aura":"","tAura":0,"vAura":1,"cles":0,"d":1,"vie":3,"vieTotale":3,"stun":0,"mortal":0,"grap":0,"grapD":-1,"imgUp":0,"imgN":0,"plane":0,"timerF":0,"etat":0,"caseSpe":0,"seedCount":0,"touche":[101,99,98,97,13,96]}];
 var questObj = {"carteMaritime":0,"boussole":0};
 var objInvent = [];
 var seaLimit = [1200,900];
@@ -94,7 +94,12 @@ function save(){
             function(e,y){
                 e.forEach(
                     function(f,x){
-                        if (f != iles[key].obj[y][x]) ilesDif[i][1].push([y,x,iles[key].obj[y][x]]);
+                        if (f.length != iles[key].obj[y][x].length) {ilesDif[i][1].push([y,x,iles[key].obj[y][x]]);}
+                        else {
+                            for (var i = 0;i<f.length;i++){
+                                if (f[i] != iles[key].obj[y][x].length) {ilesDif[i][1].push([y,x,iles[key].obj[y][x]]); i = 10000;}
+                            }
+                        }
                     }
                 );
             }
@@ -162,8 +167,9 @@ function precharge(){
         alert("Silence dans la salle ! Le jeu charge.");
 
         savedMap = JSON.parse(JSON.stringify(iles));
+        console.log(savedMap["depart"]);
         savedHouseMap = JSON.parse(JSON.stringify(interieurs));
- 
+
         cinematicos = 8;
         charge();
     };
@@ -174,7 +180,7 @@ function charge(){
     var debris = ["pot0","pot1","pot2","pot3","pot4","palmier0","palmier1","palmier2","palmier3","palmier4","herbe0","herbe1","herbe2","herbe3","herbe4","fumeeM","fumeeF","feu0","feu1","feu2","feu3","flamme0","flamme1","hook","chaineA","excla","hitB","rond","eclabousse","rondB","eclabousseB","sword0","sword1","sword2","sword3","pale0","bla","fumeeP"];
     var imgInterface = ["blank","mastersword","boomerang","hookShot","pencil","boat","pot","lettre","GPS","aiguille","vitre","corps","parachale","baton","batonF","maskWind","flowerRod","seeds"];
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur","bourgeon"];
-    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2","merchant"];
+    var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2","merchant","goron","oldGoron","goronMineCart"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","pot0","pot1","pot2","pot3","baton0","baton1","baton2","baton3","batonF0","batonF1","batonF2","batonF3"];
     var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length + nDalle + nSpeImg;
     imgRubis.forEach(
@@ -206,7 +212,7 @@ function charge(){
         };
 
     }
-    
+
     coeur.forEach(
         function(e,i){
             imgMenu[e] = new Image();
@@ -479,25 +485,17 @@ function animation(){
         if (out == 4) alert("Utilisez les flèches pour vous déplacer et la barre espace pour interagir avec la case en face de vous ou faire disparaître ce message. Allez parler au visage du developpeur pour plus d'infos.");
         ctx.globalAlpha = 1;
         var f = function(t) {
-            if (Crossed.testCrossed() == 1){
-                if (onSea == 0) draw(t);
+            try{
+                if (onSea == 0) {action(t); draw();}
+                else if (onSea == 1)sail(t);
+                else if (onSea == 2) drawSea();
+                else if (onSea == 4) drawInvent();
                 else if (onSea == 5) TPisland();
-                else sail(t);
-                Crossed.drawMenu(ctx,W,H);
-            }
-            else{
-                try{
-                    if (onSea == 0) {action(t); draw();}
-                    else if (onSea == 1)sail(t);
-                    else if (onSea == 2) drawSea();
-                    else if (onSea == 4) drawInvent();
-                    else if (onSea == 5) TPisland();
-                    else if (onSea == 6) Help();
-                } catch(e){console.error(e);}
-                if (cinematicos == 0) window.requestAnimationFrame(f);
-                else {
-                    animation();
-                }
+                else if (onSea == 6) Help();
+            } catch(e){console.error(e);}
+            if (cinematicos == 0) window.requestAnimationFrame(f);
+            else {
+                animation();
             }
         };
         window.requestAnimationFrame(f);
@@ -857,101 +855,14 @@ function drawEnnemi(n){
 }
 
 function drawInterface(){
-    if (edition == 1){
-        sideSelect = -1;
-        sideEdit.forEach(
-            function(el,i){
-                var yel = i*(H/(4*sideEdit.length)*3) + H/8;
-                var epel = H/(4*sideEdit.length)*3;
-                var hautel = epel/8*7;
-                if (mouse[1] > W - epel){
-                    if (mouse[0] > yel && mouse[0] < yel + hautel){
-                        epel = epel * 1.3;
-                        sideSelect = i;
-                    }
-                }
-                ctx.fillStyle = "rgb(20,178,139)";
-                ctx.fillRect(W-epel,yel,epel*1.5,hautel);
-                ctx.drawImage(imgElement[el],W-epel,yel,(imgElement[el].width * hautel) / imgElement[el].height,hautel);
-            }
-        );
-        if (editHand[editnumber] != "rien"){
-            if (editM == 0 || editHand[editnumber] == "return") ctx.drawImage(imgElement[editHand[editnumber]],mouse[1],mouse[0]- imgElement[editHand[editnumber]].height / 2);
-            else ctx.drawImage(imgMonstre[editHand[editnumber]+2],mouse[1],mouse[0]- imgMonstre[editHand[editnumber]+2].height / 2);
-            if (editHand[editnumber] == "tele"){
-                objNiveau.forEach(
-                    function (ee,YY){
-                        ee.forEach(
-                            function (fe,XX){
-                                if (fe[0] == "teleport"){
-                                    ctx.globalAlpha = 0.1;
-                                    Painter.cell( ctx, XX, YY, niveau[YY][XX] ,1);
-                                    ctx.globalAlpha = 1;
-
-                                }
-                            }
-                        );
-                    }
-                );
-            }
-        }
-    }
-    else {
-        ctx.drawImage(imgMenu[heros[0].invent[heros[0].objet]],W-50,0);
-        if (heros[0].invent[heros[0].objet] == "seeds"){
-            ctx.fillStyle = "rgb(250,250,250)";
-            ctx.font = "20px purisa";
-            ctx.textAlign = "right";
-            ctx.fillText(heros[0].seedCount,W-2,40);
-            //ctx.strokeText(heros[0].seedCount,W-5,40);
-        }
-        ctx.drawImage(imgMenu[heros[0].prim],W-105,0);
-        if (heros[0].prim == "seeds"){
-            ctx.fillStyle = "rgb(250,250,250)";
-            ctx.font = "20px purisa";
-            ctx.textAlign = "right";
-            ctx.fillText(heros[0].seedCount,W-57,40);
-            //ctx.strokeText(heros[0].seedCount,W-5,40);
-        }
-        ctx.drawImage(imgMenu[heros[1].invent[heros[1].objet]],W-50,55);
-        if (heros[1].invent[heros[1].objet] == "seeds"){
-            ctx.fillStyle = "rgb(250,250,250)";
-            ctx.font = "20px purisa";
-            ctx.textAlign = "right";
-            ctx.fillText(heros[0].seedCount,W-2,95);
-            //ctx.strokeText(heros[0].seedCount,W-5,40);
-        }
-        heros.forEach(
-            function(h,index){
-                for (var i = 0;i < h.vieTotale;i++){
-                    if (i < 10) ctx.drawImage(imgMenu.coeurVide,5 + i*15,5 + index*35);
-                    else ctx.drawImage(imgMenu.coeurVide,5 + (i-14)*15,15 + index*35);
-                    if (h.vie > i){
-                        if (h.vie - 0.5 > i){
-                            if (i < 10) ctx.drawImage(imgMenu.coeur1,5 + i*15,5 + index*35);
-                            else ctx.drawImage(imgMenu.coeur1,5 + (i-14)*15,15 + index*35);
-                        }
-                        else {
-                            if (i < 10) ctx.drawImage(imgMenu.coeur05,5 + i*15,5 + index*35);
-                            else ctx.drawImage(imgMenu.coeur05,5 + (i-14)*15,15 + index*35);
-                        }
-                    }
-                }
-            }
-        );
-    }
-    if (editPlate == 1 || editPlate == 2){
-        ctx.beginPath();
-        ctx.arc(mouse[1],mouse[0],15,-Math.PI,Math.PI);
-        ctx.stroke();
-    }
-
+    drawInterface = AInterface;
 }
 
 function attack(n,x){
     if (edition == 1){
         if (editPlate == 0){
             edition = 0;
+            drawInterface = AInterface;
             casePencil = ["ah","ah"];
             console.log(JSON.stringify(niveau));
             console.log(JSON.stringify(objNiveau));
@@ -1133,6 +1044,7 @@ function attack(n,x){
         }
         else if (use == "pencil"){
             editHand = editObject[out];
+            drawInterface = AEditInterface;
             editnumber = 1;
             editM = 0;
             if (edition == 0)edition = 1;

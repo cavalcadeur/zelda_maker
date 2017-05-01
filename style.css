@@ -28,6 +28,15 @@ body {
 }
 
 #alert.show {
+	top: 70%;
+	text-align: left;
+    transform: scale(1,1);
+    transition: 0.2s transform;
+}
+
+#alert.allText {
+	top: 4px;
+	text-align: center;
     transform: scale(1,1);
     transition: 0.2s transform;
 }

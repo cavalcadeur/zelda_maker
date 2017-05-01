@@ -1,6 +1,6 @@
 function cTitre(){
     disalert();
-    imgCinema[2] = [190,300,1,1,[]];
+    imgCinema[2] = [190,300,1,1,[],0];
     var trucMuche = [imgDebris.flamme0,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.fumeeM,imgDebris.fumeeF,imgDebris.sword2,imgElement.rocher,imgHeros[2],imgHeros[6],imgElement.sleepingGoddess,imgDebris.fumeeF,imgDebris.fumeeF,imgDebris.pale0];
     for (var i = 0; i < 0; i++){
         imgCinema[2][4].push([rnd(W),-rnd(500),0,4,trucMuche[rnd(trucMuche.length)]]);
@@ -22,7 +22,7 @@ function cTitre(){
          }
          */
         ctx.drawImage(fondfond,W/2-187,0);
-        imgCinema[0] = [3.5,3.5];
+        imgCinema[0] = [3.5,3.5,3.5];
         if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
             if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
                 imgCinema[0][0] = 4.5;
@@ -31,8 +31,21 @@ function cTitre(){
                 imgCinema[0][1] = 4.5;
             }
         }
-        cBouton(W/2,H/2,400,150,"Nouvelle Partie",40,imgCinema[0][0]);
-        cBouton(W/2,H/5*4,400,150,"Charger",40,imgCinema[0][1]);
+        else if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
+            imgCinema[0][2] = 4.5;
+        }
+        if (imgCinema[2][5] == 0){
+            cBouton(W/2,H/2,400,150,"Nouvelle Partie",40,imgCinema[0][0]);
+            cBouton(W/2,H/5*4,400,150,"Charger",40,imgCinema[0][1]);
+        }
+        else if (imgCinema[2][5] == 2){
+
+        }
+        else {
+            cBouton(W/2,H/2,400,150,"Partie normale",40,imgCinema[0][0]);
+            cBouton(W/2,H/5*4,400,150,"Partie Rapide",40,imgCinema[0][1]);
+        }
+        cBoutonRond(W - 35,H-35,30,"i",40,imgCinema[0][2]);
         imgCinema[2][4].forEach(
             function(e,j){
                 if (e[2] == 0){
@@ -82,6 +95,24 @@ function cTitre(){
             cinematicos = 1;
             animation();
         }
+        else if (imgCinema[1] == "salsonForever"){
+            goto = "depart";
+            out = 1;
+            niveau = iles["depart"].alti;
+            objNiveau = iles["depart"].obj;
+            particles = [{n:-5,type:"titre",img:"depart",x:0,y:10,g:0,alti:-5,lim:-6}];
+            heros[0].x = 14;
+            heros[0].y = 6;
+            heros[1].x = 15;
+            heros[1].y = 6;
+            Painter.niveau( niveau );
+            chooseBack(out);
+            for(var i = 0;i<nSpeImg;i++){
+                imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
+            }
+            cinematicos = 0;
+            animation();
+        }
         else {
             Painter.scroll(imgCinema[2][1],imgCinema[2][0]);
             window.requestAnimationFrame(ff);
@@ -95,12 +126,45 @@ function cTitreFond(){
 }
 
 function cClickTitle(){
-    if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
-        if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
-            imgCinema[1] = "bitch";
+    
+    if (imgCinema[2][5] == 0){
+        if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
+            if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
+                imgCinema[2][5] = 1;
+            }
+            else if (mouse[0] < H/5*4 + 75 && mouse[0] > H/5*4 - 75){
+                cChargementMule();
+            }
         }
-        else if (mouse[0] < H/5*4 + 75 && mouse[0] > H/5*4 - 75){
-            cChargementMule();
+        else if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
+            var elem = document.getElementById("alert");
+	    imgCinema[2][5] = 2;
+            elem.textContent = "A propos de Maker's Pencil \n \n Maker's Pencil est un jeu amateur qui a la prétention de proposer un mode aventure et un mode creation. Ce mode creation fait office de Zelda Maker. \n \n Le jeu est open source et jouable dans le navigateur. Cependant il est possible de jouer hors connexion. Pour cela il suffit de télécharger le jeu à cette adresse : ";
+            elem.className = 'allText';
+        }
+    }
+    else if (imgCinema[2][5] == 2){
+        if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
+            var elem = document.getElementById("alert");
+	    imgCinema[2][5] = 0;
+            elem.textContent = "";
+            elem.className = ' ';
+        }
+    }
+    else {
+        if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
+            if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
+                imgCinema[1] = "bitch";
+            }
+            else if (mouse[0] < H/5*4 + 75 && mouse[0] > H/5*4 - 75){
+                imgCinema[1] = "salsonForever";
+            }
+        }
+        else  if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
+            var elem = document.getElementById("alert");
+	    imgCinema[2][5] = 2;
+            elem.textContent = "A propos de Maker's Pencil \n \n Maker's Pencil est un jeu amateur qui a la prétention de proposer un mode aventure et un mode creation. Ce mode creation fait office de Zelda Maker. \n \n Le jeu est open source et jouable dans le navigateur. Cependant il est possible de jouer hors connexion. Pour cela il suffit de télécharger le jeu à cette adresse : ";
+            elem.className = 'allText';
         }
     }
 }
@@ -209,6 +273,27 @@ function cBouton(x,y,sx,sy,txt,size,light){
     ctx.font = size + "px purisa";
     ctx.textAlign = "center";
     ctx.fillText(txt, x, y + sy/4);
+}
+
+function cBoutonRond(x,y,s,txt,size,light){
+    ctx.fillStyle = "rgb(0,0,0)";
+    if (size == undefined) size = 40;
+    if (light == undefined) light = 0;
+    ctx.strokeStyle = "rgb(0,0,0)";
+    ctx.beginPath();
+    ctx.arc(x,y,s,-Math.PI,Math.PI);
+    
+    if (light > 0){
+        ctx.globalAlpha = light*0.2;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = "rgb(250,250,250)";
+    ctx.font = size + "px purisa";
+    ctx.textAlign = "center";
+    ctx.fillText(txt, x, y + s/2);
 }
 
 function cIntro(){
@@ -903,6 +988,7 @@ function drawDuPauvre(hee){
 function cMerchant(){
     var ff = function(t) {
         drawDuPauvre();
+        Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].z,W,H);
         
         imgCinema[1] = [0,0];
         if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){

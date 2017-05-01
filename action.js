@@ -1,5 +1,6 @@
 function action(t){
     if (edition == 1) return;
+    //Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].scrollSpeed);
     //var controlKeys = [[38,39,40,37],[101,99,98,97]];
     heros.forEach(
         function(h,n){
@@ -225,7 +226,8 @@ function action(t){
             if (Math.abs(h.vx) < 5) h.vx = 0;
             if (Math.abs(h.vy) < 5) h.vy = 0;
         });
-    if (heros[0].vx != 0 || heros[0].vy != 0 || heros[0].g != 0 || edition == 1)Painter.scrolling();
+    //if (heros[0].vx != 0 || heros[0].vy != 0 || heros[0].g != 0 || edition == 1)Painter.scrolling();
+    Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].z,W,H);
 }
 
 function fall(h,n){

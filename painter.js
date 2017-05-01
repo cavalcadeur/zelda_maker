@@ -7,6 +7,10 @@ var Painter = function() {
     var cellS = 10;  // Décalage.
     var walls;
     var wallsVert;
+    var dscrX = 0;
+    var dscrY = 0;
+    var vscr = 0;
+    var lscr = 1;
 
     function toX( x, y, z ) {
         return Math.floor( scrollX + x * cellX - y * cellS );
@@ -63,6 +67,7 @@ var Painter = function() {
                         lineVert.push( [0,0,0] );
                         return;
                     }
+                    
                     var lineA = 0;
                     var lineB = 0;
                     var lineC = 0;
@@ -100,6 +105,7 @@ var Painter = function() {
                     }
 
                     lineVert.push( [lineA, lineB, lineC] );
+                     
                 });
             });
 
@@ -114,6 +120,22 @@ var Painter = function() {
         centerScroll: function ( x, y , z , W , H) {
             scrollX = Math.floor(W/2 - x*cellX + y*cellS);
             scrollY = Math.floor(H/2 - y*cellY + z*cellZ);
+        },
+
+        scrollCenter: function ( x, y , z , W, H) {
+            x = x/2 + niveau[0].length/4;
+            y = y/2 + niveau.length/4;
+            var goalX = Math.floor(W/2 - x*cellX + y*cellS);
+            var goalY =  Math.floor(H/2 - y*cellY + z*cellZ);
+            var dist = Math.hypot(goalX - scrollX,goalY - scrollY);
+            lscr = dist/100;
+            if (dist <= 11) {vscr = 0; return;}
+            if (vscr < lscr) vscr += 0.05;
+            else if (vscr > lscr + 0.05) vscr -= 0.05;
+            dscrX = (goalX - scrollX)/dist;
+            dscrY = (goalY - scrollY)/dist;
+            scrollX += vscr * dscrX;
+            scrollY += vscr * dscrY;
          },
         
         scrollYPlus: function(a) {
@@ -284,6 +306,7 @@ var Painter = function() {
                     ctx.stroke();
                 }
                 // Tracer les lignes verticales.
+                
                 wall = wallsVert[y][x];
                 if( wall[0] > 0 ) {
                     ctx.beginPath();
@@ -336,6 +359,7 @@ var Painter = function() {
             return result;
         },
         scrolling: function(){
+            //vscr = 0;
             var x = toX(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
             var y = toY(heros[0].x+heros[0].vx/50,heros[0].y+heros[0].vy/50,heros[0].z);
             if (x > W-150) scrollX = W-150-(x-scrollX);
