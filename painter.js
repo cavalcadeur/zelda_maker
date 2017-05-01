@@ -136,6 +136,7 @@ var Painter = function() {
             dscrY = (goalY - scrollY)/dist;
             scrollX += vscr * dscrX;
             scrollY += vscr * dscrY;
+            backg.pushWave(vscr * dscrY,vscr * dscrX,W,H);
          },
         
         scrollYPlus: function(a) {

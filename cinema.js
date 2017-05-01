@@ -139,7 +139,7 @@ function cClickTitle(){
         else if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
             var elem = document.getElementById("alert");
 	    imgCinema[2][5] = 2;
-            elem.textContent = "A propos de Maker's Pencil \n \n Maker's Pencil est un jeu amateur qui a la prétention de proposer un mode aventure et un mode creation. Ce mode creation fait office de Zelda Maker. \n \n Le jeu est open source et jouable dans le navigateur. Cependant il est possible de jouer hors connexion. Pour cela il suffit de télécharger le jeu à cette adresse : ";
+            elem.textContent = "Cette fonctionalité est en cours de construction.";
             elem.className = 'allText';
         }
     }
@@ -163,7 +163,8 @@ function cClickTitle(){
         else  if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
             var elem = document.getElementById("alert");
 	    imgCinema[2][5] = 2;
-            elem.textContent = "A propos de Maker's Pencil \n \n Maker's Pencil est un jeu amateur qui a la prétention de proposer un mode aventure et un mode creation. Ce mode creation fait office de Zelda Maker. \n \n Le jeu est open source et jouable dans le navigateur. Cependant il est possible de jouer hors connexion. Pour cela il suffit de télécharger le jeu à cette adresse : ";
+            
+            elem.innerContent = "Cette fonctionalité est en cours de construction.";
             elem.className = 'allText';
         }
     }
