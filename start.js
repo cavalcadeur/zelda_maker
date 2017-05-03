@@ -69,6 +69,7 @@ var backg;
 var backDraw;
 var nPas = 0;
 var rigolote = [-1,-1];
+var gamePads;
 
 // programme
 
@@ -465,8 +466,24 @@ function start(){
             }
         }
     );
+    window.addEventListener("gamepadconnected", function(e) {
+        console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+                    e.gamepad.index, e.gamepad.id,
+                    e.gamepad.buttons.length, e.gamepad.axes.length);
+        gamePadF = usualGamePad;
+        gamePads = e.gamepad;
+    });
+    window.addEventListener("gamepaddisconnected", function(e) {
+        console.log("Gamepad disconnected from index %d: %s",
+                    e.gamepad.index, e.gamepad.id);
+        gamePadF = videAsFuck;
+    });
     backg.wavesPlenish();
     precharge();
+}
+
+function gamePadF(){
+
 }
 
 function animation(){
@@ -492,6 +509,7 @@ function animation(){
                 else if (onSea == 4) drawInvent();
                 else if (onSea == 5) TPisland();
                 else if (onSea == 6) Help();
+                gamePadF();
             } catch(e){console.error(e);}
             if (cinematicos == 0) window.requestAnimationFrame(f);
             else {

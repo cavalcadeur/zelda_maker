@@ -139,7 +139,7 @@ function cClickTitle(){
         else if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
             var elem = document.getElementById("alert");
 	    imgCinema[2][5] = 2;
-            elem.textContent = "Cette fonctionalité est en cours de construction.";
+            elem.innerHTML = "A propos de Maker's Pencil <br> <br> Maker's Pencil est un jeu amateur open source. Vous pouvez y jouer dans votre navigateur web. <br> Le jeu est disponible directement en ligne afin d'avoir toujours la dernière mise à jour à cette adresse : <br> <br>http://cavalcadeur.github.io/zelda_maker/. <br> <br> Il est également possible de télécharger le jeu afin de jouer hors connexion. Cela raccourcie les temps de chargement mais vous ne benificierez pas des mises à jour automatiques. <br> <br>https://github.com/cavalcadeur/zelda_maker/archive/gh-pages.zip ";
             elem.className = 'allText';
         }
     }
@@ -164,7 +164,7 @@ function cClickTitle(){
             var elem = document.getElementById("alert");
 	    imgCinema[2][5] = 2;
             
-            elem.innerContent = "Cette fonctionalité est en cours de construction.";
+            elem.innerHTML = "A propos de Maker's Pencil <br> <br> Maker's Pencil est un jeu amateur open source. Vous pouvez y jouer dans votre navigateur web. <br> Le jeu est disponible directement en ligne afin d'avoir toujours la dernière mise à jour à cette adresse : <link href=http://cavalcadeur.github.io/zelda_maker/>. Il est également possible de télécharger le jeu afin de jouer hors connexion. ";
             elem.className = 'allText';
         }
     }
