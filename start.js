@@ -14,7 +14,7 @@ var pressurePlate = [];
 var useless = ["blank",""];
 var pots = [];
 var out = 4;
-var colorSet = [["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(0,0,0)"],["rgb(90,88,96)","rgb(72,71,77)",[20,70,10,7,22,5],"rgb(72,98,178)"],["rgb(137,97,97)","rgb(115,65,65)",[200,140,140,-20,-30,-30],"rgb(209,82,28)"],["rgb(80,80,130)","rgb(40,40,85)",[140,140,200,-30,-30,-20],"rgb(0,0,50)"],["rgb(170,170,170)","rgb(150,150,150)",[210,210,210,-20,-20,-20],"rgb(0,0,15)"],["rgb(97,97,97)","rgb(65,65,65)",[140,140,140,-30,-30,-30],"rgb(28,134,182)"],["rgb(34,70,2)","rgb(19,55,0)",[30,120,20,-5,-20,-2],"rgb(20,40,0)"],["rgb(0,70,2)","rgb(19,55,0)",[30,120,20,-5,-20,-2],"rgb(0,30,30)"],["rgb(0,25,30)","rgb(0,20,25)",[4,35,45,0,7,7],"rgb(0,5,10)"]];
+var colorSet = [[[97,97,97],"rgb(65,65,65)",[140,140,140,-30,-30,-30],[0,0,0]],[[90,88,96],"rgb(72,71,77)",[20,70,10,7,22,5],[72,98,178]],[[137,97,97],"rgb(115,65,65)",[200,140,140,-20,-30,-30],[209,82,28]],[[80,80,130],"rgb(40,40,85)",[140,140,200,-30,-30,-20],[0,0,50]],[[170,170,170],"rgb(150,150,150)",[210,210,210,-20,-20,-20],[0,0,15]],[[97,97,97],"rgb(65,65,65)",[140,140,140,-30,-30,-30],[28,134,182]],[[34,70,2],"rgb(19,55,0)",[30,120,20,-5,-20,-2],[20,40,0]],[[0,70,2],"rgb(19,55,0)",[30,120,20,-5,-20,-2],[0,30,30]],[[0,25,30],"rgb(0,20,25)",[4,35,45,0,7,7],[0,5,10]]];
 var niveau = [];
 var quests = {"chef":0,"jehan":0,"garcon":0,"boussole":0,"boussoleF":0,"dev":0,"sky":0,"pencil":0};
 var alerting = 0;
@@ -38,7 +38,7 @@ var vecteurs = [[-1,0],[0,1],[1,0],[0,-1]];
 var imgArbre = ["arbre0","arbre1","arbre3","bush0","herbe0","herbe1","fleur2","coffre0","coffre1","coffre2","coffre3","porte0","cle0","cle1","bleu0","bleu1","rouge0","rouge1","switch0","switch1","house0","house1","house2","house3","house4","lambda0","table0","table1","etagere","tabouret","armure","tableau","autel","torche","torche1","lit0","lit1","majora","plate","plate1","stele","templeFeu0","templeFeu1","templeFeu2","templeEau0","templeEau1","templeEau2","palmier","gear","special","fastTravel","loot","return","outDoor","inDoor","monsters","fireTemple","sky","bougie","switch2","switch3","checkPoint","unCheckPoint","wSwitch0","wSwitch1","tele","main0","main1","statue0","miniTempleEau","mark","avaleur1","avaleur2","marque","moulin0","moulin1","arbreG0","arbreG1","arbreG2","arbreG3","arbreG4","arbreG5","arbreG6","arbreG7","arbreG8","arbreG9","canon0","canon1","canon2","eole0","houseSky0","houseSky1","houseSky2","houseSky3","arbreEole0","arbreEole1","arbreEole2","tombe0","portail0","portail1","portail2","fleur3","rocher","pont","foret0","foret1","foret2","foret3","foret4","foret5","sanctuaire","serre0","serre1","serre2","sleepingGoddess","spe","palmier1"];
 var nDalle = 0;
 var nSpeImg = 10;
-var imgEnnemi = ["dark","bokoblin","moblin","link","feu","chuchu","bossFeu","bossFeuDead","scie","ballon","main","mCorps","mPierreA","mPierreB","statue","bossVent"];
+var imgEnnemi = [];
 var mouse = [0,0];
 var editObject = [["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"],["loot","gear","special","outDoor","inDoor","fireTemple","sky","spe","monsters","lambda0"]];
 var editHand = [];
@@ -70,6 +70,9 @@ var backDraw;
 var nPas = 0;
 var rigolote = [-1,-1];
 var gamePads;
+var gameKey = [];
+var sensDuBateau = 1;
+var colors = [];
 
 // programme
 
@@ -90,6 +93,7 @@ function save(){
     var ilesDif = [];
     var i = 0;
     for(var key in iles){
+        
         ilesDif[i] = [key,[],[]];
         savedMap[key].obj.forEach(
             function(e,y){
@@ -97,8 +101,8 @@ function save(){
                     function(f,x){
                         if (f.length != iles[key].obj[y][x].length) {ilesDif[i][1].push([y,x,iles[key].obj[y][x]]);}
                         else {
-                            for (var i = 0;i<f.length;i++){
-                                if (f[i] != iles[key].obj[y][x].length) {ilesDif[i][1].push([y,x,iles[key].obj[y][x]]); i = 10000;}
+                            for (var j = 0;j<f.length;j++){
+                                if (f[j] != iles[key].obj[y][x].length) {ilesDif[i][1].push([y,x,iles[key].obj[y][x]]); j = 6660000;}
                             }
                         }
                     }
@@ -183,7 +187,7 @@ function charge(){
     var imgRubis = ["rubisVert","rubisBleu","rubisRouge","rubisBlanc","fragment","coeur","bourgeon"];
     var imgPNJ = ["lambda0","jehan","chef","fleurFan","lambda1","forgeron","pretresse","sage","aide","garcon","nadel","pancarte","lambda2","dev","windTribe1","windTribe2","merchant","goron","oldGoron","goronMineCart"];
     var armes = ["mastersword0","mastersword1","mastersword2","mastersword3","boomerang0","boomerang1","boomerang2","boomerang3","pencil0","pencil1","pencil2","pencil3","pot0","pot1","pot2","pot3","baton0","baton1","baton2","baton3","batonF0","batonF1","batonF2","batonF3"];
-    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + (imgEnnemi.length*4) + imgPNJ.length + nDalle + nSpeImg;
+    var chargement = imgRubis.length + imgHeros.length + imgArbre.length + imgInterface.length + armes.length + imgInterface.length + debris.length + coeur.length + imgPNJ.length + nDalle + nSpeImg;
     imgRubis.forEach(
         function(e,i){
             imgElement[e] = new Image();
@@ -282,19 +286,9 @@ function charge(){
             };
         }
     );
-    imgEnnemi.forEach(
-        function(e,i){
-            for (var j = 0;j < 4;j ++){
-                var name = e+j;
-                imgMonstre[name] = new Image();
-                imgMonstre[name].src = "images/ennemis/"+name+".png";
-                imgMonstre[name].onload = function(){
-                    chargement -= 1;
-                    if (chargement == 0) animation();
-                };
-            }
-        }
-    );
+        for (var i = 0;i<70;i++){
+            imgMonstre[i] = new Image();
+    }
     imgPNJ.forEach(
         function(e,i){
             imgPersoN[e] = new Image();
@@ -325,6 +319,7 @@ function start(){
     niveau = iles["depart"].alti;
     objNiveau = iles["depart"].obj;
     Painter.niveau( niveau );
+    setColors(out,5);
     resize();
     Crossed.init(W,H);
     //    canvas.addEventListener("click",function(evt) {
@@ -358,7 +353,7 @@ function start(){
             if (onSea == 4) inventclick(x,y);
             else if (onSea == 5) TPclick(x,y);
             else if (edition == 0) {
-                if (heros[0].invent[heros[0].objet] == "mastersword") clicSword(x,y);
+                if (heros[0].invent[heros[1].objet] == "mastersword") clicSword(x,y);
                 if (heros[1].invent[heros[1].objet] == "GPS") GPS(x,y);
                 return;
             }
@@ -472,6 +467,8 @@ function start(){
                     e.gamepad.buttons.length, e.gamepad.axes.length);
         gamePadF = usualGamePad;
         gamePads = e.gamepad;
+        console.log(gamePads);
+        alert("Vous avez connecté une manette de jeu à votre ordinateur. Vous pouvez bien sûr utiliser cette manette pour jouer.");
     });
     window.addEventListener("gamepaddisconnected", function(e) {
         console.log("Gamepad disconnected from index %d: %s",
@@ -483,7 +480,7 @@ function start(){
 }
 
 function gamePadF(){
-
+    //console.log("Hey !");
 }
 
 function animation(){
@@ -496,6 +493,7 @@ function animation(){
     else if (cinematicos == 7) cWaterRaise();
     else if (cinematicos == 8) cTitre();
     else if (cinematicos == 9) cMerchant();
+    else if (cinematicos == 10) cDeath();
     else {
         fondfond.src = "images/menu5.png";
         fondfond.onload = function(){};
@@ -503,13 +501,13 @@ function animation(){
         ctx.globalAlpha = 1;
         var f = function(t) {
             try{
-                if (onSea == 0) {action(t); draw();}
-                else if (onSea == 1)sail(t);
-                else if (onSea == 2) drawSea();
-                else if (onSea == 4) drawInvent();
-                else if (onSea == 5) TPisland();
-                else if (onSea == 6) Help();
-                gamePadF();
+                if (onSea == 0) {action(t); draw();gamePadF();}
+                else if (onSea == 1){sail(t);gamePadF();}
+                else if (onSea == 2) {drawSea();gamePadF();}
+                else if (onSea == 4) {drawInvent();gamePadF();}
+                else if (onSea == 5) {TPisland();gamePadF();}
+                else if (onSea == 6) {Help();gamePadF();}
+                
             } catch(e){console.error(e);}
             if (cinematicos == 0) window.requestAnimationFrame(f);
             else {
@@ -521,7 +519,7 @@ function animation(){
 }
 
 function draw() {
-    ctx.fillStyle = colorSet[out][3];
+    ctx.fillStyle = colors[0];
     ctx.fillRect(0,0,W,H);
     backDraw();
     niveau.forEach(
@@ -582,7 +580,7 @@ function draw() {
             );
             ennemis.forEach(
                 function(a,m){
-                    if (y-Math.round(a.y) == 0) drawEnnemi(m);
+                    if (a.giveY() == y)drawEnnemi(m);
                 }
             );
             pots.forEach(
@@ -723,6 +721,7 @@ function draw() {
         Painter.cell( ctx, casePencil[1], casePencil[0], niveau[casePencil[0]][casePencil[1]] ,1);
         ctx.globalAlpha = 1;
     }
+    Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].z,W,H);
     drawInterface();
 }
 
@@ -761,115 +760,9 @@ function drawHeros(n){
 }
 
 function drawEnnemi(n){
-    if (ennemis[n].etat == 1){
-        Painter.imgScaleRot( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z-0.5, 1, ennemis[n].r, imgMonstre[String(ennemis[n].img + ennemis[n].sens)] );
-        ennemis[n].r += 0.2;
-        if (ennemis[n].x > ennemis[n].ox) ennemis[n].x -= 0.02;
-        else if (ennemis[n].x < ennemis[n].ox) ennemis[n].x += 0.02;
-        else{
-            if (ennemis[n].y > ennemis[n].oy) ennemis[n].y -= 0.02;
-            else if (ennemis[n].y < ennemis[n].oy) ennemis[n].y += 0.02;
-            else{
-                ennemis[n].etat = 0;
-                if (ennemis[n].pv <= 0) {
-                    particles.push({n:0,type:"fumeeM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:40});
-                    particles.push({n:0,type:"exploM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:80});
-                    ennemis[n].pv = 0;
-                    if (objetMort > 0){
-                        var xxx = 0;
-                        ennemis.forEach(
-                            function (e,i){
-                                if (e.pv > 0){
-                                    xxx = 1;
-                                }
-                            }
-                        );
-                        if (xxx == 0){
-                            for (var i = 0;i < objetMort;i++){
-                                var exit = 0;
-                                objNiveau.forEach(
-                                    function(e,i){
-                                        e.forEach(
-                                            function(f,j){
-                                                if (f[0] == "coffre3"){
-                                                    if (f.length > 1) f.splice(0,1);
-                                                    else f[0] = "";
-                                                }
-                                            }
-                                        );
-                                    }
-                                );
-                            }
-                        }
-                    }
-                    if (ennemis[n].img == "bossFeu") {
-                        particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
-                        particles.push({n:-34,type:"fumeeF",x:10,y:6,g:0,alti:0,lim:40});
-                        particles.push({n:-40,type:"fumeeF",x:4,y:7,g:0,alti:0,lim:40});
-                        niveau  = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,0,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
-                        Painter.niveau(niveau);
-                    }
-                    else if (ennemis[n].img == "mCorps"){
-                        ennemis.forEach(
-                            function (e,n){
-                                hitEnnemis(n,10000,4);
-                            }
-                        );
-                    }
-                }
-            }
-        }
-        if (Math.abs(ennemis[n].ox - ennemis[n].x + ennemis[n].oy - ennemis[n].y) < 0.02){
-            ennemis[n].x = ennemis[n].ox;
-            ennemis[n].y = ennemis[n].oy;
-        }
-        ennemis[n].z -= ennemis[n].g;
-        ennemis[n].g += 0.004;
-    }
-    else{
-        if (ennemis[n].pv == 0) return;
-        Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[String(ennemis[n].img + ennemis[n].sens)] );
-        var altitude = niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)];
-        if (ennemis[n].z > altitude && ennemis[n].img != "mPierreA" && ennemis[n].img != "mPierreB") {
-            ennemis[n].z -= ennemis[n].g;
-            ennemis[n].g += 0.05;
-        }
-        else if (ennemis[n].z < altitude){
-            ennemis[n].g = 0;
-            ennemis[n].z = altitude;
-        }
-        if (edition == 0 && figer == 0){
-            if (ennemis[n].n == Math.round(1/ennemis[n].v)){
-                if (ennemis[n].img == "feu"){
-                    try {
-                        if (niveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]] == altitude){
-                            var truc = objNiveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]][0];
-                            if (truc == "arbre0" || truc == "arbre1"){
-                                particles.push({n:0,type:"feu",x:Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1],y:Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0],g:0,alti:altitude,lim:25});
-                            }
-                        }
-                    }
-                    catch (e){
-
-                    }
-                }
-                if (ennemis[n].stun > 0) ennemis[n].stun -= 1;
-                var sens = choseDirection(n);
-                ennemis[n].n = 0;
-                if (sens == 4){
-                    ennemis[n].stun = 1;
-                }
-                else ennemis[n].sens = sens;
-            }
-            if (ennemis[n].stop == 0){
-                ennemis[n].n += 1;
-                if (ennemis[n].stun == 0){
-                    ennemis[n].x += vecteurs[ennemis[n].sens][1] * ennemis[n].v;
-                    ennemis[n].y += vecteurs[ennemis[n].sens][0] * ennemis[n].v;
-                }
-            }
-        }
-    }
+    ennemis[n].act();
+    if (edition == 0)ennemis[n].doing();
+    ennemis[n].display();
 }
 
 function drawInterface(){
@@ -974,64 +867,11 @@ function attack(n,x){
     }
     else if (heros[n].etat == 0){
         if (use == "mastersword"){
-            var machin = objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]];
-            var truc = machin[0];
             particles.push({n:0,type:"sword",x:heros[n].x + (vecteurs[heros[n].sens][1]/2) + vecteurs[heros[n].sens][0]/5,y:heros[n].y + vecteurs[heros[n].sens][0]/2,g:0,alti:heros[n].z + Math.abs(vecteurs[heros[n].sens][1]/6),lim:10,sens:heros[n].sens});
             heros[n].imgUp = 1;
             heros[n].imgN = 10;
             if (niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] != niveau[heros[n].y][heros[n].x]) return;
-            if (truc == "herbe0" | truc == "herbe1" | truc == "pot" | truc == "palmier"){
-                if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1){
-                    objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
-                }
-                else {
-                    objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = grassContent[rnd(grassContent.length - 1)];
-                }
-                if (truc == "herbe0" || truc == "herbe1") particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
-                else if (truc == "palmier") particles.push({n:0,type:"palmier",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:15});
-            }
-            else if (truc == "switch0" || truc == "switch1") changeColor();
-            else if (truc == "wSwitch0") {waterLevel(1);machin[0] = "wSwitch1";}
-            else if (truc == "wSwitch1") {waterLevel(-1);machin[0] = "wSwitch0";}
-            else if (truc == "switch2"){
-                if (machin[3] == "") objNiveau[machin[2]][machin[1]] = [""];
-                else if (machin[3] == 1 || machin[3] == -1){
-                    niveau[machin[2]][machin[1]] += machin[3];
-                    Painter.niveau(niveau);
-                }
-                else if (machin[3] == "monstre"){
-                    ennemis.push(monstreType(machin[4],machin[1],machin[2]));
-                }
-                else {
-                    for (var i = machin.length-1;i>2;i--){
-                        objNiveau[machin[2]][machin[1]].splice(0,0,machin[i]);
-                    }
-                }
-                machin[0] = "switch3";
-            }
-            if (out == 7){
-                if (truc == "spe3"){
-                    particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
-                    if (objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].length > 1){
-                        objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]].splice(0,1);
-                    }
-                    else {
-                        objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]][0] = [""];
-                    }
-                }
-                else if (truc == "spe1" || truc == "spe2"){
-                    particles.push({n:0,type:"herbe",x:heros[n].x + vecteurs[heros[n].sens][1],y:heros[n].y + vecteurs[heros[n].sens][0],g:5,alti:niveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]],lim:10});
-                    objNiveau[heros[n].y + vecteurs[heros[n].sens][0]][heros[n].x + vecteurs[heros[n].sens][1]] = [""];
-                    alert("Ah malheureux ! A vouloir couper trop vite voilà ce qui arrive ! Ce plant est perdu pour toujours ! Malheur à toutes tes futures plantations. Tu seras maudit pour ton impatience.");
-                }
-            }
-            ennemis.forEach(
-                function(e,gg){
-                    if (Math.round(e.x) == heros[n].x + vecteurs[heros[n].sens][1] && Math.round(e.y) == heros[n].y + vecteurs[heros[n].sens][0]){
-                        hitEnnemis(gg,1,heros[n].sens);
-                    }
-                }
-            );
+            hitSpot(heros[n].x + vecteurs[heros[n].sens][1],heros[n].y + vecteurs[heros[n].sens][0],heros[n].z + 0.5,1,heros[n].sens);
         }
         else if (use == "boomerang"){
             boomerang.push({"x":heros[n].x,"y":heros[n].y,"vx":0,"vy":0,"sx":heros[n].x,"sy":heros[n].y,"r":0,"alti":niveau[heros[n].y][heros[n].x],"sens":heros[n].sens,"endu":10,"content":[]});
@@ -1491,77 +1331,7 @@ function pencil(x,y,action){
 }
 
 function hitEnnemis(n,degat,sens){
-    if (ennemis[n].pv <= 0 || ennemis[n].etat == 1) return;
-    if (ennemis[n].img == "feu" || ennemis[n].img == "scie") return;
-    if (ennemis[n].img == "moblin"){
-        if (ennemis[n].sens == (sens+2)%4 && sens != 4){
-            degat = 0;
-        }
-    }
-    if (ennemis[n].ia == "ball"){
-        ennemis[n].sens = sens;
-        if (degat == 0) ennemis[n].v = 0.05;
-        else ennemis[n].v = 0.1;
-        ennemis[n].n = Math.round(1/ennemis[n].v);
-        return;
-    }
-    if (ennemis[n].img == "bossFeu"){
-        if (degat == 0) {
-            ennemis[n].img = "bossFeuDead";
-            ennemis[n].v = 0;
-        }
-        else {
-            return;
-        }
-    }
-    else if (ennemis[n].img == "bossFeuDead"){
-        if (degat > 0) {
-            ennemis[n].img = "bossFeu";
-            ennemis[n].v = 0.05;
-            ennemis[n].n = 0;
-            ennemis.push({x:ennemis[n].x,y:ennemis[n].y,pv:2,img:"feu",sens:sens,z:1,g:0,v:0.05,n:0,ia:"mur",stop:0,stun:0,att:1});
-            particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
-            particles.push({n:0,type:"fumeeF",x:5,y:2,g:0,alti:0,lim:40});
-            particles.push({n:-14,type:"fumeeF",x:9,y:5,g:0,alti:0,lim:40});
-            particles.push({n:-21,type:"fumeeF",x:7,y:8,g:0,alti:0,lim:40});
-            particles.push({n:-24,type:"fumeeF",x:9,y:10,g:0,alti:0,lim:40});
-            particles.push({n:-33,type:"fumeeF",x:2,y:9,g:0,alti:0,lim:40});
-            if (ennemis[n].pv == 3){
-                niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,-1,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
-            }
-            else {
-                niveau = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,2,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
-                particles.splice(0,1);
-            }
-            Painter.niveau(niveau);
-        }
-        else {
-            return;
-        }
-    }
-    ennemis[n].pv -= degat;
-
-    if (sens != 4) ennemis[n].sens = (sens + 2)%4;
-    ennemis[n].stun = 1;
-    if (degat == 0) {ennemis[n].stun = 2;particles.push({n:0,type:"hitB",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});}
-    else particles.push({n:0,type:"hitA",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:10});
-    ennemis[n].x = Math.round(ennemis[n].x);
-    ennemis[n].y = Math.round(ennemis[n].y);
-    if (sens < 4 && ennemis[n].img != "mCorps"){
-        ennemis[n].ox = ennemis[n].x;
-        ennemis[n].oy = ennemis[n].y;
-        if (ennemis[n].y + vecteurs[sens][0] < niveau.length){
-            if (ennemis[n].x + vecteurs[sens][1] < niveau[ennemis[n].y + vecteurs[sens][0]].length){
-                if (niveau[ennemis[n].y][ennemis[n].x] == niveau[vecteurs[sens][0] + ennemis[n].y][vecteurs[sens][1] + ennemis[n].x]){
-                    ennemis[n].ox = vecteurs[sens][1] + ennemis[n].x;
-                    ennemis[n].oy = vecteurs[sens][0] + ennemis[n].y;
-                }
-            }
-        }
-    }
-    ennemis[n].g = -0.1;
-    ennemis[n].r = 0;
-    ennemis[n].etat = 1;
+    
 }
 
 function hitHeros(n,degat,sens){
@@ -1586,6 +1356,9 @@ function hitHeros(n,degat,sens){
     heros[n].vie -= degat;
     heros[n].stun = 20;
     heros[n].mortal = 60;
+    //if (heros[n].vie <= 0){
+        //cinematicos = 10;
+    //}
 }
 
 function waterLevel(n){

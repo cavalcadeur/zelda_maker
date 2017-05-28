@@ -162,9 +162,9 @@ function action(t){
                     }
                 }
                 if (h.imgUp != 1){
-                    if (1 == keys[heros[n].touche[1]]) move(1,n,0);
+                    if (1 == keys[heros[n].touche[1]]) {if (0 == keys[heros[n].touche[3]]) move(1,n,0);}
                     else if (1 == keys[heros[n].touche[3]]) move(3,n,0);
-                    else if (1 == keys[heros[n].touche[0]]) move(0,n,0);
+                    else if (1 == keys[heros[n].touche[0]]){if (0 == keys[heros[n].touche[2]]) move(0,n,0);}
                     else if (1 == keys[heros[n].touche[2]]) move(2,n,0);
                 }
             }
@@ -227,7 +227,6 @@ function action(t){
             if (Math.abs(h.vy) < 5) h.vy = 0;
         });
     //if (heros[0].vx != 0 || heros[0].vy != 0 || heros[0].g != 0 || edition == 1)Painter.scrolling();
-    Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].z,W,H);
 }
 
 function fall(h,n){

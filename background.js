@@ -130,7 +130,7 @@ var background = function(ctx) {
         ctx.lineTo(0,10);
         ctx.closePath();
         ctx.fill();
-        ctx.fillStyle = colorSet[out][3];
+        ctx.fillStyle = colors[0];
         ctx.beginPath();
         ctx.moveTo(-5,0);
         ctx.lineTo(0,-12);

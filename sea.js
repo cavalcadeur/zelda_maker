@@ -66,6 +66,11 @@ function waveMove(e){
 }
 
 function goToLevel(oo,go,x,y,x2,y2){
+    ennemis.forEach(
+        function (e,i){
+            ennemis[i] = e.takeBack();
+        }
+    );
     boomerang.forEach(
         function(e,n){
             if (e.endu > 5) {
@@ -100,6 +105,10 @@ function goToLevel(oo,go,x,y,x2,y2){
     for(var i = 0;i<nSpeImg;i++){
         imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
     }
+    
+    for (var i = 0;i<70;i++){
+        imgMonstre[i].src = "images/ennemis/" + out + "/e" + i + ".png";
+    }
     goto = go;
     if (oo == 1){
         if (iles[go].particles == undefined){
@@ -123,6 +132,12 @@ function goToLevel(oo,go,x,y,x2,y2){
         ennemis = interieurs[go].ennemis;
         objNiveau = interieurs[go].obj;
     }
+    ennemis.forEach(
+        function (e,i){
+            findEnnemy(e[2],i,e[0],e[1],e[3]);
+            //ennemis[i] = findEnnemy(e[2]);
+        }
+    );
     onSea = 0;
     respawnPoint = [x,y];
     heros[0].z = niveau[heros[0].y][heros[0].x];
@@ -151,6 +166,7 @@ function goToLevel(oo,go,x,y,x2,y2){
             }
         );
     }
+	setColors(out,5);
     if (go == "sky4" && quests.sky == 0){
         cinematicos = 5;
         heros[0].x += 1;

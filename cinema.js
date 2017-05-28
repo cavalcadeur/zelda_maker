@@ -12,7 +12,7 @@ function cTitre(){
         backg.pushWave(imgCinema[2][2],imgCinema[2][3],W,H);
         imgCinema[2][2] = Math.sin(t/1000)/2;
         imgCinema[2][3] = Math.cos(t/3000)/2;
-        
+
         /*
          if (imgCinema[2][0] > 500 || imgCinema[2][0] < 0){
          imgCinema[2][2] = imgCinema[2][2]*-1;
@@ -96,25 +96,29 @@ function cTitre(){
             animation();
         }
         else if (imgCinema[1] == "salsonForever"){
-            goto = "depart";
-            out = 1;
-            niveau = iles["depart"].alti;
-            objNiveau = iles["depart"].obj;
-            particles = [{n:-5,type:"titre",img:"depart",x:0,y:10,g:0,alti:-5,lim:-6}];
-            heros[0].x = 14;
-            heros[0].y = 6;
-            heros[1].x = 15;
-            heros[1].y = 6;
-            Painter.niveau( niveau );
-            chooseBack(out);
-            for(var i = 0;i<nSpeImg;i++){
-                imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
-            }
+            goToLevel(1,"depart",14,6,15,6);
+            /*
+             goto = "depart";
+             out = 1;
+             niveau = iles["depart"].alti;
+             objNiveau = iles["depart"].obj;
+             particles = [{n:-5,type:"titre",img:"depart",x:0,y:10,g:0,alti:-5,lim:-6}];
+             heros[0].x = 14;
+             heros[0].y = 6;
+             heros[1].x = 15;
+             heros[1].y = 6;
+             Painter.niveau( niveau );
+             chooseBack(out);
+             for(var i = 0;i<nSpeImg;i++){
+             imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
+             }
+             */
             cinematicos = 0;
             animation();
         }
         else {
             Painter.scroll(imgCinema[2][1],imgCinema[2][0]);
+            gamePadF();
             window.requestAnimationFrame(ff);
         }
     };
@@ -126,7 +130,7 @@ function cTitreFond(){
 }
 
 function cClickTitle(){
-    
+
     if (imgCinema[2][5] == 0){
         if (mouse[1] < W/2 + 200 && mouse[1] > W/2 - 200){
             if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
@@ -138,15 +142,15 @@ function cClickTitle(){
         }
         else if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
             var elem = document.getElementById("alert");
-	    imgCinema[2][5] = 2;
-            elem.innerHTML = "A propos de Maker's Pencil <br> <br> Maker's Pencil est un jeu amateur open source. Vous pouvez y jouer dans votre navigateur web. <br> Le jeu est disponible directement en ligne afin d'avoir toujours la dernière mise à jour à cette adresse : <br> <br>http://cavalcadeur.github.io/zelda_maker/. <br> <br> Il est également possible de télécharger le jeu afin de jouer hors connexion. Cela raccourcie les temps de chargement mais vous ne benificierez pas des mises à jour automatiques. <br> <br>https://github.com/cavalcadeur/zelda_maker/archive/gh-pages.zip ";
+            imgCinema[2][5] = 2;
+            elem.innerHTML = "A propos de Maker's Pencil <br> <br> Maker's Pencil est un jeu amateur open source. Vous pouvez y jouer dans votre navigateur web. <br> Le jeu est disponible directement en ligne afin d'avoir toujours la dernière mise à jour à cette adresse : <br> <br>http://cavalcadeur.github.io/zelda_maker/. <br> <br> Il est également possible de télécharger le jeu afin de jouer hors connexion. Cela raccourcie les temps de chargement mais vous ne benificierez pas des mises à jour automatiques. <br> <br>https://github.com/cavalcadeur/zelda_maker/archive/gh-pages.zip <br> <br><br> <br><br> <br><br> <br><br> <br><br> <br><br><br><br> <br><br><br><br> <br><br><br><br> <br><br><br><br> <br><br> <br> Woaw ! Vous avez un écran sacrément grand pour réussir à voir ce message.";
             elem.className = 'allText';
         }
     }
     else if (imgCinema[2][5] == 2){
         if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
             var elem = document.getElementById("alert");
-	    imgCinema[2][5] = 0;
+            imgCinema[2][5] = 0;
             elem.textContent = "";
             elem.className = ' ';
         }
@@ -162,8 +166,8 @@ function cClickTitle(){
         }
         else  if (Math.hypot(mouse[1] - W + 35, mouse[0] - H + 35) < 30){
             var elem = document.getElementById("alert");
-	    imgCinema[2][5] = 2;
-            
+            imgCinema[2][5] = 2;
+
             elem.innerHTML = "A propos de Maker's Pencil <br> <br> Maker's Pencil est un jeu amateur open source. Vous pouvez y jouer dans votre navigateur web. <br> Le jeu est disponible directement en ligne afin d'avoir toujours la dernière mise à jour à cette adresse : <link href=http://cavalcadeur.github.io/zelda_maker/>. Il est également possible de télécharger le jeu afin de jouer hors connexion. ";
             elem.className = 'allText';
         }
@@ -283,7 +287,7 @@ function cBoutonRond(x,y,s,txt,size,light){
     ctx.strokeStyle = "rgb(0,0,0)";
     ctx.beginPath();
     ctx.arc(x,y,s,-Math.PI,Math.PI);
-    
+
     if (light > 0){
         ctx.globalAlpha = light*0.2;
         ctx.fill();
@@ -511,11 +515,7 @@ function cShootOut(){
     var ff = function(t) {
         ctx.fillStyle = "rgb(28,134,182)";
         ctx.fillRect(0,0,W,H);
-        waves.forEach(
-            function(e,n){
-                if (n < 5) cloudNiveau(e,n);
-            }
-        );
+        backDraw();
         if (imgCinema[3] > H/2){
             ctx.drawImage(imgHeros[2],W/2-25,imgCinema[3]);
             ctx.drawImage(imgHeros[6],W/2+25,imgCinema[3]);
@@ -524,18 +524,7 @@ function cShootOut(){
             window.requestAnimationFrame(ff);
         }
         else if (imgCinema[2] > -6){
-            waves.forEach(
-                function(e,n){
-                    if (n < 5){
-                        e[1] += imgCinema[2];
-                        if (e[1] > H + 70){
-                            e[1] = -60;
-                            e[0] = rnd(W);
-                        }
-
-                    }
-                }
-            );
+            backg.pushWave(60,0,W,H);
             ctx.drawImage(imgHeros[2],W/2-25,imgCinema[3]);
             ctx.drawImage(imgHeros[6],W/2+25,imgCinema[3]);
             imgCinema[2] -= 0.3;
@@ -874,7 +863,7 @@ function cWaterRaise(){
 }
 
 function drawDuPauvre(hee){
-    ctx.fillStyle = colorSet[out][3];
+    ctx.fillStyle = colors[0];
     ctx.fillRect(0,0,W,H);
     backDraw();
     niveau.forEach(
@@ -990,7 +979,7 @@ function cMerchant(){
     var ff = function(t) {
         drawDuPauvre();
         Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].z,W,H);
-        
+
         imgCinema[1] = [0,0];
         if (mouse[0] < H/2 + 75 && mouse[0] > H/2 - 75){
             if (Math.abs(mouse[1]-W/4) < 200){
@@ -1000,7 +989,7 @@ function cMerchant(){
                 imgCinema[1][1] = 4.5;
             }
         }
-        
+
         ctx.fillStyle = "rgb(0,0,0)";
         ctx.fillRect(W/2-100,10,200,50);
         ctx.drawImage(imgElement.rubisVert,W/2+50,-15);
@@ -1010,7 +999,7 @@ function cMerchant(){
         ctx.fillText(heros[imgCinema[0][3]].rubis + "",W/2 + 40,45);
         cBouton(W/4,H/2,400,150,"Annuler",40,imgCinema[1][0]);
         cBouton(W/4*3,H/2,400,150,"Acheter",40,imgCinema[1][1]);
-        
+
         //alert(heros[imgCinema[0][3]].rubis);
         if (cinematicos > 9){
             alert(imgCinema[0][2]);
@@ -1044,4 +1033,39 @@ function cClickMerchant(){
             }
         }
     }
+}
+
+
+function cDeath(){
+    imgCinema[1] = 0;
+    var ff = function(t) {
+        drawDuPauvre();
+        Painter.scrollCenter(heros[0].x,heros[0].y,heros[0].z,W,H);
+        if (imgCinema[1] > 100){
+            ctx.globalAlpha = (imgCinema[1] - 100)/50;
+            ctx.fillStyle = "rgb(0,0,0)";
+            ctx.fillRect(0,0,W,H);
+            ctx.globalAlpha = 1;
+            if (imgCinema[1] >= 150){
+                cChargementMule();
+            }
+        }
+
+        alert("Vous êtes mort.");
+
+        //alert(heros[imgCinema[0][3]].rubis);
+        if (cinematicos == 10 && imgCinema[1] != "go"){
+            //alert(imgCinema[0][2]);
+            imgCinema[1] += 1;
+            window.requestAnimationFrame(ff);
+        }
+        else{
+            cinematicos = 0;
+            //imgCinema[1]
+            animation();
+        }
+    };
+
+    window.requestAnimationFrame(ff);
+
 }

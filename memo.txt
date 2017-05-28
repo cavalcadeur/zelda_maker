@@ -15,3 +15,6 @@
 
 
 teleporteur = ["teleport",#out,#nom du niveau,#x1,#y1,#x2,#y2]
+
+fonction findPath(x,y,z,xa,ya,hauteur traversable) : la fonction renvoie une liste de coordonnées formant un chemin vers l'arrivée 
+	si le retour est [], cela veut dire qu'il n'y a pas de chemins qui mènent à l'arrivée

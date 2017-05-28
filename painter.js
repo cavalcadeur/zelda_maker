@@ -239,6 +239,19 @@ var Painter = function() {
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },
+        imgEnnemy: function( ctx, x, y, z, s, r, img ) {
+            if( !img ) return;
+
+            var X = toX( x, y - 1, z );
+            var Y = toY( x, y, z ) - img.height;
+
+            ctx.save();
+            ctx.translate(X,Y);
+	    ctx.rotate(r);
+            ctx.scale(s,1);
+            ctx.drawImage(img,-img.width/2,-img.height/2);
+            ctx.restore();
+        },
 
         cell: function( ctx, x, y, z ,n , nivel) {
      
@@ -250,12 +263,12 @@ var Painter = function() {
                 var Y = toY( x, y, z );
                 // Partie frontale (verticale)
                 	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
-                    	ctx.fillStyle = colorSet[out][0];
+                    	ctx.fillStyle = colors[1];
                     	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
                 	}
                 // Partie latérale (verticale)
                 	if  (x == nivel[y].length - 1 || z > nivel[y][x+1]){
-                    	ctx.fillStyle = colorSet[out][1];
+                    	ctx.fillStyle = colors[2];
                     	ctx.beginPath();
                     	ctx.moveTo( X + cellX, Y );
                     	ctx.lineTo( X + cellX + cellS, Y - cellY );
@@ -266,7 +279,7 @@ var Painter = function() {
                 	}			
 
                 // Partie horizontale.
-                ctx.fillStyle = "rgb("+Math.round(colorSet[out][2][0]+z*colorSet[out][2][3])+","+Math.round(colorSet[out][2][1]+z*colorSet[out][2][4])+","+Math.round(colorSet[out][2][2]+z*colorSet[out][2][5])+")";
+                ctx.fillStyle = "rgb("+Math.round(colors[3][0]+z*colors[3][3])+","+Math.round(colors[3][1]+z*colors[3][4])+","+Math.round(colors[3][2]+z*colors[3][5])+")";
 				if (n == 1) ctx.fillStyle = "rgb(255,255,255)";
                 ctx.beginPath();
                 ctx.moveTo( X, Y );

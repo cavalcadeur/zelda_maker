@@ -25,7 +25,26 @@ function drawInvent(){
         }
     }
 
+    //rubis du joueur 1
+    
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillRect(0,W/10+10,200,50);
+    ctx.drawImage(imgElement.rubisVert,150,W/10-15);
+    ctx.fillStyle = "rgb(250,250,250)";
+    ctx.font = "30px purisa";
+    ctx.textAlign = "right";
+    ctx.fillText(heros[0].rubis + "",140,W/10 + 45);
+
+    //rubis du joueur 2
+    
     ctx.drawImage(imgElement[useless[0]],mouse[1],mouse[0]);
+    ctx.fillStyle = "rgb(0,0,0)";
+    ctx.fillRect(W-200,W/10+10,200,50);
+    ctx.drawImage(imgElement.rubisVert,W-50,W/10-15);
+    ctx.fillStyle = "rgb(250,250,250)";
+    ctx.font = "30px purisa";
+    ctx.textAlign = "right";
+    ctx.fillText(heros[0].rubis + "",W-60,W/10 + 45);
 }
 
 function inventclick(x,y){

@@ -1,8 +1,8 @@
 function sail(t){
     drawSail(t);
     var controlKeys = [[38,39,40,37],[101,99,98,97]];
-    if (1 == keys[controlKeys[0][1]]) moveBoat(1);
-    if (1 == keys[controlKeys[0][3]]) moveBoat(3);
+    if (1 == keys[controlKeys[0][1]]) {moveBoat(1);sensDuBateau = 1;}
+    if (1 == keys[controlKeys[0][3]]) {moveBoat(3);sensDuBateau = -1;}
     if (1 == keys[controlKeys[0][0]]) moveBoat(0);
     if (1 == keys[controlKeys[0][2]]) moveBoat(2);
 }
@@ -38,7 +38,15 @@ function drawSail(t){
     ctx.fillRect(0,0,W,H);
     backDraw();
     onSeaIsland = [];
-    ctx.drawImage(imgBoat,W/2 - imgBoat.width/2,H/2 - imgBoat.height);
+    ctx.save();
+    ctx.translate(W/2,H/2);
+    ctx.scale(sensDuBateau,1);
+    ctx.drawImage(imgBoat,- imgBoat.width/2,- imgBoat.height);
+    ctx.scale(1,-1);
+    ctx.globalAlpha = 0.2;
+    ctx.drawImage(imgBoat,- imgBoat.width/2,- imgBoat.height);
+    ctx.globalAlpha = 1;
+    ctx.restore();
     sea.forEach(
         function(e){ 
             if ((W/100+boatPosition[1] > e[2]-5) && (boatPosition[1] - (W/100) < e[2]+iles[e[0]].alti[0].length+5) && (H/70+boatPosition[0] > e[1]) && (boatPosition[0] - H/70 < e[1]+iles[e[0]].alti.length)){
@@ -77,9 +85,17 @@ function drawIleSail(name,X,Y){
                     }
                 }
             );
-            if (y + Y == Math.floor(boatPosition[0])) ctx.drawImage(imgBoat,W/2 - imgBoat.width/2,H/2 - imgBoat.height);
+            if (y + Y == Math.floor(boatPosition[0])) {ctx.save();
+    ctx.translate(W/2,H/2);
+    ctx.scale(sensDuBateau,1);
+    ctx.drawImage(imgBoat,- imgBoat.width/2,- imgBoat.height);
+    ctx.restore();}
         }
     );
-    if (Math.floor(boatPosition[0]) >= Y + loc.alti.length) ctx.drawImage(imgBoat,W/2 - imgBoat.width/2,H/2 - imgBoat.height);
+    if (Math.floor(boatPosition[0]) >= Y + loc.alti.length) {ctx.save();
+    ctx.translate(W/2,H/2);
+    ctx.scale(sensDuBateau,1);
+    ctx.drawImage(imgBoat,- imgBoat.width/2,- imgBoat.height);
+    ctx.restore();}
 
 }
