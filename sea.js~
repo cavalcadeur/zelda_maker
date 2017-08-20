@@ -1,0 +1,32 @@
+function seaAction(t){
+    drawSea();
+
+
+
+}
+
+function drawSea(){
+    ctx.fillStyle = "rgb(72,98,178)";
+    ctx.fillRect(0,0,W,H);
+    sea.forEach(
+        function(e){
+            drawIsland(e[0],e[1],e[2]);
+        }
+    );
+}
+
+function drawIsland(ile,Y,X){
+    var truc = iles[ile].alti;
+    truc.forEach(
+        function(f,y){
+            f.forEach(
+                function(g,x){
+                    if (g == -1) return;
+                    ctx.fillStyle = "rgb("+(20+g*5)+","+(80+g*20)+","+(10+g*2)+")"; 
+                    ctx.fillRect(x*4 + X,y*4 + Y,4,4);
+                }
+            );
+        }
+    );
+
+}

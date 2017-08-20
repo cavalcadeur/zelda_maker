@@ -1,0 +1,20 @@
+0 : rubisVert
+1 : rubisBleu
+2 : rubisRouge
+3 : arbre0
+4 : herbe0
+5 : herbe1
+6 : coffre0
+7 : coffre1
+8 : porte0
+9 : cle0
+10 : cle1
+11 : mastersword
+12 : boomerang
+13 : pencil
+
+
+teleporteur = ["teleport",#out,#nom du niveau,#x1,#y1,#x2,#y2]
+
+fonction findPath(x,y,z,xa,ya,hauteur traversable) : la fonction renvoie une liste de coordonnées formant un chemin vers l'arrivée 
+	si le retour est [], cela veut dire qu'il n'y a pas de chemins qui mènent à l'arrivée

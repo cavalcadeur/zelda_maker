@@ -1,2 +1,4 @@
-
+- tous les objets (grapins,bombes,arcs,filet à papillons,canne à pèche,lens of truth,aérouage)
+- tous les instruments (ocarina,wind waker,flute de pan)
+- îles des pas sages
 

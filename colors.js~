@@ -1,0 +1,6 @@
+function setColors(oo,hour){
+    colors[0] = colorSet[oo][3];
+    colors[1] = colorSet[oo][0];
+    colors[2] = colorSet[oo][1];
+    colors[3] = colorSet[oo][2];
+}

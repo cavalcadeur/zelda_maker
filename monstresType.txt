@@ -1,0 +1,109 @@
+if (ennemis[n].etat == 1){
+        Painter.imgScaleRot( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z-0.5, 1, ennemis[n].r, imgMonstre[String(ennemis[n].img + ennemis[n].sens)] );
+        ennemis[n].r += 0.2;
+        if (ennemis[n].x > ennemis[n].ox) ennemis[n].x -= 0.02;
+        else if (ennemis[n].x < ennemis[n].ox) ennemis[n].x += 0.02;
+        else{
+            if (ennemis[n].y > ennemis[n].oy) ennemis[n].y -= 0.02;
+            else if (ennemis[n].y < ennemis[n].oy) ennemis[n].y += 0.02;
+            else{
+                ennemis[n].etat = 0;
+                if (ennemis[n].pv <= 0) {
+                    particles.push({n:0,type:"fumeeM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:40});
+                    particles.push({n:0,type:"exploM",x:Math.round(ennemis[n].x),y:Math.round(ennemis[n].y),g:0,alti:ennemis[n].z,lim:80});
+                    ennemis[n].pv = 0;
+                    if (objetMort > 0){
+                        var xxx = 0;
+                        ennemis.forEach(
+                            function (e,i){
+                                if (e.pv > 0){
+                                    xxx = 1;
+                                }
+                            }
+                        );
+                        if (xxx == 0){
+                            for (var i = 0;i < objetMort;i++){
+                                var exit = 0;
+                                objNiveau.forEach(
+                                    function(e,i){
+                                        e.forEach(
+                                            function(f,j){
+                                                if (f[0] == "coffre3"){
+                                                    if (f.length > 1) f.splice(0,1);
+                                                    else f[0] = "";
+                                                }
+                                            }
+                                        );
+                                    }
+                                );
+                            }
+                        }
+                    }
+                    if (ennemis[n].img == "bossFeu") {
+                        particles.push({n:0,type:"quake",x:0,y:0,g:0,alti:0,lim:50});
+                        particles.push({n:-34,type:"fumeeF",x:10,y:6,g:0,alti:0,lim:40});
+                        particles.push({n:-40,type:"fumeeF",x:4,y:7,g:0,alti:0,lim:40});
+                        niveau  = [[-1,-1,-1,-1,-1,-1,-1,-1,0,-1,-1],[-1,2,2,2,2,2,2,2,0,2,2],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[-1,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,2,0,0,0,0,0,0,0,0,0]];
+                        Painter.niveau(niveau);
+                    }
+                    else if (ennemis[n].img == "mCorps"){
+                        ennemis.forEach(
+                            function (e,n){
+                                hitEnnemis(n,10000,4);
+                            }
+                        );
+                    }
+                }
+            }
+        }
+        if (Math.abs(ennemis[n].ox - ennemis[n].x + ennemis[n].oy - ennemis[n].y) < 0.02){
+            ennemis[n].x = ennemis[n].ox;
+            ennemis[n].y = ennemis[n].oy;
+        }
+        ennemis[n].z -= ennemis[n].g;
+        ennemis[n].g += 0.004;
+    }
+    else{
+        if (ennemis[n].pv == 0) return;
+        Painter.img( ctx, ennemis[n].x, ennemis[n].y, ennemis[n].z, imgMonstre[String(ennemis[n].img + ennemis[n].sens)] );
+        var altitude = niveau[Math.round(ennemis[n].y)][Math.round(ennemis[n].x)];
+        if (ennemis[n].z > altitude && ennemis[n].img != "mPierreA" && ennemis[n].img != "mPierreB") {
+            ennemis[n].z -= ennemis[n].g;
+            ennemis[n].g += 0.05;
+        }
+        else if (ennemis[n].z < altitude){
+            ennemis[n].g = 0;
+            ennemis[n].z = altitude;
+        }
+        if (edition == 0 && figer == 0){
+            if (ennemis[n].n == Math.round(1/ennemis[n].v)){
+                if (ennemis[n].img == "feu"){
+                    try {
+                        if (niveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]] == altitude){
+                            var truc = objNiveau[Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0]][Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1]][0];
+                            if (truc == "arbre0" || truc == "arbre1"){
+                                particles.push({n:0,type:"feu",x:Math.round(ennemis[n].x) + vecteurs[ennemis[n].sens][1],y:Math.round(ennemis[n].y) + vecteurs[ennemis[n].sens][0],g:0,alti:altitude,lim:25});
+                            }
+                        }
+                    }
+                    catch (e){
+
+                    }
+                }
+                if (ennemis[n].stun > 0) ennemis[n].stun -= 1;
+                var sens = choseDirection(n);
+                ennemis[n].n = 0;
+                if (sens == 4){
+                    ennemis[n].stun = 1;
+                }
+                else ennemis[n].sens = sens;
+            }
+            if (ennemis[n].stop == 0){
+                ennemis[n].n += 1;
+                if (ennemis[n].stun == 0){
+                    ennemis[n].x += vecteurs[ennemis[n].sens][1] * ennemis[n].v;
+                    ennemis[n].y += vecteurs[ennemis[n].sens][0] * ennemis[n].v;
+                }
+            }
+        }
+    }
