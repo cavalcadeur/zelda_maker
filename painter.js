@@ -1,10 +1,11 @@
 var Painter = function() {
     var scrollX = 300;
     var scrollY = 190;
-    var cellX = 50;  // Largeur d'une cellule.
-    var cellY = 35;  // Profondeur.
+    var cellX = 10;  // Largeur d'une cellule.
+    var cellY = 55;  // Profondeur.
     var cellZ = 30;
     var cellS = 10;  // Décalage.
+	var width = 2; 
     var walls;
     var wallsVert;
     var dscrX = 0;
@@ -31,6 +32,13 @@ var Painter = function() {
     }
 
     return {
+        init: function(a,b,c,d,e){
+            cellX = a;
+            cellY = b;
+            cellZ = c;
+            cellS = d;
+			width = e;
+        },
         realCoor: function(x,y,z){
             if (z == undefined) z = 1;
             return [toX(x,y,z),toY(x,y,z)];
@@ -239,8 +247,9 @@ var Painter = function() {
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },
-        imgEnnemy: function( ctx, x, y, z, s, r, img ) {
+        imgEnnemy: function( ctx, x, y, z, s, r, img ,sy) {
             if( !img ) return;
+            if (sy == undefined) sy = 1;
 
             var X = toX( x, y - 1, z );
             var Y = toY( x, y, z ) - img.height;
@@ -248,7 +257,7 @@ var Painter = function() {
             ctx.save();
             ctx.translate(X,Y);
 	    ctx.rotate(r);
-            ctx.scale(s,1);
+            ctx.scale(s,sy);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },
@@ -263,7 +272,8 @@ var Painter = function() {
                 var Y = toY( x, y, z );
                 // Partie frontale (verticale)
                 	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
-                    	ctx.fillStyle = colors[1];
+                    	    ctx.fillStyle = colors[1];
+                            //ctx.createPattern(imgPat,"repeat");
                     	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
                 	}
                 // Partie latérale (verticale)
@@ -292,7 +302,7 @@ var Painter = function() {
 				if (n == 1) return;
 
                 ctx.strokeStyle = "#000";
-                ctx.lineWidth = 2;
+                ctx.lineWidth = width;
                 // Tracer les lignes des plateaux.
                 var wall = walls[y][x];
                 if( wall & 1 ) {

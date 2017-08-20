@@ -2,11 +2,7 @@ function drawSea(){
     var seaScroll = [boatPosition[1]*3 - 10-W/2,boatPosition[0]*3-30-H/2];
     ctx.fillStyle = "rgb(72,98,178)";
     ctx.fillRect(0,0,W,H);
-    waves.forEach(
-        function(f){
-            waveMove(f);
-        }
-    );
+    backg.backGroundMap();
     if (questObj["carteMaritime"] == 1){
         sea.forEach(
             function(e){
@@ -37,38 +33,15 @@ function drawIsland(ile,Y,X){
 
 }
 
-function waveMove(e){
-    ctx.fillStyle = "rgb(180,180,215)";
-    if (e[2] < 100 && e[2] > 0){
-        ctx.beginPath();
-        ctx.moveTo(e[0] - 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - e[2] / 10 - e[2] / 20);
-        ctx.lineTo(e[0] + 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - e[2] / 20 - e[2] / 20);
-        ctx.closePath();
-        ctx.fill();
-    }
-    else if (e[2] >= 100){
-        ctx.beginPath();
-        ctx.moveTo(e[0] - 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - e[2] / 20);
-        ctx.lineTo(e[0] + 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 20 - e[2] / 20);
-        ctx.closePath();
-        ctx.fill();
-    }
-    if (e[2] == 200) {
-        e[2] = -rnd(200);
-        e[0] = rnd(W);
-        e[1] = rnd(H);
-    }
-    e[2] += 1;
-}
-
 function goToLevel(oo,go,x,y,x2,y2){
     ennemis.forEach(
         function (e,i){
             ennemis[i] = e.takeBack();
+        }
+    );
+    particles.forEach(
+        function(e,i){
+            particles[i] = deComposeParticle(e);
         }
     );
     boomerang.forEach(
@@ -136,6 +109,11 @@ function goToLevel(oo,go,x,y,x2,y2){
         function (e,i){
             findEnnemy(e[2],i,e[0],e[1],e[3]);
             //ennemis[i] = findEnnemy(e[2]);
+        }
+    );
+    particles.forEach(
+        function(e,i){
+            particles[i] = composeParticle(e);
         }
     );
     onSea = 0;

@@ -1,18 +1,41 @@
  --  0.0.1  --
 
-- cinematique d'intro avec Engmi
-- physique révisée des objets
-- correction de bugs
-- tutoriel du pinceau
-- menu lateral du pinceau
-- optimisation du tracé des îles
-- animation deplacements latéraux
-- ecran titre
-- scrolling intelligent
-- objets spécifiques
-- marchands
-- touches paramétrables
-- sauvegarde corrigée
-- fonction de path finding (optimisation pourrave)
+- cinematique d'intro avec Engmi                            A
+- hitbox révisée des objets                                 C
+- correction de bugs                                        C
+- menu lateral du pinceau                                   C
+- optimisation du tracé des îles                            C
+- animation deplacements latéraux                           C
+- ecran titre                                               C
+- scrolling intelligent                                     A
+- objets spécifiques                                        C
+- marchands                                                 A
+- touches paramétrables                                     C
+- sauvegarde corrigée                                       C
+- fonction de path finding (optimisation pourrave)          H
+- ennemis spécifiques avec IA plus poussée et modulaire     A
+- dialogue personnalisé pour le goron                       A
+- système de particules intelligentes                       A
+- moteur physique pour les objets mouvants                  C
+- dialogues à plusieurs bulles + skippable                  A
+- doubles menus latéraux du pinceau                         C
 
-  7732 m^2
+  7222 m^2
+
+ -- TO DO --
+
+- faire disparaître le point info d'un clic n'importe où
+- pousse d'herbe automatique en exterieur
+- particules oiseaux au hasard
+- main boomerang qui ne se fait pas manger
+- système de pont en ligne automatique
+- pont à multi étages
+- correction des couleurs du menu teleportation
+
+ -- Lexique --
+
+C : compatible avec le pinceau
+A : compatibilité améliorable
+N : non compatible et source de bugs
+H : caché dans le code / non visible lors d'une partie normale
+B : bugué as fuck

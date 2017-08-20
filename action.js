@@ -95,7 +95,7 @@ function action(t){
                     }
                     else if (truc[0] == "plate"){
                         if (truc[3] == "") objNiveau[truc[2]][truc[1]] = [""];
-                        else if (truc[3] == 1 || truc[3] == -1){
+                        else if (truc[3] == 1 || truc[3] == -1 || truc[3] == 0.2 || truc[3] == -0.2){
                             niveau[truc[2]][truc[1]] += truc[3];
                             Painter.niveau(niveau);
                         }
@@ -141,7 +141,8 @@ function action(t){
                     }
                     else if (truc[0] == "textBox"){
                         if (h.z == niveau[h.y][h.x]){
-                            particles.push({n:0,type:"bla",x:0,y:0,g:0,alti:60000,lim:-1,content:truc[1],actu:"",xx:0,yy:0,y2:0,x2:0});
+                            addParticles("bla",0,0,60000,0,0,-1,truc[1]);
+                            //particles.push({n:0,type:"bla",x:0,y:0,g:0,alti:60000,lim:-1,content:truc[1],actu:"",xx:0,yy:0,y2:0,x2:0});
                             objNiveau[h.y][h.x] = [""];
                         }
                     }
@@ -179,7 +180,8 @@ function action(t){
                         else var Sens = e.sens;
                         if (e.img == "main") {
                             goToLevel(e.out,e.goto,e.xx,e.yy,e.xx,e.yy);
-                            particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
+                            addParticles("fadeOut",niveau[niveau.length-1].length -1,niveau.length - 1,-1,0,0,30);
+                            //particles.push({n:0,x:niveau[niveau.length-1].length -1,y:niveau.length - 1,type:"fadeOut",lim:30,alti:-1,g:0});
                         }
                         else hitHeros(n,e.att,Sens);
                     }
@@ -233,12 +235,16 @@ function fall(h,n){
     var truc = objNiveau[h.y][h.x];
     if (truc != "avaleur1" && truc != "avaleur2"){
         if (out == 1 || out == 3){
-            particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
-            particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+            addParticles("rond",h.x,h.y,-1,0,0,30,0.3);
+            //particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rond",lim:30,alti:-1,g:0});
+            addParticles("eclabousse",h.x,h.y,-1,15,0,30,0);
+            //particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousse",lim:30,alti:-1,g:15});
         }
         else if (out == 2){
-            particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
-            particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
+            addParticles("rondB",h.x,h.y,-1,0,0,30,0.3);
+            //particles.push({n:0,x:h.x,y:h.y,s:0.3,type:"rondB",lim:30,alti:-1,g:0});
+            addParticles("eclabousseB",h.x,h.y,-1,15,0,30,0);
+            //particles.push({n:0,x:h.x,y:h.y,s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
         }
         if (niveau[respawnPoint[1]][respawnPoint[0]] < 0){
             var xxx = 0;
@@ -316,15 +322,18 @@ function move(d,n,gg){
         }
     }
     if (heros[n].z + 1 < getFloor(heros[n].x+vecteurs[d][1],heros[n].y+vecteurs[d][0],heros[n].z)){
+        /*
         if (truc[0] == "rocher"){
             var YY = heros[n].y+vecteurs[d][0];
             var XX = heros[n].x+vecteurs[d][1];
             if (XX + vecteurs[d][1] == -1 || YY + vecteurs[d][0] == -1 || XX + vecteurs[d][1] == niveau[YY].length || YY + vecteurs[d][0] == niveau.length) return;
             if (objNiveau[YY][XX].length == 1 ) objNiveau[YY][XX][0] = "";
             else objNiveau[YY][XX].splice(0,1);
-            particles.push({n:0,type:"rocher",x:XX,y:YY,g:0,alti:niveau[YY][XX],lim:-5,sens:heros[n].sens,endu:1});
-            heros[n].stun = 3;
+            addParticles("object",XX+0.5,YY+0.5,niveau[YY][XX],0,vecteurs[heros[n].sens][1]*0.19,vecteurs[heros[n].sens][0]*0.19,"rocher",0,"normal");
+            //particles.push({n:0,type:"rocher",x:XX,y:YY,g:0,alti:niveau[YY][XX],lim:-5,sens:heros[n].sens,endu:1});
+            heros[n].stun = 10;
         }
+         */
         return;
     }
     //}
@@ -353,12 +362,6 @@ function changeArme(n){
         if (heros[n].invent[heros[n].objet] == "batonF") heros[n].invent[heros[n].objet] = "baton";
         heros[n].objet = (heros[n].objet+1)%heros[n].invent.length;
     }
-}
-
-function taille(caseT){
-    var tailles = {"bleu0":1.1,"coffre0":1.1,"coffre1":0.6,"rouge1":1.1,"arbre0":2,"arbre1":2,"arbreEole1":1.5,"armure":1.6,"autel":1.1,"bougie":1.3,"canon0":0.5,"canon1":1.3,"canon2":0.5,"checkPoint":1.2,"unCheckPoint":1.2,"eole0":1.3,"etagere":1.7,"fleur2":1.1,"fleur3":0.6,"house0":2,"house1":1.8,"house2":1.8,"house3":1.8,"house4":3,"houseSky0":0.5,"houseSky1":2,"houseSky2":0.5,"houseSky3":2,"PNJ":1.5,"lit0":0.8,"lit1":0.8,"main0":1.3,"main1":1.3,"miniTempleEau":2,"moulin0":3,"moulin1":3,"palmier":1.2,"plate":0.2,"plate1":0.1,"portail0":3,"portail2":3,"porte0":1.5,"pot":0.4,"statue0":1.3,"switch0":1,"switch1":1,"switch2":1,"switch3":1,"table0":0.8,"table1":0.8,"tabouret":0.6,"tombe0":1.4,"torche":1.3,"torche2":1.3,"torche1":0.3,"templeEau0":3,"templeEau1":3,"templeEau2":3,"templeFeu0":3,"templeFeu1":3,"templeFeu2":3,"rocher":1.1,"arbre3":6,"sanctuaire":6,"serre0":3,"serre1":3.5,"serre2":3,"foret0":4.2,"foret1":4.2,"foret2":4.2,"foret3":4.2,"foret4":4.2,"foret5":4.2,wSwitch0:1.1,wSwitch1:1.1,"sleepingGoddess":2,"palmier1":3.2,"spe0":[0,0,0,0,0,0,3,0,2.5][out],"spe1":[0,0,0,0,0,0,0.5,0,2.2][out],"spe2":[0,0,0,0,0,0,1.01,0,2.3][out],"spe3":[0,0,0,0,0,0,1.01,0,2.3][out],"spe4":[0,0,0,0,0,0,1.01][out],"spe5":[0,0,0,0,0,0,0][out],"spe6":[0,0,0,0,0,0,0][out],"spe7":[0,0,0,0,0,0,0][out],"spe8":[0.5,0,0,0,0,0,0][out],"spe9":[0,0,0,0,0,0,0][out]};
-    if (tailles[caseT] == undefined) return 0;
-    else return tailles[caseT];
 }
 
 function getFloor(x,y,z){

@@ -199,12 +199,16 @@ var Bokoblin = function(){
             if (getFloor(Math.floor(x),Math.floor(y),z) <= -1){
                 mort = 0;
                 if (out == 1 || out == 3){
-                    particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0.3,type:"rond",lim:30,alti:-1,g:0});
-                    particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0,type:"eclabousse",lim:30,alti:-1,g:15});
+                    addParticles("rond",Math.floor(x),Math.floor(y),-1,0,0,30,0.3);
+                    //particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0.3,type:"rond",lim:30,alti:-1,g:0});
+                    addParticles("eclabousse",Math.floor(x),Math.floor(y),-1,15,0,30,0);
+                    //particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0,type:"eclabousse",lim:30,alti:-1,g:15});
                 }
                 else if (out == 2){
-                    particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0.3,type:"rondB",lim:30,alti:-1,g:0});
-                    particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0,type:"eclabousseB",lim:30,alti:-1,g:15});
+                    addParticles("rondB",Math.floor(x),Math.floor(y),-1,0,0,30,0.3);
+                    //particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0.3,type:"rond",lim:30,alti:-1,g:0});
+                    addParticles("eclabousseB",Math.floor(x),Math.floor(y),-1,15,0,30,0);
+                    //particles.push({n:0,x:Math.floor(x),y:Math.floor(y),s:0,type:"eclabousse",lim:30,alti:-1,g:15});
                 }
                 this.act = nada;
                 this.display = nada;
@@ -214,8 +218,10 @@ var Bokoblin = function(){
             }
             else if (pv <= 0){
                 mort = 0;
-                particles.push({n:0,type:"fumeeM",x:Math.floor(x),y:Math.floor(y),g:0,alti:z,lim:40});
-                particles.push({n:0,type:"exploM",x:Math.floor(x),y:Math.floor(y),g:0,alti:z,lim:80});
+                addParticles("fumeeM",Math.floor(x),Math.floor(y),z,0,0,40);
+                //particles.push({n:0,type:"fumeeM",x:Math.floor(x),y:Math.floor(y),g:0,alti:z,lim:40});
+                addParticles("exploM",Math.floor(x),Math.floor(y),z,0,0,80);
+                //particles.push({n:0,type:"exploM",x:Math.floor(x),y:Math.floor(y),g:0,alti:z,lim:80});
                 this.act = nada;
                 this.display = nada;
                 this.doing = nada;
@@ -491,7 +497,8 @@ var Bokoblin = function(){
             pv -= degat;
             scale = 1;
             flyMode = 1;
-            particles.push({n:0,type:"hitA",x:Math.floor(x),y:Math.floor(y),g:0,alti:z,lim:10});
+            addParticles("hitA",Math.floor(x),Math.floor(y),z,0,0,10);
+            //particles.push({n:0,type:"hitA",x:Math.floor(x),y:Math.floor(y),g:0,alti:z,lim:10});
             if (Math.floor(x) + vecteurs[sens][1] < 0 || Math.floor(y) + vecteurs[sens][0] < 0 || Math.floor(x) + vecteurs[sens][1] >= niveau[0].length || Math.floor(y) + vecteurs[sens][0] >= niveau.length) flyMode = 0;
             else if (getFloor(Math.floor(x) + vecteurs[sens][1],Math.floor(y) + vecteurs[sens][0],z) > z) flyMode = 0;
         }
