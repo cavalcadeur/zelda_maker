@@ -1,0 +1,4 @@
+- problèmes du menu aide
+- problème de selection du fond marin lors des chargements de sauvegardes
+- changer les objets avec autre chose que la molette
+- les ennemis ne sont pas fonctionnels

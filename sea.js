@@ -2,11 +2,7 @@ function drawSea(){
     var seaScroll = [boatPosition[1]*3 - 10-W/2,boatPosition[0]*3-30-H/2];
     ctx.fillStyle = "rgb(72,98,178)";
     ctx.fillRect(0,0,W,H);
-    waves.forEach(
-        function(f){
-            waveMove(f);
-        }
-    );
+    backg.backGroundMap();
     if (questObj["carteMaritime"] == 1){
         sea.forEach(
             function(e){
@@ -16,9 +12,9 @@ function drawSea(){
         ctx.drawImage(imgBoat,boatPosition[1]*3 - 10 - seaScroll[0],boatPosition[0]*3 - 30 - seaScroll[1],30,30);
     }
     else {
-		alert("Vous ne possédez pas encore de carte maritime !");
-		onSea = 1;
-	}	
+        alert("Vous ne possédez pas encore de carte maritime !");
+        onSea = 1;
+    }
 }
 
 function drawIsland(ile,Y,X){
@@ -37,38 +33,15 @@ function drawIsland(ile,Y,X){
 
 }
 
-function waveMove(e){
-    ctx.fillStyle = "rgb(180,180,215)";
-    if (e[2] < 100 && e[2] > 0){
-        ctx.beginPath();
-        ctx.moveTo(e[0] - 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - e[2] / 10 - e[2] / 20);
-        ctx.lineTo(e[0] + 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - e[2] / 20 - e[2] / 20);
-        ctx.closePath();
-        ctx.fill();
-    }
-    else if (e[2] >= 100){
-        ctx.beginPath();
-        ctx.moveTo(e[0] - 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 10 - e[2] / 20);
-        ctx.lineTo(e[0] + 25,e[1] - e[2] / 20);
-        ctx.lineTo(e[0],e[1] - 5 - (200-e[2]) / 20 - e[2] / 20);
-        ctx.closePath();
-        ctx.fill();
-    }
-    if (e[2] == 200) {
-        e[2] = -rnd(200);
-        e[0] = rnd(W);
-        e[1] = rnd(H);
-    }
-    e[2] += 1;
-}
-
-function goToLevel(oo,go,x,y,x2,y2){
+function goToLevel(oo,go,x,y,x2,y2,scrollStore,d,n){
     ennemis.forEach(
         function (e,i){
             ennemis[i] = e.takeBack();
+        }
+    );
+    particles.forEach(
+        function(e,i){
+            particles[i] = deComposeParticle(e);
         }
     );
     boomerang.forEach(
@@ -105,7 +78,7 @@ function goToLevel(oo,go,x,y,x2,y2){
     for(var i = 0;i<nSpeImg;i++){
         imgElement["spe"+i].src = "images/elements/spe/"+ out +"/spe" + i + ".png";
     }
-    
+
     for (var i = 0;i<70;i++){
         imgMonstre[i].src = "images/ennemis/" + out + "/e" + i + ".png";
     }
@@ -120,6 +93,10 @@ function goToLevel(oo,go,x,y,x2,y2){
         niveau = iles[go].alti;
         ennemis = iles[go].ennemis;
         objNiveau = iles[go].obj;
+        textured = iles[go].textures;
+        
+        // attention, les voisins sont forcément exterieurs si la pièce est une île.
+        var voisins = iles[go].voisins;
     }
     else{
         if (interieurs[go].particles == undefined){
@@ -131,6 +108,52 @@ function goToLevel(oo,go,x,y,x2,y2){
         niveau = interieurs[go].alti;
         ennemis = interieurs[go].ennemis;
         objNiveau = interieurs[go].obj;
+        textured = interieurs[go].textures;
+
+        // attention, les voisins sont forcément interieurs si la pièce est interieure.
+        var voisins = interieurs[go].voisins;
+
+    }
+    canvImg = [0,0,0,0];
+    if (voisins != undefined){
+        voisins.forEach(
+            function (e,i){
+                if (oo == 1){
+                    var Vniveau = iles[e[0]].alti;
+                    var Vennemis = iles[e[0]].ennemis;
+                    var VobjNiveau = iles[e[0]].obj;
+                    var Vtextures = iles[e[0]].textures;
+                }
+                else {
+                    var Vniveau = interieurs[e[0]].alti;
+                    var Vennemis = interieurs[e[0]].ennemis;
+                    var VobjNiveau = interieurs[e[0]].obj;
+                    var Vtextures = interieurs[e[0]].textures;
+                }
+
+                canvImg[e[1]] = [document.createElement("canvas")];
+                canvImg[e[1]][1] = canvImg[e[1]][0].getContext("2d");
+
+                canvImg[e[1]][0].setAttribute("width",Painter.getRealWidth(Vniveau)+700);
+                canvImg[e[1]][0].setAttribute("height",Painter.getRealHeight(Vniveau)+700);
+                
+                Painter.niveau(Vniveau , Vtextures);
+                Painter.scrollVoisin(Vniveau);
+                drawRoom(0,canvImg[e[1]][1],Vniveau,VobjNiveau);
+            }
+        );
+    }
+    if (x == -1) heros[0].x = niveau[0].length - 1;
+    if (x2 == -1) heros[1].x = niveau[0].length - 1;
+    if (y == -1) heros[0].y = niveau.length - 1;
+    if (y2 == -1) heros[1].y = niveau.length - 1;
+    if (d != undefined){
+        heros[n].anim = walkAnim;
+            
+            //heros[n].x +=  vecteurs[d][1];
+            //heros[n].y +=  vecteurs[d][0];
+        heros[n].vx += -50 * vecteurs[d][1];
+        heros[n].vy += -50 * vecteurs[d][0];
     }
     ennemis.forEach(
         function (e,i){
@@ -138,13 +161,23 @@ function goToLevel(oo,go,x,y,x2,y2){
             //ennemis[i] = findEnnemy(e[2]);
         }
     );
+    particles.forEach(
+        function(e,i){
+            particles[i] = composeParticle(e);
+        }
+    );
     onSea = 0;
     respawnPoint = [x,y];
     heros[0].z = niveau[heros[0].y][heros[0].x];
     heros[1].z = niveau[heros[1].y][heros[1].x];
-    Painter.niveau(niveau);
-    Painter.scroll(0,0);
-    Painter.centerScroll(x,y,0,W,H);
+    Painter.niveau(niveau , textured);
+    if (scrollStore == undefined){
+        Painter.scroll(0,0);
+        Painter.centerScroll(x,y,0,W,H);
+    }
+    else{
+        Painter.adjustScroll(scrollStore,heros[0].x - vecteurs[d][1],heros[0].y - vecteurs[d][0],heros[0].z);
+    }
     if (out == 7){
         objNiveau.forEach(
             function (e,yz){
@@ -162,11 +195,11 @@ function goToLevel(oo,go,x,y,x2,y2){
                             if (objNiveau[yz][xz][1] > 6000) objNiveau[yz][xz] = ["spe3",listo[rnd(listo.length)],"spe0"];
                         }
                     }
-                );                
+                );
             }
         );
     }
-	setColors(out,5);
+    setColors(out,5);
     if (go == "sky4" && quests.sky == 0){
         cinematicos = 5;
         heros[0].x += 1;
@@ -203,7 +236,7 @@ function chooseBack(oo){
     else if (oo == 4){
         backDraw = backg.fd;
     }
-	else if (oo == 8){
+    else if (oo == 8){
         backDraw = backg.fg;
     }
     else {

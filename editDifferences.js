@@ -1,42 +1,41 @@
 function AEditInterface(){
-    sideSelect = -1;
+    ctx.fillStyle = "rgb(0,39,43)";
+    ctx.fillRect(0,0,150,H);
+    ctx.fillRect(W-150,0,150,H);
+    ctx.globalAlpha = 0.5;
+    ctx.fillRect(150,0,5,H);
+    ctx.fillRect(W-155,0,5,H);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "rgb(0,81,89)";
     sideEdit.forEach(
-        function(el,i){
-            var yel = i*(H/(4*sideEdit.length)*3) + H/8;
-            var epel = H/(4*sideEdit.length)*3;
-            var hautel = epel/8*7;
-            if (mouse[1] > W - epel){
-                if (mouse[0] > yel && mouse[0] < yel + hautel){
-                    epel = epel * 1.3;
-                    sideSelect = i;
-                }
-            }
-            ctx.fillStyle = "rgb(20,178,139)";
-            ctx.fillRect(W-epel,yel,epel*1.5,hautel);
-            ctx.drawImage(imgElement[el],W-epel,yel,(imgElement[el].width * hautel) / imgElement[el].height,hautel);
+        function(e,i){
+            if (i + editNs[0]*10 == editNs[1]) ctx.fillRect((i%2) * 60 + 15,Math.floor(i/2)*80-5,60,80);
+            ctx.drawImage(imgElement[e],(i%2) * 60 + 20,Math.floor(i/2)*80,50,70);
         }
     );
-    if (editHand[editnumber] != "rien"){
-        if (editM == 0 || editHand[editnumber] == "return") ctx.drawImage(imgElement[editHand[editnumber]],mouse[1],mouse[0]- imgElement[editHand[editnumber]].height / 2);
-        else ctx.drawImage(imgMonstre[editHand[editnumber]+2],mouse[1],mouse[0]- imgMonstre[editHand[editnumber]+2].height / 2);
-        if (editHand[editnumber] == "tele"){
-            objNiveau.forEach(
-                function (ee,YY){
-                    ee.forEach(
-                        function (fe,XX){
-                            if (fe[0] == "teleport"){
-                                ctx.globalAlpha = 0.1;
-                                Painter.cell( ctx, XX, YY, niveau[YY][XX] ,1);
-                                ctx.globalAlpha = 1;
-
-                            }
-                        }
-                    );
-                }
-            );
+    for(var i = 0;i<10;i++){
+        if (editNs[1] == 0){
+            if (editObject[out][i + editNs[2]*10] != undefined){
+                if (i + editNs[2]*10 == editNs[3]) ctx.fillRect((i%2) * 60 + 15 + W - 150,Math.floor(i/2)*80-5,60,80);
+                ctx.drawImage(imgMonstre[editObject[out][i + editNs[2]*10][1]],(i%2) * 60 + 20 + W - 150,Math.floor(i/2)*80,50,70);
+            }
+        }
+        else {
+            if (editArray[sideEdit[editNs[1]]][i + editNs[2]*10] != undefined){
+                if (i + editNs[2]*10 == editNs[3]) ctx.fillRect((i%2) * 60 + 15 + W - 150,Math.floor(i/2)*80-5,60,80);
+                ctx.drawImage(imgElement[editArray[sideEdit[editNs[1]]][i + editNs[2]*10]],(i%2) * 60 + 20 + W - 150,Math.floor(i/2)*80,50,70);
+            }
         }
     }
-    
+
+    if (editArray[sideEdit[editNs[1]]].length > 10){
+        ctx.fillStyle = "rgb(250,250,250)";
+        drawFleche(80 + W - 150,5*80+10,50);
+        drawFleche(70 + W - 150,5*80+10,-50);
+    }
+
+    ctx.drawImage(imgElement["save"],0,H-70);
+
     if (editPlate == 1 || editPlate == 2){
         ctx.beginPath();
         ctx.arc(mouse[1],mouse[0],15,-Math.PI,Math.PI);
@@ -88,4 +87,91 @@ function AInterface(){
         }
     );
 
+}
+
+function drawFleche(x,y,s){
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x+s,y+Math.abs(s/2));
+    ctx.lineTo(x,y+Math.abs(s));
+    ctx.closePath();
+    ctx.fill();
+}
+
+function clickEdit(x,y,b){
+    if (x < 150){
+        if (y > H-70) exportFileAsFuck();
+        else if (y < 400){
+            editNs[1] = Math.floor(y / 80)*2 + Math.floor(x/75) + editNs[0]*10;
+            editNs[2] = 0;
+            editNs[3] = 0;
+        }
+    }
+    else if (x > W-150){
+        if (y < 400){
+            var truc = Math.floor(y / 80)*2 + Math.floor((x-W+150)/75) + editNs[2]*10;
+            if (editArray[sideEdit[editNs[1]]][truc] != undefined) editNs[3] = truc;
+        }
+        else if (y < 600){
+            if (x > W-75){
+                editNs[2] = (editNs[2]+1)%Math.ceil(editArray[sideEdit[editNs[1]]].length/10);
+            }
+            else {
+                editNs[2] -= 1;
+                if (editNs[2] <= -1) editNs[2] = Math.ceil(editArray[sideEdit[editNs[1]]].length/10)-1;
+            }
+        }
+    }
+    else {
+        if (b == 0) pencil(x,y,editArray[sideEdit[editNs[1]]][editNs[3]]);
+        else {
+            if (editArray[sideEdit[editNs[1]]][editNs[3]] == "sky") pencil(x,y,-1);
+            else if (editArray[sideEdit[editNs[1]]][editNs[3]] == "sky2") pencil(x,y,-0.2);
+            else pencil(x,y,"delete");
+        }
+        //if (b == 0) pencil(x,y,1);
+        //else pencil(x,y,-1);
+    }
+}
+
+function exportFileAsFuck(){
+    var result = "";
+   
+    result += "Niveau Maker's Pencil " + goto + " out="+out + " :\n \n";
+    
+    var nnn = niveau;
+    var ooo = objNiveau;
+    var eee = ennemis;
+    
+    var body = JSON.stringify(nnn);
+    result += body + "\n \n";
+    body = JSON.stringify(ooo);
+    result += body + "\n \n";
+    body = JSON.stringify(eee);
+    result += body + "\n \n";
+    
+    markedLevels.forEach(
+        function (ee){
+            if (ee[0] != goto){
+                if (ee[1] == 1){
+                    var llevel = iles[ee[0]];
+                }
+                else {
+                    var llevel = interieurs[ee[0]];
+                }
+                var nnn = llevel.alti;
+                var ooo = llevel.obj;
+                var eee = llevel.ennemis;
+                result += "Niveau Maker's Pencil " + ee[0] + " out=" + ee[1] + " : \n \n";
+                var body = JSON.stringify(nnn);
+                result += body + "\n \n";
+                body = JSON.stringify(ooo);
+                result += body + "\n \n";
+                body = JSON.stringify(eee);
+                result += body + "\n \n";
+            }
+        }
+    );
+
+    SaveAs(new Blob([result]),"ile"+rnd(78000)+".txt");
 }

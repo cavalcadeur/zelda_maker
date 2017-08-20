@@ -1,18 +1,17 @@
  --  0.0.1  --
 
-- cinematique d'intro avec Engmi
-- physique révisée des objets
-- correction de bugs
-- tutoriel du pinceau
-- menu lateral du pinceau
-- optimisation du tracé des îles
-- animation deplacements latéraux
-- ecran titre
-- scrolling intelligent
-- objets spécifiques
-- marchands
-- touches paramétrables
-- sauvegarde corrigée
-- fonction de path finding (optimisation pourrave)
+- separation en moteur/data (réussie ???)
 
-  7732 m^2
+  635 m^2
+
+ -- TO DO --
+
+- ile de l'aurore
+
+ -- Lexique --
+
+C : compatible avec le pinceau
+A : compatibilité améliorable
+N : non compatible et source de bugs
+H : caché dans le code / non visible lors d'une partie normale
+B : bugué as fuck

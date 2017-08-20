@@ -4,8 +4,8 @@
 // fonction qui trouve le bon ennemi, le crée et le prépare au combat
 
 function findEnnemy(nom,id,x,y,m){
-    if (nom == "bokoblin"){
-        ennemis[id] = new Bokoblin();
+    if (nom == "cochon"){
+        ennemis[id] = new Cochon();
     }
     else if (nom == "chuchu"){
         ennemis[id] = new Chuchu();

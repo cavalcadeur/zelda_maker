@@ -1,19 +1,23 @@
 var Painter = function() {
     var scrollX = 300;
     var scrollY = 190;
-    var cellX = 50;  // Largeur d'une cellule.
-    var cellY = 35;  // Profondeur.
+    var cellX = 10;  // Largeur d'une cellule.
+    var cellY = 55;  // Profondeur.
     var cellZ = 30;
     var cellS = 10;  // Décalage.
+    var width = 2; 
     var walls;
     var wallsVert;
+    var colorsZ;
     var dscrX = 0;
     var dscrY = 0;
     var vscr = 0;
     var lscr = 1;
+    var LSD = 1;
+    var counter = 0;
 
     function toX( x, y, z ) {
-        return Math.floor( scrollX + x * cellX - y * cellS );
+        return Math.floor( scrollX + x * cellX - y * cellS);
     }
 
     function toY( x, y, z ) {
@@ -31,22 +35,49 @@ var Painter = function() {
     }
 
     return {
+        init: function(a,b,c,d,e){
+            cellX = a;
+            cellY = b;
+            cellZ = c;
+            cellS = d;
+			width = e;
+        },
         realCoor: function(x,y,z){
             if (z == undefined) z = 1;
             return [toX(x,y,z),toY(x,y,z)];
         },
-        niveau: function( level ) {
+        niveau: function( level , texture) {
+            if (texture == undefined) texture = [];
 			editNumber = 1;
             var rows = level.length;
             var cols = level[0].length;
+            colorsZ = [];
             walls = [];
             wallsVert = [];
             level.forEach(function( row, y ) {
+                
+                colorsZ[y] = [];
+                
                 var line = [];
                 walls.push( line );
                 var lineVert = [];
                 wallsVert.push( lineVert );
                 row.forEach(function ( z, x ) {
+
+                    colorsZ[y][x] = [];
+                    
+                    colorsZ[y][x][0] = "rgb("+Math.round(colors[3][0]+z*colors[3][3])+","+Math.round(colors[3][1]+z*colors[3][4])+","+Math.round(colors[3][2]+z*colors[3][5])+")";
+                    colorsZ[y][x][1] = colors[1];
+                    colorsZ[y][x][2] = colors[2];
+
+                    if (out == 1){
+                        if (z < -0.2){
+                            colorsZ[y][x][0] = "rgb("+Math.round(181 - z*0)+","+Math.round(180 - z*0)+","+Math.round(98 - z*0)+")";
+                            colorsZ[y][x][1] = "rgb(128,128,101)";
+                            colorsZ[y][x][2] = "rgb(115,115,91)";
+                        }
+                    }
+                    
                     var v = 0;
                     if( y == 0 || level[y - 1][x] < z ) {
                         v += 1;
@@ -109,12 +140,23 @@ var Painter = function() {
                 });
             });
 
+            texture.forEach(
+                function(e,i){
+                    colorsZ[e[0]][e[1]][0] = e[2];
+                }
+            );
+
             //console.info("[painter] wallsVert=...", wallsVert);
         },
 
         scroll: function( x, y ) {
             scrollX = x;
             scrollY = y;
+        },
+        scrollVoisin: function(niv){
+            //scrollX = (niv.length)*cellS;
+            scrollX = toX(0,0,-1) - toX(0,niv.length,-1) - 10 + width/2 + 500;
+            scrollY = 55 + width/2 + 500;
         },
 
         centerScroll: function ( x, y , z , W , H) {
@@ -141,6 +183,15 @@ var Painter = function() {
         
         scrollYPlus: function(a) {
             scrollY += a;
+        },
+
+        scrollStore: function(x,y,z){
+            return [toX(x,y,z),toY(x,y,z)];
+        },
+
+        adjustScroll: function(coor,x,y,z){
+            scrollX = coor[0] - x * cellX + y * cellS;
+            scrollY = coor[1] - y * cellY + z * cellZ;
         },
 
         drawQuake: function( n ) {
@@ -239,16 +290,17 @@ var Painter = function() {
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },
-        imgEnnemy: function( ctx, x, y, z, s, r, img ) {
+        imgEnnemy: function( ctx, x, y, z, s, r, img ,sy) {
             if( !img ) return;
+            if (sy == undefined) sy = 1;
 
-            var X = toX( x, y - 1, z );
-            var Y = toY( x, y, z ) - img.height;
+            var X = toX( x, y-1, z );
+            var Y = toY( x, y-1, z ) - img.height/2;
 
             ctx.save();
             ctx.translate(X,Y);
 	    ctx.rotate(r);
-            ctx.scale(s,1);
+            ctx.scale(s,sy);
             ctx.drawImage(img,-img.width/2,-img.height/2);
             ctx.restore();
         },
@@ -256,19 +308,25 @@ var Painter = function() {
         cell: function( ctx, x, y, z ,n , nivel) {
      
             //-----------------------------------------------------------------
+
+            //counter += 0.001;
+            //LSD = Math.sin(counter/10)*5;
             
 			if( typeof nivel === 'undefined' ) nivel = niveau; 
             if( z > -1 ) {
                 var X = toX( x, y, z );
                 var Y = toY( x, y, z );
                 // Partie frontale (verticale)
-                	if  (y == nivel.length - 1 || z > nivel[y+1][x]){
-                    	ctx.fillStyle = colors[1];
+                	if  (y >= nivel.length - 1 || z > nivel[y+1][x]){
+                    	    //ctx.fillStyle = colors[1];
+                            ctx.fillStyle = colorsZ[y][x][1];
+                            //ctx.createPattern(imgPat,"repeat");
                     	ctx.fillRect( X, Y, cellX, cellZ * (z + 1) );
                 	}
                 // Partie latérale (verticale)
                 	if  (x == nivel[y].length - 1 || z > nivel[y][x+1]){
-                    	ctx.fillStyle = colors[2];
+                    	    //ctx.fillStyle = colors[2];
+                            ctx.fillStyle = colorsZ[y][x][2];
                     	ctx.beginPath();
                     	ctx.moveTo( X + cellX, Y );
                     	ctx.lineTo( X + cellX + cellS, Y - cellY );
@@ -279,7 +337,8 @@ var Painter = function() {
                 	}			
 
                 // Partie horizontale.
-                ctx.fillStyle = "rgb("+Math.round(colors[3][0]+z*colors[3][3])+","+Math.round(colors[3][1]+z*colors[3][4])+","+Math.round(colors[3][2]+z*colors[3][5])+")";
+                //ctx.fillStyle = "rgb("+Math.round(colors[3][0]+z*colors[3][3])+","+Math.round(colors[3][1]+z*colors[3][4])+","+Math.round(colors[3][2]+z*colors[3][5])+")";
+                ctx.fillStyle = colorsZ[y][x][0];
 				if (n == 1) ctx.fillStyle = "rgb(255,255,255)";
                 ctx.beginPath();
                 ctx.moveTo( X, Y );
@@ -292,7 +351,7 @@ var Painter = function() {
 				if (n == 1) return;
 
                 ctx.strokeStyle = "#000";
-                ctx.lineWidth = 2;
+                ctx.lineWidth = width;
                 // Tracer les lignes des plateaux.
                 var wall = walls[y][x];
                 if( wall & 1 ) {
@@ -342,6 +401,15 @@ var Painter = function() {
                 }
             }
         },
+
+        drawVoisin: function(calc,x,y,ctx,niv){
+            ctx.drawImage(calc,toX(niv[0].length,niv.length-1,0) - width - 500,toY(0,-1,0)-width/2 - 500);
+        },
+
+        drawVoisinG: function(calc,x,y,ctx,niv){
+            ctx.drawImage(calc,toX(-niv[0].length,niv.length-1,0) - 500,toY(0,-1,0)-width/2 - 500);
+        },
+        
         case: function(level,x,y){
             var result = ["ah","ah"];
             level.forEach(
@@ -356,6 +424,12 @@ var Painter = function() {
                 }
             );
             return result;
+        },
+        getRealWidth(niv){
+            return (niv[0].length * cellX + niv.length * cellS);
+        },
+        getRealHeight(niv){
+            return (niv.length * cellY);
         },
         caseGround: function(level,x,y){
             var result = ["ah","ah"];
